@@ -1,18 +1,137 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { HabitContext } from "../context/HabitContext";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@material-ui/core";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import { green } from "@material-ui/core/colors";
+import RenderHabitsByCategory from "../components/RenderHabitsByCategory";
+import Popover from "@material-ui/core/Popover";
+
+const useStyles = makeStyles({
+  table: {
+    minWidth: 200,
+    maxWidth: 600,
+    paddingLeft: 10,
+  },
+  checkbox: {
+    color: green[400],
+    "&$checked": {
+      color: green[600],
+    },
+  },
+});
+
+const habitCategory = habits => {
+  let category = {};
+  let categoryArray = [];
+  if (habits) {
+    for (let h of habits) {
+      if (!category.hasOwnProperty(h.category)) {
+        categoryArray.push(h.category);
+        category[h.category] = " ";
+      } else {
+        category[h.category] = " ";
+      }
+    }
+  }
+
+  return categoryArray;
+};
 
 export function Index() {
   const { habit } = useContext(HabitContext);
+  const [categories, setCategories] = useState(null);
+  const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState(null);
 
   console.dir(habit);
+
+  useEffect(() => {
+    let categoryArray = habitCategory(habit);
+    setCategories(categoryArray);
+  }, [habit]);
+
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
+  console.dir(categories);
 
   return (
     <div>
       <h2>Home</h2>
+      <Fab
+        aria-describedby={id}
+        size="small"
+        color="primary"
+        onClick={handleClick}
+      >
+        <AddIcon />
+      </Fab>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+      >
+        <div>The content of the Popover.</div>
+      </Popover>
+
+      <TableContainer className={classes.table} component={Paper}>
+        <Table aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">Habits </TableCell>
+              <TableCell align="center">Current Day</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {categories
+              ? categories.map(c => {
+                  return (
+                    <RenderHabitsByCategory
+                      category={c}
+                      habit={habit}
+                      key={c}
+                    />
+                  );
+                })
+              : null}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <pre>
         {habit
-          ? habit.map(h => {
-              return <div key={h.name}>{h.name}</div>;
+          ? habit.map((h, i) => {
+              return (
+                <div key={i}>
+                  {i + 1}: {h.habitName}, {h.category}, {h.types} ,{h.color}
+                </div>
+              );
             })
           : " "}
       </pre>
