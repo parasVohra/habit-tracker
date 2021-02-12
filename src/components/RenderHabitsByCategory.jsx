@@ -1,8 +1,16 @@
 import { Checkbox, TableCell, TableRow } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 
 const RenderHabitsByCategory = ({ category, habit }) => {
-  console.log("Render CAteg:" + category);
+  const [isCompleted, setIsCompleted] = useState(true);
+  //handle the habit status and get habits data from server
+
+  //also handle async call and
+
+  //handle habit update
+
+  //and also update the data base
+
   return (
     <>
       <TableRow align="left">{category}</TableRow>
@@ -12,14 +20,12 @@ const RenderHabitsByCategory = ({ category, habit }) => {
               <TableRow key={i}>
                 <TableCell align="center">{h.habitName}</TableCell>
                 <TableCell align="center">
-                  <Checkbox></Checkbox>
+                  <Checkbox checked={isCompleted}></Checkbox>
                 </TableCell>
               </TableRow>
-            ) : (
-              ""
-            );
+            ) : null;
           })
-        : " "}
+        : null}
     </>
   );
 };

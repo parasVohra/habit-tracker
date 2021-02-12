@@ -9,6 +9,7 @@ import { Formik, useField } from "formik";
 import React, { useContext } from "react";
 import * as yup from "yup";
 import { HabitContext } from "../context/HabitContext";
+import habitService from "../services/habitService";
 
 const MyTextField = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -50,6 +51,21 @@ const validationSchema = yup.object({
   types: yup.string().required(),
   color: yup.string().required(),
 });
+
+const saveHabit = async habit => {
+  //make a object of habit in order to send post
+
+  let habitData = {
+    category: habit.category,
+    habitName: habit.habitName,
+    types: habit.types,
+    color: habit.color,
+  };
+
+  const response = await habitService.saveHabit(habitData);
+
+  console.log(response.data.message);
+};
 
 const useStyles = makeStyles({
   root: {
@@ -147,6 +163,7 @@ const Form = () => {
         onSubmit={data => {
           console.log(data);
           setHabit([...habit, data]);
+          saveHabit(data);
         }}
         validationSchema={validationSchema}
       >

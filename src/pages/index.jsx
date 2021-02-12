@@ -9,6 +9,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Checkbox,
 } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
@@ -53,8 +54,6 @@ export function Index() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
 
-  console.dir(habit);
-
   useEffect(() => {
     let categoryArray = habitCategory(habit);
     setCategories(categoryArray);
@@ -70,8 +69,6 @@ export function Index() {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
-
-  console.dir(categories);
 
   return (
     <div>
@@ -98,7 +95,23 @@ export function Index() {
           horizontal: "center",
         }}
       >
-        <div>The content of the Popover.</div>
+        <div>
+          <div>
+            <div>
+              Habit name <Checkbox />
+            </div>
+            <div>
+              Habit name <Checkbox />
+            </div>
+
+            <div>
+              Habit name <Checkbox />
+            </div>
+            <div>
+              Habit name <Checkbox />
+            </div>
+          </div>
+        </div>
       </Popover>
 
       <TableContainer className={classes.table} component={Paper}>
