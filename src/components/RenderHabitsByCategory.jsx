@@ -1,15 +1,15 @@
 import { Checkbox, TableCell, TableRow } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const RenderHabitsByCategory = ({ category, habit }) => {
   const [isCompleted, setIsCompleted] = useState(true);
-  //handle the habit status and get habits data from server
+  //1. get habits from server
 
-  //also handle async call and
-
-  //handle habit update
-
-  //and also update the data base
+  //2 get habits status from the server
+  //3 display habits and there status
+  //4 handle change in habits and update the status locally
+  //5 update the server with the new habit status update.
+  //6 show popup to confirm that habit is updated
 
   return (
     <>

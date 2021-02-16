@@ -1,0 +1,39 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "value": "General",
+      "label": "General"
+    },
+    {
+      "id": 2,
+      "value": "Health/Nutrition",
+      "label": "Health/Nutrition"
+    },
+    {
+      "id": 3,
+      "value": "Skills",
+      "label": "Skills"
+    },
+    {
+      "id": 4,
+      "value": "Work/Study",
+      "label": "Work/Study"
+    },
+    {
+      "id": 5,
+      "value": "House Hold",
+      "label": "House Hold"
+    },
+    {
+      "id": 6,
+      "value": "Quit Habit",
+      "label": "Quit Habit"
+    },
+    {
+      "id": 7,
+      "value": "Financial",
+      "label": "Financial"
+    }
+  ]
+}
