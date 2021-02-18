@@ -35,5 +35,99 @@
       "value": "Financial",
       "label": "Financial"
     }
+  ],
+  "inputTypes": [
+    {
+      "id": 1,
+      " value": "checkbox",
+      "label": "Check Box"
+    },
+    {
+      "id": 2,
+      " value": "text",
+      "label": "Text"
+    },
+    {
+      "id": 3,
+      " value": "number",
+      "label": "Number"
+    }
+  ],
+  "habitColor": [
+    {
+      "id": 1,
+      "value": "red",
+      "label": "Red"
+    },
+    {
+      "id": 2,
+      "value": "blue",
+      "label": "Blue"
+    },
+    {
+      "id": 3,
+      "value": "black",
+      "label": "Black"
+    },
+    {
+      "id": 4,
+      "value": "green",
+      "label": "Green"
+    }
+  ],
+  "habitStatus": [
+    {
+      "id": 1,
+      "date": "12/2/2021",
+      "day": "wed",
+      "timeUpdated": "02:12",
+      "habitID": "1",
+      "isCompleted": false,
+      "inputTypeData": 10
+    }
+  ],
+  "habitList": [
+    {
+      "id": 1,
+      "category": "General",
+      "habitName": "Cold Shower",
+      "inputType": "CheckBox",
+      "habitColor": "black"
+    },
+    {
+      "category": "Health/Nutrition",
+      "habitName": "Healthy Meal",
+      "types": "checkbox",
+      "color": "black",
+      "id": 2
+    },
+    {
+      "category": "Work/Study",
+      "habitName": "Project",
+      "types": "checkbox",
+      "color": "black",
+      "id": 3
+    },
+    {
+      "category": "Quit Habit",
+      "habitName": "Youtube",
+      "types": "checkbox",
+      "color": "black",
+      "id": 4
+    },
+    {
+      "category": "Skills",
+      "habitName": "Solve Coding Problem",
+      "types": "checkbox",
+      "color": "black",
+      "id": 5
+    },
+    {
+      "category": "House Hold",
+      "habitName": "Garbage",
+      "types": "checkbox",
+      "color": "black",
+      "id": 6
+    }
   ]
 }

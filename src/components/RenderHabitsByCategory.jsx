@@ -1,9 +1,18 @@
 import { Checkbox, TableCell, TableRow } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 
+import HabitService from "../services/habitService";
+
 const RenderHabitsByCategory = ({ category, habit }) => {
-  const [isCompleted, setIsCompleted] = useState(true);
+  const [isCompleted] = useState(true);
+  //const [habits, setHabits] = useState(null);
+
   //1. get habits from server
+
+  // useEffect(() => {
+  //   HabitService.getHabits().then(h => setHabits(h.data));
+  //   HabitService.getHabitStatus().then(h => console.log(h));
+  // }, []);
 
   //2 get habits status from the server
   //3 display habits and there status

@@ -16,6 +16,7 @@ import AddIcon from "@material-ui/icons/Add";
 import { green } from "@material-ui/core/colors";
 import RenderHabitsByCategory from "../components/RenderHabitsByCategory";
 import Popover from "@material-ui/core/Popover";
+import HabitService from "../services/habitService";
 
 const useStyles = makeStyles({
   table: {
@@ -49,15 +50,23 @@ const habitCategory = habits => {
 };
 
 export function Index() {
-  const { habit } = useContext(HabitContext);
+  //const { habit } = useContext(HabitContext);
+  const [habits, setHabits] = useState(null);
   const [categories, setCategories] = useState(null);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
 
   useEffect(() => {
-    let categoryArray = habitCategory(habit);
-    setCategories(categoryArray);
-  }, [habit]);
+    async function fetchData() {
+      // You can await here
+      const { data } = await HabitService.getHabits();
+      console.log(data);
+      setHabits(data);
+      let categoryArray = habitCategory(data);
+      setCategories(categoryArray);
+    }
+    fetchData();
+  }, []);
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -128,7 +137,7 @@ export function Index() {
                   return (
                     <RenderHabitsByCategory
                       category={c}
-                      habit={habit}
+                      habit={habits}
                       key={c}
                     />
                   );
@@ -137,17 +146,6 @@ export function Index() {
           </TableBody>
         </Table>
       </TableContainer>
-      <pre>
-        {habit
-          ? habit.map((h, i) => {
-              return (
-                <div key={i}>
-                  {i + 1}: {h.habitName}, {h.category}, {h.types} ,{h.color}
-                </div>
-              );
-            })
-          : " "}
-      </pre>
     </div>
   );
 }
