@@ -60,6 +60,7 @@ export function Index() {
     async function fetchData() {
       // You can await here
       const { data } = await HabitService.getHabits();
+
       console.log(data);
       setHabits(data);
       let categoryArray = habitCategory(data);

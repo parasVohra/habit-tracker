@@ -10,12 +10,16 @@ export async function getHabits() {
   return await http.get(apiUrl + "habitList");
 }
 
-export async function getHabitStatus(data) {
+export async function getHabitStatus() {
   return await http.get(apiUrl + "habitStatus");
+}
+export async function updateHabitStatus(data) {
+  return await http.put(apiUrl + "habitStatus/" + data.habitID, data.status);
 }
 
 export default {
   saveHabit,
   getHabits,
   getHabitStatus,
+  updateHabitStatus,
 };

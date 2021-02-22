@@ -77,11 +77,51 @@
   ],
   "habitStatus": [
     {
-      "id": 1,
+      "isCompleted": true,
+      "id": 1
+    },
+    {
+      "id": 2,
       "date": "12/2/2021",
       "day": "wed",
       "timeUpdated": "02:12",
-      "habitID": "1",
+      "habitID": 2,
+      "isCompleted": false,
+      "inputTypeData": 10
+    },
+    {
+      "id": 3,
+      "date": "12/2/2021",
+      "day": "wed",
+      "timeUpdated": "02:12",
+      "habitID": 3,
+      "isCompleted": false,
+      "inputTypeData": 10
+    },
+    {
+      "id": 4,
+      "date": "12/2/2021",
+      "day": "wed",
+      "timeUpdated": "02:12",
+      "habitID": 4,
+      "isCompleted": false,
+      "inputTypeData": 10
+    },
+    {
+      "id": 5,
+      "date": "12/2/2021",
+      "day": "wed",
+      "timeUpdated": "02:12",
+      "habitID": 5,
+      "isCompleted": false,
+      "inputTypeData": 10
+    },
+    {
+      "id": 6,
+      "date": "12/2/2021",
+      "day": "wed",
+      "timeUpdated": "02:12",
+      "habitID": 6,
       "isCompleted": false,
       "inputTypeData": 10
     }
