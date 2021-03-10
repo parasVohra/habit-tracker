@@ -4,22 +4,18 @@ import http from "./httpService";
 import { apiUrl } from "../config.json";
 
 export async function saveHabit(data) {
-  return await http.post(apiUrl + "habitList", data);
+  return await http.post(apiUrl + "saveHabit", data);
 }
 export async function getHabits() {
-  return await http.get(apiUrl + "habitList");
+  return await http.get(apiUrl + "getHabits");
 }
 
-export async function getHabitStatus() {
-  return await http.get(apiUrl + "habitStatus");
-}
 export async function updateHabitStatus(data) {
-  return await http.put(apiUrl + "habitStatus/" + data.habitID, data.status);
+  return await http.post(apiUrl + "updateHabit", data);
 }
 
 export default {
   saveHabit,
   getHabits,
-  getHabitStatus,
   updateHabitStatus,
 };

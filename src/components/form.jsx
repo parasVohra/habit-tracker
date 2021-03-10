@@ -6,10 +6,11 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import { Formik, useField } from "formik";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import * as yup from "yup";
 import { HabitContext } from "../context/HabitContext";
 import habitService from "../services/habitService";
+import moment from "moment";
 
 const MyTextField = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -58,13 +59,13 @@ const saveHabit = async habit => {
   let habitData = {
     category: habit.category,
     habitName: habit.habitName,
-    types: habit.types,
+    inputType: habit.types,
     color: habit.color,
   };
 
   const response = await habitService.saveHabit(habitData);
 
-  console.log(response.data.message);
+  console.log(response);
 };
 
 const useStyles = makeStyles({
@@ -149,6 +150,11 @@ const colors = [
 const Form = () => {
   const { habit, setHabit } = useContext(HabitContext);
   const classes = useStyles();
+
+  useEffect(() => {
+    let s = moment().format("ddd, DDMMYYYY");
+    console.log(typeof s);
+  }, []);
 
   return (
     <Card className={classes.root}>

@@ -1,14 +1,16 @@
 import { Checkbox, TableCell, TableRow } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 
 import HabitService from "../services/habitService";
 
-const habitStatus = (habitId, statusArray) => {
-  const currentStatus = statusArray.filter(
-    status => status.habitID === habitId
-  );
-
-  return currentStatus;
+const checkStatus = h => {
+  let trackCount = h.habitTrack.length;
+  if (trackCount === 0) {
+    return false;
+  } else {
+    return true;
+  }
 };
 
 const RenderHabitsByCategory = ({ category, habit }) => {
@@ -16,37 +18,34 @@ const RenderHabitsByCategory = ({ category, habit }) => {
   //const [habits, setHabits] = useState(null);
 
   useEffect(() => {
-    async function getStatus() {
-      const status = await HabitService.getHabitStatus();
-      console.log(status.data);
-      setStatusArray(status.data);
-    }
-    getStatus();
+    console.log(habit.length);
   }, []);
 
-  const handleChange = (habit, e) => {
+  const handleChange = (e, habit) => {
     if (habit) {
       console.log(habit);
       console.log(e.target.checked);
-
-      const data = {
-        status: {
-          isCompleted: e.target.checked,
-        },
-        habitID: habit[0].habitID,
-      };
-
-      const res = HabitService.updateHabitStatus(data);
-
-      console.log(res);
     }
 
-    //call put request to update status of checkbox
+    //format data for update which includes date, day , isComplete, data
+    let data = {
+      id: habit._id,
+      date: moment().format("DDMMYYYY"),
+      day: moment().format("ddd"),
+      isComplete: e.target.checked,
+    };
+
+    //send post request to server to update data
+    let updateStatus = async () => {
+      let response = await HabitService.updateHabitStatus(data);
+
+      console.log(response);
+    };
+
+    updateStatus();
+    //after getting response check the status of check box and update it
   };
 
-  //1. get habits from server
-
-  //2 get habits status from the server
   //3 display habits and there status
   //4 handle change in habits and update the status locally
   //5 update the server with the new habit status update.
@@ -62,10 +61,8 @@ const RenderHabitsByCategory = ({ category, habit }) => {
                 <TableCell align="center">{h.habitName}</TableCell>
                 <TableCell align="center">
                   <Checkbox
-                    checked={habitStatus(h.id, statusArray).isCompleted}
-                    onChange={e =>
-                      handleChange(habitStatus(h.id, statusArray), e)
-                    }
+                    checked={checkStatus(h)} // call a function to to find current day in habit tracker and check isComplete status
+                    onChange={e => handleChange(e, h)}
                   ></Checkbox>
                 </TableCell>
               </TableRow>
