@@ -10,7 +10,6 @@ import React, { useContext, useEffect } from "react";
 import * as yup from "yup";
 import { HabitContext } from "../context/HabitContext";
 import habitService from "../services/habitService";
-import moment from "moment";
 
 const MyTextField = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -151,10 +150,7 @@ const Form = () => {
   const { habit, setHabit } = useContext(HabitContext);
   const classes = useStyles();
 
-  useEffect(() => {
-    let s = moment().format("ddd, DDMMYYYY");
-    console.log(typeof s);
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <Card className={classes.root}>
