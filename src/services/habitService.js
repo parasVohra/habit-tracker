@@ -14,8 +14,13 @@ export async function updateHabitStatus(data) {
   return await http.post(apiUrl + "updateHabit", data);
 }
 
+export async function updateIsTracked(data) {
+  return await http.post(apiUrl + "updateIsTracked", data);
+}
+
 export default {
   saveHabit,
   getHabits,
   updateHabitStatus,
+  updateIsTracked,
 };

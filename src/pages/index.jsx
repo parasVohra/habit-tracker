@@ -17,6 +17,7 @@ import { green } from "@material-ui/core/colors";
 import RenderHabitsByCategory from "../components/RenderHabitsByCategory";
 import Popover from "@material-ui/core/Popover";
 import HabitService from "../services/habitService";
+import { Label } from "@material-ui/icons";
 
 const useStyles = makeStyles({
   table: {
@@ -32,7 +33,7 @@ const useStyles = makeStyles({
   },
 });
 
-const habitCategory = habits => {
+const habitCategory = (habits) => {
   let category = {};
   let categoryArray = [];
   if (habits) {
@@ -69,12 +70,26 @@ export function Index() {
     fetchData();
   }, []);
 
-  const handleClick = event => {
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleChange = (event) => {
+    let data = {
+      id: event.target.id,
+      isTracked: event.target.checked,
+    };
+    console.log(event);
+    async function updateIsTracked() {
+      const res = await HabitService.updateIsTracked(data);
+      console.log(res);
+    }
+
+    updateIsTracked();
   };
 
   const open = Boolean(anchorEl);
@@ -106,21 +121,32 @@ export function Index() {
         }}
       >
         <div>
-          <div>
-            <div>
-              Habit name <Checkbox />
-            </div>
-            <div>
-              Habit name <Checkbox />
-            </div>
-
-            <div>
-              Habit name <Checkbox />
-            </div>
-            <div>
-              Habit name <Checkbox />
-            </div>
-          </div>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Habits </TableCell>
+                <TableCell align="center">Track Habit</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {habits
+                ? habits.map((h, i) => {
+                    return (
+                      <TableRow key={i}>
+                        <TableCell align="center">{h.habitName}</TableCell>
+                        <TableCell align="center">
+                          <Checkbox
+                            id={h._id}
+                            onChange={(e) => handleChange(e)}
+                            checked={h.isTracked}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+                : null}
+            </TableBody>
+          </Table>
         </div>
       </Popover>
 
@@ -134,7 +160,7 @@ export function Index() {
           </TableHead>
           <TableBody>
             {categories
-              ? categories.map(c => {
+              ? categories.map((c) => {
                   return (
                     <RenderHabitsByCategory
                       category={c}
