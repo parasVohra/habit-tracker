@@ -1,5 +1,5 @@
 import { Checkbox, TableCell, TableRow } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import moment from "moment";
 
 import HabitService from "../services/habitService";
@@ -34,6 +34,7 @@ const RenderHabitsByCategory = ({ category, habit }) => {
           habitName: h.habitName,
           habitCategory: h.category,
           habitCheck: status,
+          habitTracked: h.isTracked,
         },
       ]);
     });
@@ -43,7 +44,7 @@ const RenderHabitsByCategory = ({ category, habit }) => {
     HabitState(habitData);
 
     return () => {};
-  }, [habitData]);
+  }, [habitData, setHabitStatus]);
 
   const handleChange = (e, habit) => {
     if (habit) {
@@ -57,7 +58,6 @@ const RenderHabitsByCategory = ({ category, habit }) => {
       day: moment().format("ddd"),
       isComplete: e.target.checked,
     };
-
     //send post request to server to update data
     let updateStatus = async () => {
       let response = await HabitService.updateHabitStatus(data);
@@ -77,7 +77,7 @@ const RenderHabitsByCategory = ({ category, habit }) => {
       <TableRow align="left">{category}</TableRow>
       {habitStatus
         ? habitStatus.map((h, i) => {
-            return h.habitCategory === category ? (
+            return h.habitCategory === category && h.habitTracked === true ? (
               <TableRow key={i}>
                 <TableCell align="center">{h.habitName}</TableCell>
                 <TableCell align="center">
