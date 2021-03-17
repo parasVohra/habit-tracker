@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import moment from "moment";
 
 import HabitService from "../services/habitService";
+import Condition from "yup/lib/Condition";
 
 const RenderHabitsByCategory = ({ category, habit }) => {
   const [habitData, setHabit] = useState(habit);
@@ -35,6 +36,7 @@ const RenderHabitsByCategory = ({ category, habit }) => {
           habitCategory: h.category,
           habitCheck: status,
           habitTracked: h.isTracked,
+          habitInputType: h.inputType,
         },
       ]);
     });
@@ -44,32 +46,62 @@ const RenderHabitsByCategory = ({ category, habit }) => {
     HabitState(habitData);
 
     return () => {};
-  }, [habitData, setHabitStatus]);
+  }, [habitData]);
 
   const handleChange = (e, habit) => {
     if (habit) {
       console.log(habit);
       console.log(e.target.checked);
     }
-    //format data for update which includes date, day , isComplete, data
-    let data = {
-      id: habit.habitId,
-      date: moment().format("DDMMYYYY"),
-      day: moment().format("ddd"),
-      isComplete: e.target.checked,
-    };
-    //send post request to server to update data
-    let updateStatus = async () => {
-      let response = await HabitService.updateHabitStatus(data);
-      if (response.status === 200) {
-        const { data } = await HabitService.getHabits();
 
-        console.log(data);
-        setHabit(data);
-        setHabitStatus([]);
+    if (habit.habitInputType !== "checkbox" && e.target.checked === true) {
+      let popupVal = prompt(`Enter the  value for ${habit.habitName}`, "");
+
+      if (popupVal === null) {
+        alert("Please enter the value ");
+      } else {
+        // save the changes to data base
+        let data = {
+          id: habit.habitId,
+          date: moment().format("DDMMYYYY"),
+          day: moment().format("ddd"),
+          isComplete: e.target.checked,
+          inputData: popupVal,
+        };
+        let updateStatus = async () => {
+          let response = await HabitService.updateHabitStatus(data);
+          if (response.status === 200) {
+            const { data } = await HabitService.getHabits();
+
+            console.log(data);
+            setHabit(data);
+            setHabitStatus([]);
+          }
+        };
+        updateStatus();
       }
-    };
-    updateStatus();
+    } else {
+      //format data for update which includes date, day , isComplete, data
+      let data = {
+        id: habit.habitId,
+        date: moment().format("DDMMYYYY"),
+        day: moment().format("ddd"),
+        isComplete: e.target.checked,
+        inputData: null,
+      };
+      //send post request to server to update data
+      let updateStatus = async () => {
+        let response = await HabitService.updateHabitStatus(data);
+        if (response.status === 200) {
+          const { data } = await HabitService.getHabits();
+
+          console.log(data);
+          setHabit(data);
+          setHabitStatus([]);
+        }
+      };
+      updateStatus();
+    }
   };
 
   return (

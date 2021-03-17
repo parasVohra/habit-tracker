@@ -10,6 +10,7 @@ import {
   TableRow,
   Paper,
   Checkbox,
+  Button,
 } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
@@ -17,6 +18,7 @@ import { green } from "@material-ui/core/colors";
 import RenderHabitsByCategory from "../components/RenderHabitsByCategory";
 import Popover from "@material-ui/core/Popover";
 import HabitService from "../services/habitService";
+import moment from "moment";
 
 export function Index() {
   //const { habit } = useContext(HabitContext);
@@ -24,6 +26,7 @@ export function Index() {
   const [categories, setCategories] = useState(null);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [currentDate, setCurrentDate] = useState(moment().format("DDMMYYYY"));
 
   // this fetch function is need to extracted and need to be reused
   useEffect(() => {
@@ -76,6 +79,7 @@ export function Index() {
   return (
     <div>
       <h2>Home</h2>
+      <div>{currentDate}</div>
       <Fab
         aria-describedby={id}
         size="small"
@@ -127,6 +131,13 @@ export function Index() {
           </Table>
         </div>
       </Popover>
+
+      <Button variant="contained" color="primary">
+        Prev
+      </Button>
+      <Button variant="contained" color="primary">
+        Next
+      </Button>
 
       <TableContainer className={classes.table} component={Paper}>
         <Table aria-label="simple table">
