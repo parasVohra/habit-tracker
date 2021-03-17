@@ -5,48 +5,57 @@ import moment from "moment";
 import HabitService from "../services/habitService";
 import Condition from "yup/lib/Condition";
 
-const RenderHabitsByCategory = ({ category, habit }) => {
+const RenderHabitsByCategory = ({ category, habit, date }) => {
   const [habitData, setHabit] = useState(habit);
+  const [currentDate, setCurrentDate] = useState(null);
+  const [status, setStatus] = useState(false);
 
   const [habitStatus, setHabitStatus] = useState([]);
 
-  const HabitState = (habit) => {
-    habit.forEach((h) => {
-      let status = false;
-
-      let trackCount = h.habitTrack.length;
-
-      if (trackCount === 0) {
-        status = false;
-      } else {
-        h.habitTrack.forEach((val) => {
-          if (val.date === moment().format("DDMMYYYY")) {
-            status = val.isComplete;
-          } else {
-            status = false;
-          }
-        });
-      }
-
-      setHabitStatus((oldHabit) => [
-        ...oldHabit,
-        {
-          habitId: h._id,
-          habitName: h.habitName,
-          habitCategory: h.category,
-          habitCheck: status,
-          habitTracked: h.isTracked,
-          habitInputType: h.inputType,
-        },
-      ]);
-    });
-  };
-
   useEffect(() => {
+    setCurrentDate(date);
+    const HabitState = (habit) => {
+      habit.forEach((h) => {
+        //let status = false;
+
+        let trackCount = h.habitTrack.length;
+
+        if (trackCount === 0) {
+          setStatus(false);
+        } else {
+          h.habitTrack.forEach((val) => {
+            let curDate = moment(currentDate).format("DDMMYYYY");
+
+            if (val.date === curDate) {
+              console.log(curDate + "  :  " + val.date);
+              setStatus(val.isComplete);
+            }
+          });
+        }
+
+        setHabitStatus((oldHabit) => [
+          ...oldHabit,
+          {
+            habitId: h._id,
+            habitName: h.habitName,
+            habitCategory: h.category,
+            habitCheck: status,
+            habitTracked: h.isTracked,
+            habitInputType: h.inputType,
+          },
+        ]);
+      });
+    };
+
     HabitState(habitData);
 
-    return () => {};
-  }, [habitData]);
+    return () => {
+      setHabitStatus([]);
+      setStatus(false);
+    };
+  }, [habitData, currentDate, date, status]);
+
+  console.log(habitStatus);
 
   const handleChange = (e, habit) => {
     if (habit) {

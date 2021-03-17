@@ -26,11 +26,18 @@ export function Index() {
   const [categories, setCategories] = useState(null);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [currentDate, setCurrentDate] = useState(moment().format("DDMMYYYY"));
+  const [todayDate] = useState(moment()._d);
+  const [currentDate, setCurrentDate] = useState(moment()._d);
+  const [isNextDisable, setNextDisable] = useState(false);
 
   // this fetch function is need to extracted and need to be reused
   useEffect(() => {
     //fetch habits from server
+    if (
+      moment(currentDate).format("DDMMYYYY") === moment().format("DDMMYYYY")
+    ) {
+      setNextDisable(true);
+    }
     async function fetchData() {
       // You can await here
       const { data } = await HabitService.getHabits();
@@ -41,7 +48,8 @@ export function Index() {
       setCategories(categoryArray);
     }
     fetchData();
-  }, [habits]);
+    console.log(currentDate);
+  }, [currentDate]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -49,6 +57,19 @@ export function Index() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const showPrevDate = () => {
+    // change the current date to previous date
+    let prevDate = moment(currentDate).add(-1, "days");
+    setNextDisable(false);
+    setCurrentDate(prevDate._d);
+  };
+
+  const showNextDate = () => {
+    // change the current date to next date
+    let nextDate = moment(currentDate).add(1, "days");
+    setCurrentDate(nextDate._d);
   };
 
   const handleChange = (event) => {
@@ -79,7 +100,7 @@ export function Index() {
   return (
     <div>
       <h2>Home</h2>
-      <div>{currentDate}</div>
+      <div>{moment(currentDate).format("DDMMYYYY")}</div>
       <Fab
         aria-describedby={id}
         size="small"
@@ -132,10 +153,15 @@ export function Index() {
         </div>
       </Popover>
 
-      <Button variant="contained" color="primary">
+      <Button variant="contained" color="primary" onClick={showPrevDate}>
         Prev
       </Button>
-      <Button variant="contained" color="primary">
+      <Button
+        disabled={isNextDisable}
+        variant="contained"
+        color="primary"
+        onClick={showNextDate}
+      >
         Next
       </Button>
 
@@ -155,6 +181,7 @@ export function Index() {
                       category={c}
                       habit={habits}
                       key={c}
+                      date={currentDate}
                     />
                   );
                 })
