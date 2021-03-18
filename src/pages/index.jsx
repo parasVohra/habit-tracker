@@ -11,6 +11,7 @@ import {
   Paper,
   Checkbox,
   Button,
+  Grid,
 } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
@@ -98,17 +99,11 @@ export function Index() {
   const id = open ? "simple-popover" : undefined;
 
   return (
-    <div>
-      <h2>Home</h2>
-      <div>{moment(currentDate).format("DDMMYYYY")}</div>
-      <Fab
-        aria-describedby={id}
-        size="small"
-        color="primary"
-        onClick={handleClick}
-      >
-        <AddIcon />
-      </Fab>
+    <React.Fragment>
+      <div style={{ margin: "20px" }}>
+        {moment(currentDate).format("DDMMYYYY")}
+      </div>
+
       <Popover
         id={id}
         open={open}
@@ -153,17 +148,70 @@ export function Index() {
         </div>
       </Popover>
 
-      <Button variant="contained" color="primary" onClick={showPrevDate}>
-        Prev
-      </Button>
-      <Button
-        disabled={isNextDisable}
-        variant="contained"
-        color="primary"
-        onClick={showNextDate}
-      >
-        Next
-      </Button>
+      <Grid container className={classes.root} spacing={2}>
+        <Grid item xs={12}>
+          <Grid container justify="center">
+            <Grid item>
+              <Button
+                style={{ margin: "20px" }}
+                variant="contained"
+                color="primary"
+                onClick={showPrevDate}
+              >
+                Prev
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                style={{ margin: "20px" }}
+                disabled={isNextDisable}
+                variant="contained"
+                color="primary"
+                onClick={showNextDate}
+              >
+                Next
+              </Button>
+            </Grid>
+            <Grid xs={3} item></Grid>
+            <Grid item justify="flex-end">
+              <Fab
+                aria-describedby={id}
+                size="small"
+                color="primary"
+                onClick={handleClick}
+              >
+                <AddIcon />
+              </Fab>
+            </Grid>
+          </Grid>
+          <Grid container justify="center">
+            <TableContainer className={classes.table} component={Paper}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">Habits </TableCell>
+                    <TableCell align="center">Current Day</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {categories
+                    ? categories.map((c) => {
+                        return (
+                          <RenderHabitsByCategory
+                            category={c}
+                            habit={habits}
+                            key={c}
+                            date={currentDate}
+                          />
+                        );
+                      })
+                    : null}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
+        </Grid>
+      </Grid>
 
       <TableContainer className={classes.table} component={Paper}>
         <Table aria-label="simple table">
@@ -189,7 +237,7 @@ export function Index() {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </React.Fragment>
   );
 }
 
