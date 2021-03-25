@@ -81,6 +81,7 @@ export function Index() {
       if (res.status === 200 && res.data.nModified === 1) {
         // here i want to fetch the updated habit data from the server
         // and also i want want to render the habits
+        console.log(res);
       }
 
       console.log(res);
@@ -180,7 +181,7 @@ export function Index() {
             </Grid>
           </Grid>
           <Grid container justify="center">
-            <RenderHabits date={currentDate} />
+            <RenderHabits habit={habits} date={currentDate} />
           </Grid>
         </Grid>
       </Grid>

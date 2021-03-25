@@ -16,20 +16,25 @@ import React, { useEffect, useState } from "react";
 import HabitService from "../services/habitService";
 import RenderHabitsByCategory from "../components/RenderHabitsByCategory";
 
-const RenderHabits = ({ date }) => {
-  const [habits, setHabits] = useState([]);
+const RenderHabits = ({ habit, date }) => {
+  const [habits, setHabits] = useState(habit);
   const [habitSt, setHabitSt] = useState(null);
   const [categories, setCategory] = useState([]);
   const classes = useStyles();
+  const [currentDate, setCurrentDate] = useState(date);
 
-  async function getHabits() {
-    const { data } = await HabitService.getHabits();
-    setHabits(data);
-  }
+  // async function getHabits() {
+  //   const { data } = await HabitService.getHabits();
+  //   setHabits(data);
+  // }
+
+  // useEffect(() => {
+  //   getHabits();
+  // }, [currentDate]);
 
   useEffect(() => {
-    getHabits();
-  }, []);
+    setCurrentDate(date);
+  }, [date]);
 
   useEffect(() => {
     const [habit, category] = HabitsByCategory(habits);
@@ -40,9 +45,6 @@ const RenderHabits = ({ date }) => {
 
     console.log("hi");
   }, [habits]);
-
-  console.log(habitSt);
-  console.log(categories);
 
   return (
     <div className={classes.root}>
@@ -66,7 +68,7 @@ const RenderHabits = ({ date }) => {
                           <TableCell></TableCell>
                         </TableRow>
                         <RenderHabitsByCategory
-                          date={date}
+                          date={currentDate}
                           category={c}
                           habit={habitSt}
                         />
@@ -76,12 +78,6 @@ const RenderHabits = ({ date }) => {
                 ) : (
                   <TableCell>ss</TableCell>
                 )}
-                <TableRow align="left">
-                  <TableCell>clod Shower</TableCell>
-                  <TableCell align="right">
-                    <Checkbox></Checkbox>
-                  </TableCell>
-                </TableRow>
               </>
             ) : (
               <TableCell>ss</TableCell>
@@ -89,7 +85,6 @@ const RenderHabits = ({ date }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <pre>{JSON.stringify(habitSt, null, 2)}</pre>
     </div>
   );
 };
