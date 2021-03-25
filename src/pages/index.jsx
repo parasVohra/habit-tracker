@@ -20,6 +20,7 @@ import RenderHabitsByCategory from "../components/RenderHabitsByCategory";
 import Popover from "@material-ui/core/Popover";
 import HabitService from "../services/habitService";
 import moment from "moment";
+import RenderHabits from "../components/RenderHabits";
 
 export function Index() {
   //const { habit } = useContext(HabitContext);
@@ -27,7 +28,6 @@ export function Index() {
   const [categories, setCategories] = useState(null);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [todayDate] = useState(moment()._d);
   const [currentDate, setCurrentDate] = useState(moment()._d);
   const [isNextDisable, setNextDisable] = useState(false);
 
@@ -38,6 +38,8 @@ export function Index() {
       moment(currentDate).format("DDMMYYYY") === moment().format("DDMMYYYY")
     ) {
       setNextDisable(true);
+    } else {
+      setNextDisable(false);
     }
     async function fetchData() {
       // You can await here
@@ -60,17 +62,10 @@ export function Index() {
     setAnchorEl(null);
   };
 
-  const showPrevDate = () => {
-    // change the current date to previous date
-    let prevDate = moment(currentDate).add(-1, "days");
-    setNextDisable(false);
-    setCurrentDate(prevDate._d);
-  };
-
-  const showNextDate = () => {
-    // change the current date to next date
-    let nextDate = moment(currentDate).add(1, "days");
-    setCurrentDate(nextDate._d);
+  const changeDate = (n) => {
+    // change the current date to prev or next date
+    let changedDate = moment(currentDate).add(n, "days");
+    setCurrentDate(changedDate._d);
   };
 
   const handleChange = (event) => {
@@ -156,7 +151,7 @@ export function Index() {
                 style={{ margin: "20px" }}
                 variant="contained"
                 color="primary"
-                onClick={showPrevDate}
+                onClick={() => changeDate(-1)}
               >
                 Prev
               </Button>
@@ -167,7 +162,7 @@ export function Index() {
                 disabled={isNextDisable}
                 variant="contained"
                 color="primary"
-                onClick={showNextDate}
+                onClick={() => changeDate(1)}
               >
                 Next
               </Button>
@@ -185,58 +180,10 @@ export function Index() {
             </Grid>
           </Grid>
           <Grid container justify="center">
-            <TableContainer className={classes.table} component={Paper}>
-              <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center">Habits </TableCell>
-                    <TableCell align="center">Current Day</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {categories
-                    ? categories.map((c) => {
-                        return (
-                          <RenderHabitsByCategory
-                            category={c}
-                            habit={habits}
-                            key={c}
-                            date={currentDate}
-                          />
-                        );
-                      })
-                    : null}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <RenderHabits date={currentDate} />
           </Grid>
         </Grid>
       </Grid>
-
-      <TableContainer className={classes.table} component={Paper}>
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">Habits </TableCell>
-              <TableCell align="center">Current Day</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {categories
-              ? categories.map((c) => {
-                  return (
-                    <RenderHabitsByCategory
-                      category={c}
-                      habit={habits}
-                      key={c}
-                      date={currentDate}
-                    />
-                  );
-                })
-              : null}
-          </TableBody>
-        </Table>
-      </TableContainer>
     </React.Fragment>
   );
 }
