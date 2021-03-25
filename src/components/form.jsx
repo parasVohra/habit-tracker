@@ -6,9 +6,8 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import { Formik, useField } from "formik";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import * as yup from "yup";
-import { HabitContext } from "../context/HabitContext";
 import habitService from "../services/habitService";
 
 const MyTextField = ({ label, ...props }) => {
@@ -36,7 +35,7 @@ const MySelectField = ({ label, options, ...props }) => {
       helperText={errorText}
       error={!!errorText}
     >
-      {options.map(option => (
+      {options.map((option) => (
         <MenuItem key={option.value} value={option.value}>
           {option.label}
         </MenuItem>
@@ -52,7 +51,7 @@ const validationSchema = yup.object({
   color: yup.string().required(),
 });
 
-const saveHabit = async habit => {
+const saveHabit = async (habit) => {
   //make a object of habit in order to send post
 
   let habitData = {
@@ -147,7 +146,7 @@ const colors = [
 ];
 
 const Form = () => {
-  const { habit, setHabit } = useContext(HabitContext);
+  const [habit, setHabit] = useState(null);
   const classes = useStyles();
 
   useEffect(() => {}, []);
@@ -162,7 +161,7 @@ const Form = () => {
           types: "checkbox",
           color: "black",
         }}
-        onSubmit={data => {
+        onSubmit={(data) => {
           console.log(data);
           setHabit([...habit, data]);
           saveHabit(data);

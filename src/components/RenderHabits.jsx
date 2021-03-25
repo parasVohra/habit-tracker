@@ -34,7 +34,8 @@ const RenderHabits = ({ habit, date }) => {
 
   useEffect(() => {
     setCurrentDate(date);
-  }, [date]);
+    setHabits(habit);
+  }, [date, habit]);
 
   useEffect(() => {
     const [habit, category] = HabitsByCategory(habits);
@@ -105,13 +106,15 @@ function HabitsByCategory(habits) {
   let habitRestructure = {};
   let categories = [];
   // if category is present in object
-  for (let h of habits) {
-    if (!habitRestructure.hasOwnProperty(h.category)) {
-      categories.push(h.category);
-      habitRestructure[h.category] = [];
-      habitRestructure[h.category].push(h);
-    } else {
-      habitRestructure[h.category].push(h);
+  if (habits) {
+    for (let h of habits) {
+      if (!habitRestructure.hasOwnProperty(h.category)) {
+        categories.push(h.category);
+        habitRestructure[h.category] = [];
+        habitRestructure[h.category].push(h);
+      } else {
+        habitRestructure[h.category].push(h);
+      }
     }
   }
   return [habitRestructure, categories];

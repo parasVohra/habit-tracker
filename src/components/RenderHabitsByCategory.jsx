@@ -1,13 +1,24 @@
 import { Checkbox, TableCell, TableRow } from "@material-ui/core";
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  useContext,
+} from "react";
 import moment from "moment";
 import HabitService from "../services/habitService";
+import { Context } from "../context/HabitContext";
 
 const RenderHabitsByCategory = ({ category, habit, date }) => {
   const [habitData] = useState(habit);
   const [cat] = useState(category);
   const [currentDate, setCurrentDate] = useState(date);
   const check = useRef(false);
+
+  const [state, dispatch] = useContext(Context);
+
+  console.log(state);
 
   useEffect(() => {
     setCurrentDate(date);
