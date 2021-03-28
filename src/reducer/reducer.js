@@ -23,6 +23,7 @@ const Reducer = (state, action) => {
     case "SET_CURRENT_DATE":
       return {
         ...state,
+        currentDate: payload,
       };
 
     default:

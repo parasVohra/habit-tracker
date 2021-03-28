@@ -50,8 +50,7 @@ const RenderHabits = ({ habit, date }) => {
                           <TableCell>{c}</TableCell>
                           <TableCell></TableCell>
                         </TableRow>
-                        {/* <RenderHabitsByCategory
-                        /> */}
+                        <RenderHabitsByCategory category={c} />
                       </>
                     );
                   })

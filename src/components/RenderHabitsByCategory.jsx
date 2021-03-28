@@ -10,17 +10,20 @@ import moment from "moment";
 import HabitService from "../services/habitService";
 import { Context } from "../Store/habitStore";
 
-const RenderHabitsByCategory = ({ category, habit, date }) => {
-  const [habitData] = useState(habit);
-  const [cat] = useState(category);
-  const [currentDate, setCurrentDate] = useState(date);
-  const check = useRef(false);
-
+const RenderHabitsByCategory = ({ category }) => {
   const [state, dispatch] = useContext(Context);
+  const [habitData, setHabitData] = useState(null);
+  const [cat] = useState(category);
+  const [currentDate, setCurrentDate] = useState(null);
 
   useEffect(() => {
-    setCurrentDate(date);
-  }, [date]);
+    setHabitData(state.habitRestructure);
+    setCurrentDate(state.currentDate);
+  }, [state.habitRestructure, state.category, state.currentDate]);
+
+  console.log(habitData);
+
+  const check = useRef(false);
 
   const getCurrentStatus = (currentDate, habit) => {
     //console.log(habit);
@@ -78,23 +81,27 @@ const RenderHabitsByCategory = ({ category, habit, date }) => {
 
   return (
     <>
-      {habitData[cat].map((h) => {
-        return (
-          <TableRow key={h._id}>
-            <TableCell key={h._id} align="center">
-              {h.habitName}
-            </TableCell>
-            <TableCell align="center">
-              <Checkbox
-                checked={getCurrentStatus(currentDate, h.habitTrack)}
-                id={h._id}
-                onChange={(e) => handelChange(e, h)}
-                ref={check}
-              ></Checkbox>
-            </TableCell>
-          </TableRow>
-        );
-      })}
+      {habitData ? (
+        habitData[cat].map((h) => {
+          return (
+            <TableRow key={h._id}>
+              <TableCell key={h._id} align="center">
+                {h.habitName}
+              </TableCell>
+              <TableCell align="center">
+                <Checkbox
+                  checked={getCurrentStatus(currentDate, h.habitTrack)}
+                  id={h._id}
+                  onChange={(e) => handelChange(e, h)}
+                  ref={check}
+                ></Checkbox>
+              </TableCell>
+            </TableRow>
+          );
+        })
+      ) : (
+        <></>
+      )}
     </>
   );
 };

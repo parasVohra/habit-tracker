@@ -11,14 +11,16 @@ import TrackHabit from "../components/TrackHabit";
 export function Home() {
   const [state, dispatch] = useContext(Context);
   const classes = useStyles();
-  const [currentDate, setCurrentDate] = useState(moment()._d);
   const [isNextDisable, setNextDisable] = useState(false);
+
+  console.log(state);
 
   // this fetch function is need to extracted and need to be reused
   useEffect(() => {
     //fetch habits from server
     if (
-      moment(currentDate).format("DDMMYYYY") === moment().format("DDMMYYYY")
+      moment(state.currentDate).format("DDMMYYYY") ===
+      moment().format("DDMMYYYY")
     ) {
       setNextDisable(true);
     } else {
@@ -30,19 +32,18 @@ export function Home() {
       dispatch({ type: "SET_HABIT", payload: data });
     }
     fetchData();
-    console.log(currentDate);
-  }, [currentDate, dispatch]);
+  }, [state.currentDate, dispatch]);
 
   const changeDate = (n) => {
     // change the current date to prev or next date
-    let changedDate = moment(currentDate).add(n, "days");
-    setCurrentDate(changedDate._d);
+    let changedDate = moment(state.currentDate).add(n, "days");
+    dispatch({ type: "SET_CURRENT_DATE", payload: changedDate._d });
   };
 
   return (
     <React.Fragment>
       <div style={{ margin: "20px" }}>
-        {moment(currentDate).format("DDMMYYYY")}
+        {moment(state.currentDate).format("DDMMYYYY")}
       </div>
 
       <Grid container className={classes.root} spacing={2}>
@@ -75,7 +76,7 @@ export function Home() {
             </Grid>
           </Grid>
           <Grid container justify="center">
-            <RenderHabits habit={state.habits} date={currentDate} />
+            <RenderHabits />
           </Grid>
         </Grid>
       </Grid>
