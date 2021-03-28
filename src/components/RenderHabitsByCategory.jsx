@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import moment from "moment";
 import HabitService from "../services/habitService";
-import { Context } from "../context/HabitContext";
+import { Context } from "../Store/habitStore";
 
 const RenderHabitsByCategory = ({ category, habit, date }) => {
   const [habitData] = useState(habit);
@@ -18,23 +18,16 @@ const RenderHabitsByCategory = ({ category, habit, date }) => {
 
   const [state, dispatch] = useContext(Context);
 
-  console.log(state);
-
   useEffect(() => {
     setCurrentDate(date);
   }, [date]);
 
   const getCurrentStatus = (currentDate, habit) => {
-    console.log(habit);
+    //console.log(habit);
     let fDate = moment(currentDate).format("DDMMYYYY");
-    console.log(fDate);
     let status = habit.filter((h) => h.date === fDate);
-    // .map((c) => {
-    //   console.log("map" + c);
-    //   return c.isComplete;
-    // });
 
-    console.log(status);
+    //console.log(status);
 
     if (status.length === 0) {
       return false;

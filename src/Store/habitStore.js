@@ -3,9 +3,10 @@ import moment from "moment";
 import Reducer from "../reducer/reducer";
 
 const initialState = {
-  habits: [],
+  habits: null,
   category: [],
   habitRestructure: [],
+  habitStatus: [],
   error: null,
   currentDate: moment()._d,
 };
