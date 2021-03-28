@@ -10,42 +10,24 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-//import moment from "moment";
+import React, { useContext, useEffect, useState } from "react";
 
-import HabitService from "../services/habitService";
 import RenderHabitsByCategory from "../components/RenderHabitsByCategory";
+import { Context } from "../Store/habitStore";
 
 const RenderHabits = ({ habit, date }) => {
-  const [habits, setHabits] = useState(habit);
-  const [habitSt, setHabitSt] = useState(null);
-  const [categories, setCategory] = useState([]);
+  const [state, dispatch] = useContext(Context);
   const classes = useStyles();
-  const [currentDate, setCurrentDate] = useState(date);
-
-  // async function getHabits() {
-  //   const { data } = await HabitService.getHabits();
-  //   setHabits(data);
-  // }
-
-  // useEffect(() => {
-  //   getHabits();
-  // }, [currentDate]);
 
   useEffect(() => {
-    setCurrentDate(date);
-    setHabits(habit);
-  }, [date, habit]);
+    const [habit, category] = HabitsByCategory(state.habits);
 
-  useEffect(() => {
-    const [habit, category] = HabitsByCategory(habits);
+    dispatch({ type: "SET_CATEGORY", payload: category });
 
-    setCategory(category);
-
-    setHabitSt(habit);
+    dispatch({ type: "SET_HABIT_RESTRUCTURE", payload: habit });
 
     console.log("hi");
-  }, [habits]);
+  }, [dispatch, state.habits]);
 
   return (
     <div className={classes.root}>
@@ -58,21 +40,18 @@ const RenderHabits = ({ habit, date }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {habitSt ? (
+            {state.habitRestructure ? (
               <>
-                {categories ? (
-                  categories.map((c, index) => {
+                {state.category ? (
+                  state.category.map((c, index) => {
                     return (
                       <>
-                        <TableRow key={index}>
+                        <TableRow key={c}>
                           <TableCell>{c}</TableCell>
                           <TableCell></TableCell>
                         </TableRow>
-                        <RenderHabitsByCategory
-                          date={currentDate}
-                          category={c}
-                          habit={habitSt}
-                        />
+                        {/* <RenderHabitsByCategory
+                        /> */}
                       </>
                     );
                   })
