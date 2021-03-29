@@ -6,7 +6,7 @@ const initialState = {
   habits: null,
   category: [],
   habitRestructure: [],
-  habitStatus: [],
+  habitStatus: {},
   error: null,
   currentDate: moment()._d,
 };

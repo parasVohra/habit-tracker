@@ -15,29 +15,56 @@ const RenderHabitsByCategory = ({ category }) => {
   const [habitData, setHabitData] = useState(null);
   const [cat] = useState(category);
   const [currentDate, setCurrentDate] = useState(null);
+  const [habitStatus, setHabitStatus] = useState(null);
 
   useEffect(() => {
     setHabitData(state.habitRestructure);
     setCurrentDate(state.currentDate);
-  }, [state.habitRestructure, state.category, state.currentDate]);
+    setHabitStatus(state.habitStatus);
+  }, [
+    state.habitRestructure,
+    state.category,
+    state.currentDate,
+    state.habitStatus,
+  ]);
+
+  useEffect(() => {
+    const getCurrentStatus = (currentDate, habit) => {
+      console.log(cat);
+      habit
+        ? habit[cat].forEach((h) => {
+            let fDate = moment(currentDate).format("DDMMYYYY");
+            console.log(fDate);
+            let status = h.habitTrack.filter((d) => d.date === fDate);
+
+            console.log(status);
+
+            if (status.length === 0) {
+              let data = {};
+              console.log(status);
+              let name = h.habitName;
+              let complete = false;
+              data[name] = complete;
+              dispatch({ type: "SET_HABIT_STATUS", payload: data });
+            } else if (status.length > 0) {
+              console.log(status);
+              let name = h.habitName;
+              let complete = status[0].isComplete;
+              let data = {};
+              data[name] = complete;
+              console.log(data);
+              dispatch({ type: "SET_HABIT_STATUS", payload: data });
+            }
+          })
+        : console.log(habit);
+    };
+    getCurrentStatus(currentDate, habitData);
+  }, [currentDate, habitData, cat, dispatch]);
 
   console.log(habitData);
+  console.log(state);
 
-  const check = useRef(false);
-
-  const getCurrentStatus = (currentDate, habit) => {
-    //console.log(habit);
-    let fDate = moment(currentDate).format("DDMMYYYY");
-    let status = habit.filter((h) => h.date === fDate);
-
-    //console.log(status);
-
-    if (status.length === 0) {
-      return false;
-    } else {
-      return status;
-    }
-  };
+  const check = useRef();
 
   const updateStatus = async (data) => {
     let response = await HabitService.updateHabitStatus(data);
@@ -61,6 +88,12 @@ const RenderHabitsByCategory = ({ category }) => {
       inputData: null,
     };
 
+    let name = habit.habitName;
+
+    let updateData = {};
+    updateData[name] = e.target.checked;
+    dispatch({ type: "SET_HABIT_STATUS", payload: updateData });
+
     if (habit.inputType !== "checkbox" && e.target.checked === true) {
       let popupVal = prompt(`Enter the  value for ${habit.habitName}`, "");
 
@@ -69,7 +102,6 @@ const RenderHabitsByCategory = ({ category }) => {
       } else {
         // save the changes to data base
         data.inputData = popupVal;
-
         updateStatus(data);
       }
     } else {
@@ -90,7 +122,7 @@ const RenderHabitsByCategory = ({ category }) => {
               </TableCell>
               <TableCell align="center">
                 <Checkbox
-                  checked={getCurrentStatus(currentDate, h.habitTrack)}
+                  checked={habitStatus[h.habitName]}
                   id={h._id}
                   onChange={(e) => handelChange(e, h)}
                   ref={check}

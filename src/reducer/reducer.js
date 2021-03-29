@@ -20,6 +20,11 @@ const Reducer = (state, action) => {
       return {
         ...state,
       };
+    case "SET_HABIT_STATUS":
+      return {
+        ...state,
+        habitStatus: Object.assign({}, state.habitStatus, payload),
+      };
     case "SET_CURRENT_DATE":
       return {
         ...state,
