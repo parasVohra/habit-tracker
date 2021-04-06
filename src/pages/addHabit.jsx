@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import RenderHabits from "../components/RenderHabits";
-import { Context } from "../Store/habitStore";
 
 export function AddHabit() {
   return (

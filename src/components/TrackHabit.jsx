@@ -9,7 +9,7 @@ import {
   TableHead,
   Checkbox,
 } from "@material-ui/core";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 
@@ -17,7 +17,7 @@ function TrackHabit() {
   const [state, dispatch] = useContext(Context);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  console.log(state.habits);
+  const [habitTracked, setHabitTracked] = useState(null);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -31,7 +31,6 @@ function TrackHabit() {
       id: event.target.id,
       isTracked: event.target.checked,
     };
-    console.log(event);
 
     // update is track is also need to extracted
     async function updateIsTracked() {
@@ -39,10 +38,7 @@ function TrackHabit() {
       if (res.status === 200 && res.data.nModified === 1) {
         // here i want to fetch the updated habit data from the server
         // and also i want want to render the habits
-        console.log(res);
       }
-
-      console.log(res);
     }
 
     updateIsTracked();

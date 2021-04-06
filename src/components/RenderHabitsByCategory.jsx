@@ -1,11 +1,5 @@
 import { Checkbox, TableCell, TableRow } from "@material-ui/core";
-import React, {
-  useCallback,
-  useEffect,
-  useState,
-  useRef,
-  useContext,
-} from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import moment from "moment";
 import HabitService from "../services/habitService";
 import { Context } from "../Store/habitStore";
@@ -30,29 +24,23 @@ const RenderHabitsByCategory = ({ category }) => {
 
   useEffect(() => {
     const getCurrentStatus = (currentDate, habit) => {
-      console.log(cat);
       habit
         ? habit[cat].forEach((h) => {
             let fDate = moment(currentDate).format("DDMMYYYY");
-            console.log(fDate);
-            let status = h.habitTrack.filter((d) => d.date === fDate);
 
-            console.log(status);
+            let status = h.habitTrack.filter((d) => d.date === fDate);
 
             if (status.length === 0) {
               let data = {};
-              console.log(status);
               let name = h.habitName;
               let complete = false;
               data[name] = complete;
               dispatch({ type: "SET_HABIT_STATUS", payload: data });
             } else if (status.length > 0) {
-              console.log(status);
               let name = h.habitName;
               let complete = status[0].isComplete;
               let data = {};
               data[name] = complete;
-              console.log(data);
               dispatch({ type: "SET_HABIT_STATUS", payload: data });
             }
           })
@@ -60,9 +48,6 @@ const RenderHabitsByCategory = ({ category }) => {
     };
     getCurrentStatus(currentDate, habitData);
   }, [currentDate, habitData, cat, dispatch]);
-
-  console.log(habitData);
-  console.log(state);
 
   const check = useRef();
 
@@ -76,10 +61,6 @@ const RenderHabitsByCategory = ({ category }) => {
   };
 
   const handelChange = (e, habit) => {
-    if (habit) {
-      console.log(habit);
-      console.log(e.target.checked);
-    }
     let data = {
       id: habit._id,
       date: moment(currentDate).format("DDMMYYYY"),
@@ -122,7 +103,7 @@ const RenderHabitsByCategory = ({ category }) => {
               </TableCell>
               <TableCell align="center">
                 <Checkbox
-                  checked={habitStatus[h.habitName]}
+                  checked={habitStatus[h.habitName] || false}
                   id={h._id}
                   onChange={(e) => handelChange(e, h)}
                   ref={check}

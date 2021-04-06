@@ -1,6 +1,4 @@
 import {
-  Checkbox,
-  Grid,
   makeStyles,
   Paper,
   Table,
@@ -10,7 +8,7 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 
 import RenderHabitsByCategory from "../components/RenderHabitsByCategory";
 import { Context } from "../Store/habitStore";
