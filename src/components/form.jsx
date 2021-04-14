@@ -60,6 +60,7 @@ const saveHabit = async (habit) => {
     inputType: habit.types,
     color: habit.color,
   };
+  console.log("in save habit");
 
   const response = await habitService.saveHabit(habitData);
 
@@ -163,7 +164,7 @@ const Form = () => {
         }}
         onSubmit={(data) => {
           console.log(data);
-          setHabit([...habit, data]);
+          setHabit(data);
           saveHabit(data);
         }}
         validationSchema={validationSchema}
