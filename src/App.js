@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import Store from "./Store/habitStore";
 import { Home } from "./pages";
 import { AddHabit } from "./pages/addHabit";
@@ -13,9 +13,10 @@ function App() {
         <NavBar />
         <main className="container-sm">
           <Switch>
-            <Route path="/" exact component={Home} />
-            <Route path="/addHabit" component={AddHabit} />
+            <Route path="/home" component={Home} />
+            <Route path="/addHabit" exact component={AddHabit} />
             <Route path="/form" component={Form} />
+            <Redirect from="/" exact to="/home" />
           </Switch>
         </main>
       </Store>

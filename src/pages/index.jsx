@@ -27,6 +27,7 @@ export function Home() {
       setNextDisable(false);
     }
     async function fetchData() {
+      console.log("getting habits");
       // You can await here
       const { data } = await HabitService.getHabits();
       dispatch({ type: "SET_HABIT", payload: data });
