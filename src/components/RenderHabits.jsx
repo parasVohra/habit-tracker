@@ -30,11 +30,22 @@ const RenderHabits = ({ habit, date }) => {
   return (
     <div className={classes.root}>
       <TableContainer className={classes.table} component={Paper}>
-        <Table aria-label="simple table">
+        <Table
+          aria-label="simple table"
+          padding="none"
+          size="small"
+          stickyHeader
+        >
           <TableHead>
             <TableRow>
               <TableCell align="center">Habits </TableCell>
-              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">S</TableCell>
+              <TableCell align="center">M</TableCell>
+              <TableCell align="center">T</TableCell>
+              <TableCell align="center">W</TableCell>
+              <TableCell align="center">T</TableCell>
+              <TableCell align="center">F</TableCell>
+              <TableCell align="center">S</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -45,7 +56,15 @@ const RenderHabits = ({ habit, date }) => {
                     return (
                       <>
                         <TableRow key={c}>
-                          <TableCell>{c}</TableCell>
+                          <TableCell>
+                            <strong>{c}</strong>
+                          </TableCell>
+                          <TableCell></TableCell>
+                          <TableCell></TableCell>
+                          <TableCell></TableCell>
+                          <TableCell></TableCell>
+                          <TableCell></TableCell>
+                          <TableCell></TableCell>
                           <TableCell></TableCell>
                         </TableRow>
                         <RenderHabitsByCategory category={c} />
@@ -71,9 +90,12 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   paper: {
-    padding: "20px",
+    padding: "5px",
     textAlign: "center",
     color: "black",
+  },
+  table: {
+    minWidth: 350,
   },
 }));
 

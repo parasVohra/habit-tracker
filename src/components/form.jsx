@@ -10,6 +10,76 @@ import React, { useContext, useEffect, useState } from "react";
 import * as yup from "yup";
 import habitService from "../services/habitService";
 
+const Form = () => {
+  const [habit, setHabit] = useState(null);
+  const classes = useStyles();
+
+  useEffect(() => {}, []);
+
+  return (
+    <Card className={classes.root}>
+      <h2>Add New Habit</h2>
+      <Formik
+        initialValues={{
+          category: "General",
+          habitName: "",
+          types: "checkbox",
+          color: "black",
+        }}
+        onSubmit={(data) => {
+          console.log(data);
+          setHabit(data);
+          saveHabit(data);
+        }}
+        validationSchema={validationSchema}
+      >
+        {({ values, handleSubmit, handleChange, handleBlur }) => (
+          <form onSubmit={handleSubmit}>
+            <div className={classes.root}>
+              <MySelectField
+                value={values.category}
+                select
+                label="Category"
+                name="category"
+                options={categories}
+              />
+            </div>
+            <div className={classes.root}>
+              <MyTextField label="Habit Name" name="habitName" type="input" />
+            </div>
+
+            <div className={classes.root}>
+              <MySelectField
+                value={values.types}
+                select
+                label="Types"
+                name="types"
+                options={types}
+              />
+            </div>
+
+            <div className={classes.root}>
+              <MySelectField
+                value={values.color}
+                select
+                label="Color"
+                name="color"
+                options={colors}
+              />
+            </div>
+            <div>
+              <Button variant="contained" color="primary" type="submit">
+                Save Habit
+              </Button>
+            </div>
+            <pre>{JSON.stringify(values, null, 2)}</pre>
+          </form>
+        )}
+      </Formik>
+    </Card>
+  );
+};
+
 const MyTextField = ({ label, ...props }) => {
   const [field, meta] = useField(props);
   const errorText = meta.error && meta.touched ? meta.error : "";
@@ -145,76 +215,5 @@ const colors = [
     label: "Green",
   },
 ];
-
-const Form = () => {
-  const [habit, setHabit] = useState(null);
-  const classes = useStyles();
-
-  useEffect(() => {}, []);
-
-  return (
-    <Card className={classes.root}>
-      <h2>Add New Habit</h2>
-      <Formik
-        initialValues={{
-          category: "General",
-          habitName: "",
-          types: "checkbox",
-          color: "black",
-        }}
-        onSubmit={(data) => {
-          console.log(data);
-          setHabit(data);
-          saveHabit(data);
-        }}
-        validationSchema={validationSchema}
-      >
-        {({ values, handleSubmit, handleChange, handleBlur }) => (
-          <form onSubmit={handleSubmit}>
-            <div className={classes.root}>
-              <MySelectField
-                value={values.category}
-                select
-                label="Category"
-                name="category"
-                options={categories}
-              />
-            </div>
-            <div className={classes.root}>
-              <MyTextField label="Habit Name" name="habitName" type="input" />
-            </div>
-
-            <div className={classes.root}>
-              <MySelectField
-                value={values.types}
-                select
-                label="Types"
-                name="types"
-                options={types}
-              />
-            </div>
-
-            <div className={classes.root}>
-              <MySelectField
-                value={values.color}
-                select
-                label="Color"
-                name="color"
-                options={colors}
-              />
-            </div>
-            <div>
-              <Button variant="contained" color="primary" type="submit">
-                Save Habit
-              </Button>
-            </div>
-
-            <pre>{JSON.stringify(values, null, 2)}</pre>
-          </form>
-        )}
-      </Formik>
-    </Card>
-  );
-};
 
 export default Form;

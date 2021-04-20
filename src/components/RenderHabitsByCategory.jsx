@@ -9,47 +9,65 @@ const RenderHabitsByCategory = ({ category }) => {
   const [habitData, setHabitData] = useState(null);
   const [cat] = useState(category);
   const [currentDate, setCurrentDate] = useState(null);
-  const [habitStatus, setHabitStatus] = useState(null);
+  const [habitStatus, setHabitStatus] = useState(false);
+  const [startDate, setStartDate] = useState(null);
 
   useEffect(() => {
     setHabitData(state.habitRestructure);
     setCurrentDate(state.currentDate);
-    setHabitStatus(state.habitStatus);
+    setStartDate(state.weekStartDate);
   }, [
     state.habitRestructure,
     state.category,
     state.currentDate,
-    state.habitStatus,
+    state.weekStartDate,
   ]);
 
+  console.log(habitData);
+
   useEffect(() => {
-    const getCurrentStatus = (currentDate, habit) => {
-      habit
-        ? habit[cat].forEach((h) => {
-            let fDate = moment(currentDate).format("DDMMYYYY");
+    const getCurrentStatus = (habit) => {
+      console.log(habit);
+      habit[cat].map((h) => {
+        console.log(h);
+        //let fDate = moment(currentDate).format("DDMMYYYY");
 
-            let status = h.habitTrack.filter((d) => d.date === fDate);
+        console.log("in for each");
 
-            if (status.length === 0) {
-              let data = {};
-              let name = h.habitName;
-              let complete = false;
-              data[name] = complete;
-              dispatch({ type: "SET_HABIT_STATUS", payload: data });
-            } else if (status.length > 0) {
-              let name = h.habitName;
-              let complete = status[0].isComplete;
-              let data = {};
-              data[name] = complete;
-              dispatch({ type: "SET_HABIT_STATUS", payload: data });
-            }
-          })
-        : console.log(habit);
+        let ishabitComplete = {};
+        let name = h.habitName;
+        ishabitComplete[name] = [];
+        let forloop = false;
+        for (let i = 0; i <= 6; i++) {
+          console.log("in for each");
+          let dateCounter = moment(startDate).add(i, "days");
+          let formatedDate = moment(dateCounter).format("DDMMYYYY");
+          let status = h.habitTrack.filter((d) => d.date === formatedDate);
+          console.log(status);
+          if (status.length > 0) {
+            console.log(h.habitName, formatedDate, "true");
+            ishabitComplete[name][i] = true;
+          } else {
+            ishabitComplete[name][i] = false;
+          }
+
+          if (i === 6) {
+            forloop = true;
+          }
+        }
+
+        if (forloop) {
+          dispatch({ type: "SET_HABIT_STATUS", payload: ishabitComplete });
+        }
+      });
     };
-    getCurrentStatus(currentDate, habitData);
-  }, [currentDate, habitData, cat, dispatch]);
+    getCurrentStatus(state.habitRestructure);
+  }, [cat, dispatch, startDate, state.habitRestructure]);
+
+  console.log(habitStatus);
 
   const check = useRef();
+  console.log(state.habitRestructure);
 
   const updateStatus = async (data) => {
     let response = await HabitService.updateHabitStatus(data);
@@ -60,7 +78,7 @@ const RenderHabitsByCategory = ({ category }) => {
     }
   };
 
-  const handelChange = (e, habit) => {
+  const handelChange = (e, habit, index) => {
     let data = {
       id: habit._id,
       date: moment(currentDate).format("DDMMYYYY"),
@@ -69,11 +87,15 @@ const RenderHabitsByCategory = ({ category }) => {
       inputData: null,
     };
 
+    console.log(" index", index);
+
     let name = habit.habitName;
 
-    let updateData = {};
-    updateData[name] = e.target.checked;
+    let updateData = state.habitStatus;
+    updateData[name][index] = e.target.checked;
     dispatch({ type: "SET_HABIT_STATUS", payload: updateData });
+
+    console.log("new status", state.habitStatus);
 
     if (habit.inputType !== "checkbox" && e.target.checked === true) {
       let popupVal = prompt(`Enter the  value for ${habit.habitName}`, "");
@@ -103,10 +125,96 @@ const RenderHabitsByCategory = ({ category }) => {
               </TableCell>
               <TableCell align="center">
                 <Checkbox
-                  checked={habitStatus[h.habitName] || false}
+                  checked={state.habitStatus[h.habitName][0] || false}
+                  index={0}
                   id={h._id}
-                  onChange={(e) => handelChange(e, h)}
+                  onChange={(e) => handelChange(e, h, 0)}
                   ref={check}
+                  size="small"
+                ></Checkbox>
+              </TableCell>
+              <TableCell align="center">
+                <Checkbox
+                  checked={
+                    state.habitStatus
+                      ? state.habitStatus[h.habitName][1]
+                      : false
+                  }
+                  index={1}
+                  id={h._id}
+                  onChange={(e) => handelChange(e, h, 1)}
+                  ref={check}
+                  size="small"
+                ></Checkbox>
+              </TableCell>
+              <TableCell align="center">
+                <Checkbox
+                  checked={
+                    state.habitStatus
+                      ? state.habitStatus[h.habitName][2]
+                      : false
+                  }
+                  index={2}
+                  id={h._id}
+                  onChange={(e) => handelChange(e, h, 2)}
+                  ref={check}
+                  size="small"
+                ></Checkbox>
+              </TableCell>
+              <TableCell align="center">
+                <Checkbox
+                  checked={
+                    state.habitStatus
+                      ? state.habitStatus[h.habitName][3]
+                      : false
+                  }
+                  index={3}
+                  id={h._id}
+                  onChange={(e) => handelChange(e, h, 3)}
+                  ref={check}
+                  size="small"
+                ></Checkbox>
+              </TableCell>
+              <TableCell align="center">
+                <Checkbox
+                  checked={
+                    state.habitStatus
+                      ? state.habitStatus[h.habitName][4]
+                      : false
+                  }
+                  index={4}
+                  id={h._id}
+                  onChange={(e) => handelChange(e, h, 4)}
+                  ref={check}
+                  size="small"
+                ></Checkbox>
+              </TableCell>
+              <TableCell align="center">
+                <Checkbox
+                  checked={
+                    state.habitStatus
+                      ? state.habitStatus[h.habitName][5]
+                      : false
+                  }
+                  index={5}
+                  id={h._id}
+                  onChange={(e) => handelChange(e, h, 5)}
+                  ref={check}
+                  size="small"
+                ></Checkbox>
+              </TableCell>
+              <TableCell align="center">
+                <Checkbox
+                  checked={
+                    state.habitStatus
+                      ? state.habitStatus[h.habitName][6]
+                      : false
+                  }
+                  index={6}
+                  id={h._id}
+                  onChange={(e) => handelChange(e, h, 6)}
+                  ref={check}
+                  size="small"
                 ></Checkbox>
               </TableCell>
             </TableRow>

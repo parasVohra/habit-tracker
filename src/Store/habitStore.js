@@ -9,6 +9,11 @@ const initialState = {
   habitStatus: {},
   error: null,
   currentDate: moment()._d,
+  weekStartDate: moment().subtract(moment().weekday(), "days")._d,
+  weekEndDate: moment(moment().subtract(moment().weekday(), "days")._d).add(
+    6,
+    "days"
+  )._d,
 };
 
 const Store = ({ children }) => {

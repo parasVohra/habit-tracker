@@ -35,6 +35,10 @@ export function Home() {
     fetchData();
   }, [state.currentDate, dispatch]);
 
+  console.log(moment().weekday());
+  console.log(state.weekStartDate);
+  console.log(state.weekEndDate);
+
   const changeDate = (n) => {
     // change the current date to prev or next date
     let changedDate = moment(state.currentDate).add(n, "days");
