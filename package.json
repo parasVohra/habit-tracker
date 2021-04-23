@@ -10,6 +10,7 @@
     "@testing-library/react": "^11.2.3",
     "@testing-library/user-event": "^12.6.2",
     "axios": "^0.21.1",
+    "date-fns": "^2.21.1",
     "eslint-plugin-react-hooks": "^0.0.0-10cc40018",
     "formik": "^2.2.6",
     "moment": "^2.29.1",

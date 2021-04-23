@@ -8,7 +8,7 @@ import moment from "moment";
 import RenderHabits from "../components/RenderHabits";
 import TrackHabit from "../components/TrackHabit";
 
-export function Home() {
+export default function Home() {
   const [state, dispatch] = useContext(Context);
   const classes = useStyles();
   const [isNextDisable, setNextDisable] = useState(false);

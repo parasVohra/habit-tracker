@@ -1,19 +1,28 @@
 import { createContext, useReducer } from "react";
-import moment from "moment";
 import Reducer from "../reducer/reducer";
+import {
+  getTodayDate,
+  getWeekStartDate,
+  getWeekEndDate,
+  fetchHabitData,
+  extractCategories,
+} from "../utilities/utilitiesMethods";
+
+const TODAY_DATE = getTodayDate();
+const CURRENT_WEEK_START_DATE = getWeekStartDate();
+const CURRENT_WEEK_END_DATE = getWeekEndDate();
+const habitsData = fetchHabitData();
+const categories = extractCategories(habitsData);
 
 const initialState = {
-  habits: null,
-  category: [],
+  habits: habitsData || {},
+  category: categories || [],
   habitRestructure: [],
   habitStatus: {},
-  error: null,
-  currentDate: moment()._d,
-  weekStartDate: moment().subtract(moment().weekday(), "days")._d,
-  weekEndDate: moment(moment().subtract(moment().weekday(), "days")._d).add(
-    6,
-    "days"
-  )._d,
+  error: [],
+  currentDate: TODAY_DATE,
+  weekStartDate: CURRENT_WEEK_START_DATE,
+  weekEndDate: CURRENT_WEEK_END_DATE,
 };
 
 const Store = ({ children }) => {

@@ -4,6 +4,12 @@ import moment from "moment";
 import HabitService from "../services/habitService";
 import { Context } from "../Store/habitStore";
 
+// First day of week is sunday
+const FIRST_WEEKDAY_INDEX = 0;
+
+// Last day of week is saturday
+const LAST_WEEKDAY_INDEX = 6;
+
 const RenderHabitsByCategory = ({ category }) => {
   const [state, dispatch] = useContext(Context);
   const [habitData, setHabitData] = useState(null);
@@ -38,16 +44,17 @@ const RenderHabitsByCategory = ({ category }) => {
         let name = h.habitName;
         ishabitComplete[name] = [];
         let forloop = false;
-        for (let i = 0; i <= 6; i++) {
+        for (let i = FIRST_WEEKDAY_INDEX; i <= LAST_WEEKDAY_INDEX; i++) {
           console.log("in for each");
           let dateCounter = moment(startDate).add(i, "days");
           let formatedDate = moment(dateCounter).format("DDMMYYYY");
           let status = h.habitTrack.filter((d) => d.date === formatedDate);
-          console.log(status);
-          if (status.length > 0) {
+          //console.log(status[0].isComplete);
+          if (status.length > 0 && status[0].isComplete) {
             console.log(h.habitName, formatedDate, "true");
             ishabitComplete[name][i] = true;
           } else {
+            console.log(status);
             ishabitComplete[name][i] = false;
           }
 
@@ -64,10 +71,7 @@ const RenderHabitsByCategory = ({ category }) => {
     getCurrentStatus(state.habitRestructure);
   }, [cat, dispatch, startDate, state.habitRestructure]);
 
-  console.log(habitStatus);
-
   const check = useRef();
-  console.log(state.habitRestructure);
 
   const updateStatus = async (data) => {
     let response = await HabitService.updateHabitStatus(data);
@@ -81,15 +85,13 @@ const RenderHabitsByCategory = ({ category }) => {
   const handelChange = (e, habit, index) => {
     let data = {
       id: habit._id,
-      date: moment(currentDate).format("DDMMYYYY"),
-      day: moment(currentDate).format("ddd"),
+      date: moment(state.weekStartDate).add(index, "days").format("DDMMYYYY"),
+      day: moment(state.weekStartDate).add(index, "days").format("ddd"),
       isComplete: e.target.checked,
       inputData: null,
     };
-
-    console.log(" index", index);
-
     let name = habit.habitName;
+    console.log(data);
 
     let updateData = state.habitStatus;
     updateData[name][index] = e.target.checked;

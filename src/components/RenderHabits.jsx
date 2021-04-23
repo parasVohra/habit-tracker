@@ -12,6 +12,7 @@ import React, { useContext, useEffect } from "react";
 
 import RenderHabitsByCategory from "../components/RenderHabitsByCategory";
 import { Context } from "../Store/habitStore";
+import { extractCategories } from "../utilities/utilitiesMethods";
 
 const RenderHabits = ({ habit, date }) => {
   const [state, dispatch] = useContext(Context);
@@ -26,6 +27,8 @@ const RenderHabits = ({ habit, date }) => {
 
     console.log("hi");
   }, [dispatch, state.habits]);
+
+  console.log(extractCategories(state.habits));
 
   return (
     <div className={classes.root}>
