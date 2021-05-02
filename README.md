@@ -1,4 +1,8 @@
-# Getting Started with Create React App
+# Project demo link
+
+[Click to checkout Project Live demo](https://parasvohra.github.io/habit-tracker/#/)
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
