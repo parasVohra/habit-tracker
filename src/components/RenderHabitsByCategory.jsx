@@ -4,6 +4,8 @@ import moment from "moment";
 import HabitService from "../services/habitService";
 import { Context } from "../Store/habitStore";
 
+console.log("*************************In Render Categories");
+
 // First day of week is sunday
 const FIRST_WEEKDAY_INDEX = 0;
 
@@ -29,32 +31,23 @@ const RenderHabitsByCategory = ({ category }) => {
     state.weekStartDate,
   ]);
 
-  console.log(habitData);
-
   useEffect(() => {
     const getCurrentStatus = (habit) => {
-      console.log(habit);
       habit[cat].map((h) => {
-        console.log(h);
         //let fDate = moment(currentDate).format("DDMMYYYY");
-
-        console.log("in for each");
 
         let ishabitComplete = {};
         let name = h.habitName;
         ishabitComplete[name] = [];
         let forloop = false;
         for (let i = FIRST_WEEKDAY_INDEX; i <= LAST_WEEKDAY_INDEX; i++) {
-          console.log("in for each");
           let dateCounter = moment(startDate).add(i, "days");
           let formatedDate = moment(dateCounter).format("DDMMYYYY");
           let status = h.habitTrack.filter((d) => d.date === formatedDate);
           //console.log(status[0].isComplete);
           if (status.length > 0 && status[0].isComplete) {
-            console.log(h.habitName, formatedDate, "true");
             ishabitComplete[name][i] = true;
           } else {
-            console.log(status);
             ishabitComplete[name][i] = false;
           }
 
@@ -75,7 +68,7 @@ const RenderHabitsByCategory = ({ category }) => {
 
   const updateStatus = async (data) => {
     let response = await HabitService.updateHabitStatus(data);
-    console.log(response);
+
     if (response.status === 200) {
       alert("Habit Status updated");
       check.current.focus();
@@ -91,13 +84,10 @@ const RenderHabitsByCategory = ({ category }) => {
       inputData: null,
     };
     let name = habit.habitName;
-    console.log(data);
 
     let updateData = state.habitStatus;
     updateData[name][index] = e.target.checked;
     dispatch({ type: "SET_HABIT_STATUS", payload: updateData });
-
-    console.log("new status", state.habitStatus);
 
     if (habit.inputType !== "checkbox" && e.target.checked === true) {
       let popupVal = prompt(`Enter the  value for ${habit.habitName}`, "");

@@ -6,18 +6,13 @@
 import { startOfWeek, endOfWeek } from "date-fns";
 import habitService from "../services/habitService";
 
+console.log("*************************In Utilities");
+
 // fetch data from habit server
 export function fetchHabitData() {
-  new Promise(async (resolve, reject) => {
-    try {
-      // perform api request
-      let habits = await habitService.getHabits();
-      resolve(habits);
-    } catch (err) {
-      reject(null);
-    }
-
-    //  return data;
+  let habits = habitService.getHabits();
+  Promise.all([habits]).then((x) => {
+    return x[0].data;
   });
 }
 
@@ -27,23 +22,34 @@ export function fetchHabitData() {
  */
 export function extractCategories(habitObject) {
   // if passed argument is of type object then reduce categories else return error msg
-  if (typeof habitObject === "object") {
-    let uniqueCategories = {};
 
-    // reduce categories from habit object
-    let categoryArray = habitObject.reduce((categories, habits) => {
-      if (!uniqueCategories.hasOwnProperty(habits.category)) {
-        categories.push(habits.category);
-      }
-      uniqueCategories[habits.category] = "";
-      return categories;
-    }, []);
+  let uniqueCategories = {};
 
-    return categoryArray;
-  } else {
-    return "passed habit object is not a object";
-  }
+  // reduce categories from habit object
+  let categoryArray = habitObject.reduce((categories, habits) => {
+    if (!uniqueCategories.hasOwnProperty(habits.category)) {
+      categories.push(habits.category);
+    }
+    uniqueCategories[habits.category] = "";
+    return categories;
+  }, []);
+
+  return categoryArray;
 }
+
+/**
+ *
+ * @param {*} habitObject
+ * @returns habitsNameList
+ */
+export function extractHabitNames(habitObject) {
+  console.log(habitObject);
+  return habitObject.map((habit) => {
+    return habit.habitName;
+  }, []);
+}
+
+//etchHabitData();
 
 /**
  * @requires: habits object
@@ -51,6 +57,18 @@ export function extractCategories(habitObject) {
  */
 export function restructureHabits(habitObject) {
   // if passed argument is of type object then map habit by categories else return error msg
+  let uniqueCategories = {};
+
+  // reduce categories from habit object
+  let categoryArray = habitObject.reduce((categories, habits) => {
+    if (!uniqueCategories.hasOwnProperty(habits.category)) {
+      categories.push(habits.category);
+    }
+    uniqueCategories[habits.category] = "";
+    return categories;
+  }, []);
+
+  return categoryArray;
 }
 
 export function getTodayDate() {

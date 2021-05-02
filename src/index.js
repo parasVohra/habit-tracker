@@ -5,6 +5,8 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+console.log("************* In Index.js");
+
 ReactDOM.render(
   <BrowserRouter>
     <App />

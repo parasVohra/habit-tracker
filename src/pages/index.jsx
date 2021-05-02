@@ -8,6 +8,8 @@ import moment from "moment";
 import RenderHabits from "../components/RenderHabits";
 import TrackHabit from "../components/TrackHabit";
 
+console.log("************ In Home page Component ");
+
 export default function Home() {
   const [state, dispatch] = useContext(Context);
   const classes = useStyles();

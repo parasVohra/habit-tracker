@@ -6,6 +6,8 @@ import AddHabit from "./pages/addHabit";
 import Form from "./components/form";
 import NavBar from "./components/navBar";
 
+console.log("*************** In App");
+
 function App() {
   // initialze process
 

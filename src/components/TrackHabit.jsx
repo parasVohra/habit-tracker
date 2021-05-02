@@ -72,24 +72,7 @@ function TrackHabit() {
                 <TableCell align="center">Track Habit</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {state.habits
-                ? state.habits.map((h, i) => {
-                    return (
-                      <TableRow key={i}>
-                        <TableCell align="center">{h.habitName}</TableCell>
-                        <TableCell align="center">
-                          <Checkbox
-                            id={h._id}
-                            onChange={(e) => handleChange(e)}
-                            checked={h.isTracked}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                : null}
-            </TableBody>
+            <TableBody></TableBody>
           </Table>
         </div>
       </Popover>
@@ -107,3 +90,22 @@ function TrackHabit() {
 }
 
 export default TrackHabit;
+
+// {
+//   state.habits
+//     ? state.habits.map((h, i) => {
+//         return (
+//           <TableRow key={i}>
+//             <TableCell align="center">{h.habitName}</TableCell>
+//             <TableCell align="center">
+//               <Checkbox
+//                 id={h._id}
+//                 onChange={(e) => handleChange(e)}
+//                 checked={h.isTracked}
+//               />
+//             </TableCell>
+//           </TableRow>
+//         );
+//       })
+//     : null;
+// }

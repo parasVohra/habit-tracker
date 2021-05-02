@@ -24,6 +24,7 @@ const RenderHabits = ({ habit, date }) => {
     dispatch({ type: "SET_CATEGORY", payload: category });
 
     dispatch({ type: "SET_HABIT_RESTRUCTURE", payload: habit });
+    console.log(extractCategories(state.habits));
 
     console.log("hi");
   }, [dispatch, state.habits]);
