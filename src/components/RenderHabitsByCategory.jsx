@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef, useContext } from "react";
 import moment from "moment";
 import HabitService from "../services/habitService";
 import { Context } from "../Store/habitStore";
+import { addDays, format } from "date-fns";
 
 console.log("*************************In Render Categories");
 
@@ -36,19 +37,20 @@ const RenderHabitsByCategory = ({ category }) => {
       habit[cat].map((h) => {
         //let fDate = moment(currentDate).format("DDMMYYYY");
 
-        let ishabitComplete = {};
+        let isHabitComplete = {};
         let name = h.habitName;
-        ishabitComplete[name] = [];
+        isHabitComplete[name] = [];
         let forloop = false;
         for (let i = FIRST_WEEKDAY_INDEX; i <= LAST_WEEKDAY_INDEX; i++) {
-          let dateCounter = moment(startDate).add(i, "days");
-          let formatedDate = moment(dateCounter).format("DDMMYYYY");
-          let status = h.habitTrack.filter((d) => d.date === formatedDate);
+          let dateCounter = addDays(state.weekStartDate, i);
+
+          let formatDate = format(dateCounter, "ddMMyyyy");
+          let status = h.habitTrack.filter((d) => d.date === formatDate);
           //console.log(status[0].isComplete);
           if (status.length > 0 && status[0].isComplete) {
-            ishabitComplete[name][i] = true;
+            isHabitComplete[name][i] = true;
           } else {
-            ishabitComplete[name][i] = false;
+            isHabitComplete[name][i] = false;
           }
 
           if (i === 6) {
@@ -57,12 +59,12 @@ const RenderHabitsByCategory = ({ category }) => {
         }
 
         if (forloop) {
-          dispatch({ type: "SET_HABIT_STATUS", payload: ishabitComplete });
+          dispatch({ type: "SET_HABIT_STATUS", payload: isHabitComplete });
         }
       });
     };
     getCurrentStatus(state.habitRestructure);
-  }, [cat, dispatch, startDate, state.habitRestructure]);
+  }, [cat, dispatch, state.weekStartDate, state.habitRestructure]);
 
   const check = useRef();
 

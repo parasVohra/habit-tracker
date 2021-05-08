@@ -8,28 +8,14 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 
 import RenderHabitsByCategory from "../components/RenderHabitsByCategory";
 import { Context } from "../Store/habitStore";
-import { extractCategories } from "../utilities/utilitiesMethods";
 
-const RenderHabits = ({ habit, date }) => {
+const RenderHabits = () => {
   const [state, dispatch] = useContext(Context);
   const classes = useStyles();
-
-  useEffect(() => {
-    const [habit, category] = HabitsByCategory(state.habits);
-
-    dispatch({ type: "SET_CATEGORY", payload: category });
-
-    dispatch({ type: "SET_HABIT_RESTRUCTURE", payload: habit });
-    console.log(extractCategories(state.habits));
-
-    console.log("hi");
-  }, [dispatch, state.habits]);
-
-  console.log(extractCategories(state.habits));
 
   return (
     <div className={classes.root}>
@@ -102,23 +88,4 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 350,
   },
 }));
-
-//restructure habits by categories
-function HabitsByCategory(habits) {
-  let habitRestructure = {};
-  let categories = [];
-  // if category is present in object
-  if (habits) {
-    for (let h of habits) {
-      if (!habitRestructure.hasOwnProperty(h.category)) {
-        categories.push(h.category);
-        habitRestructure[h.category] = [];
-        habitRestructure[h.category].push(h);
-      } else {
-        habitRestructure[h.category].push(h);
-      }
-    }
-  }
-  return [habitRestructure, categories];
-}
 export default RenderHabits;

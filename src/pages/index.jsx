@@ -3,10 +3,17 @@ import { Context } from "../Store/habitStore";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Grid } from "@material-ui/core";
 import { green } from "@material-ui/core/colors";
-import HabitService from "../services/habitService";
-import moment from "moment";
+import { addDays, format } from "date-fns";
 import RenderHabits from "../components/RenderHabits";
 import TrackHabit from "../components/TrackHabit";
+import {
+  fetchHabitData,
+  extractCategoriesAndRestructureHabits,
+  getTodayDate,
+  getWeekStartDate,
+  getWeekEndDate,
+  extractHabitNames,
+} from "../utilities/utilitiesMethods";
 
 console.log("************ In Home page Component ");
 
@@ -17,40 +24,51 @@ export default function Home() {
 
   console.log(state);
 
-  // this fetch function is need to extracted and need to be reused
   useEffect(() => {
-    //fetch habits from server
-    if (
-      moment(state.currentDate).format("DDMMYYYY") ===
-      moment().format("DDMMYYYY")
-    ) {
-      setNextDisable(true);
-    } else {
-      setNextDisable(false);
-    }
-    async function fetchData() {
-      console.log("getting habits");
-      // You can await here
-      const { data } = await HabitService.getHabits();
-      dispatch({ type: "SET_HABIT", payload: data });
-    }
-    fetchData();
-  }, [state.currentDate, dispatch]);
+    async function hydrateStoreState() {
+      const habitObj = await fetchHabitData();
 
-  console.log(moment().weekday());
-  console.log(state.weekStartDate);
-  console.log(state.weekEndDate);
+      console.log(habitObj);
+      dispatch({ type: "SET_HABIT", payload: habitObj });
+      const [
+        habitRestructure,
+        categories,
+      ] = await extractCategoriesAndRestructureHabits(habitObj);
 
-  const changeDate = (n) => {
+      dispatch({ type: "SET_HABIT_RESTRUCTURE", payload: habitRestructure });
+      dispatch({ type: "SET_CATEGORY", payload: categories });
+
+      const habitNameList = extractHabitNames(habitObj);
+      dispatch({ type: "SET_HABIT_NAME_LIST", payload: habitNameList });
+
+      const todayDate = await getTodayDate();
+      dispatch({ type: "SET_CURRENT_DATE", payload: todayDate });
+
+      const weekStartDate = await getWeekStartDate(new Date());
+      const weekEndDate = await getWeekEndDate(new Date());
+
+      dispatch({ type: "SET_WEEK_START_DATE", payload: weekStartDate });
+      dispatch({ type: "SET_WEEK_END_DATE", payload: weekEndDate });
+    }
+
+    hydrateStoreState();
+  }, [dispatch]);
+
+  // this fetch function is need to extracted and need to be reused
+
+  const changeDate = async (n) => {
     // change the current date to prev or next date
-    let changedDate = moment(state.currentDate).add(n, "days");
-    dispatch({ type: "SET_CURRENT_DATE", payload: changedDate._d });
+    let changedDate = addDays(state.currentDate, n);
+    dispatch({ type: "SET_CURRENT_DATE", payload: changedDate });
+    const newStartWeekDate = await getWeekStartDate(changedDate);
+
+    dispatch({ type: "SET_WEEK_START_DATE", payload: newStartWeekDate });
   };
 
   return (
     <React.Fragment>
       <div style={{ margin: "20px" }}>
-        {moment(state.currentDate).format("DDMMYYYY")}
+        {format(state.currentDate, "dd MMMM yyyy")}
       </div>
 
       <Grid container className={classes.root} spacing={2}>
@@ -61,7 +79,7 @@ export default function Home() {
                 style={{ margin: "20px" }}
                 variant="contained"
                 color="primary"
-                onClick={() => changeDate(-1)}
+                onClick={() => changeDate(-7)}
               >
                 Prev
               </Button>
@@ -72,7 +90,7 @@ export default function Home() {
                 disabled={isNextDisable}
                 variant="contained"
                 color="primary"
-                onClick={() => changeDate(1)}
+                onClick={() => changeDate(7)}
               >
                 Next
               </Button>

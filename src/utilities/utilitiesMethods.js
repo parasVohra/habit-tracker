@@ -6,35 +6,10 @@
 import { startOfWeek, endOfWeek } from "date-fns";
 import habitService from "../services/habitService";
 
-console.log("*************************In Utilities");
-
 // fetch data from habit server
-export function fetchHabitData() {
-  let habits = habitService.getHabits();
-  Promise.all([habits]).then((x) => {
-    return x[0].data;
-  });
-}
-
-/**
- * @requires: habits object
- * @returns: categories array or error string
- */
-export function extractCategories(habitObject) {
-  // if passed argument is of type object then reduce categories else return error msg
-
-  let uniqueCategories = {};
-
-  // reduce categories from habit object
-  let categoryArray = habitObject.reduce((categories, habits) => {
-    if (!uniqueCategories.hasOwnProperty(habits.category)) {
-      categories.push(habits.category);
-    }
-    uniqueCategories[habits.category] = "";
-    return categories;
-  }, []);
-
-  return categoryArray;
+export async function fetchHabitData() {
+  let response = await habitService.getHabits();
+  return response.data;
 }
 
 /**
@@ -49,40 +24,45 @@ export function extractHabitNames(habitObject) {
   }, []);
 }
 
-//etchHabitData();
-
 /**
- * @requires: habits object
- * @returns: habit restructure array
+ *
+ * @param {*} habits
+ * @returns habit restructured object and categories array
  */
-export function restructureHabits(habitObject) {
-  // if passed argument is of type object then map habit by categories else return error msg
-  let uniqueCategories = {};
-
-  // reduce categories from habit object
-  let categoryArray = habitObject.reduce((categories, habits) => {
-    if (!uniqueCategories.hasOwnProperty(habits.category)) {
-      categories.push(habits.category);
+export function extractCategoriesAndRestructureHabits(habits) {
+  let habitRestructure = {};
+  let categories = [];
+  // if category is present in object
+  if (habits && typeof habits === "object") {
+    for (let h of habits) {
+      if (!habitRestructure.hasOwnProperty(h.category)) {
+        categories.push(h.category);
+        habitRestructure[h.category] = [];
+        habitRestructure[h.category].push(h);
+      } else {
+        habitRestructure[h.category].push(h);
+      }
     }
-    uniqueCategories[habits.category] = "";
-    return categories;
-  }, []);
-
-  return categoryArray;
+  }
+  return Promise.resolve([habitRestructure, categories]);
 }
 
 export function getTodayDate() {
-  return new Date();
+  const date = new Date();
+  console.log(date);
+  return Promise.resolve(date);
 }
 
 // get start of week from date fns
-export function getWeekStartDate() {
-  let weekStartDate = startOfWeek(new Date());
-  return weekStartDate;
+export function getWeekStartDate(date) {
+  console.log(date);
+  let weekStartDate = startOfWeek(date);
+  console.log(weekStartDate);
+  return Promise.resolve(weekStartDate);
 }
 
 // get end of week from date fns
-export function getWeekEndDate() {
-  let weekEndDate = endOfWeek(new Date());
-  return weekEndDate;
+export function getWeekEndDate(date) {
+  let weekEndDate = endOfWeek(date);
+  return Promise.resolve(weekEndDate);
 }

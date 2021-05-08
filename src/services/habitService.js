@@ -3,8 +3,6 @@
 import http from "./httpService";
 import { apiUrl } from "../config.json";
 
-console.log("*************************In Services");
-
 export async function saveHabit(data) {
   return await http.post(apiUrl + "saveHabit", data);
 }

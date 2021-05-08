@@ -11,6 +11,11 @@ const Reducer = (state, action) => {
         ...state,
         category: payload,
       };
+    case "SET_HABIT_NAME_LIST":
+      return {
+        ...state,
+        habitsNameList: payload,
+      };
     case "SET_HABIT_RESTRUCTURE":
       return {
         ...state,
@@ -29,6 +34,16 @@ const Reducer = (state, action) => {
       return {
         ...state,
         currentDate: payload,
+      };
+    case "SET_WEEK_START_DATE":
+      return {
+        ...state,
+        weekStartDate: payload,
+      };
+    case "SET_WEEK_END_DATE":
+      return {
+        ...state,
+        weekEndDate: payload,
       };
 
     default:

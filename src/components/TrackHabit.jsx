@@ -32,12 +32,14 @@ function TrackHabit() {
       isTracked: event.target.checked,
     };
 
-    // update is track is also need to extracted
+    /**
+     * @todo update is track is also need to extracted
+     * */
     async function updateIsTracked() {
       const res = await HabitService.updateIsTracked(data);
       if (res.status === 200 && res.data.nModified === 1) {
         // here i want to fetch the updated habit data from the server
-        // and also i want want to render the habits
+        // and also i want to render the habits
       }
     }
 
