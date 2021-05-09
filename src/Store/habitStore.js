@@ -9,8 +9,8 @@ const initialState = {
   habitStatus: [],
   error: [],
   currentDate: new Date(),
-  weekStartDate: undefined,
-  weekEndDate: undefined,
+  weekStartDate: new Date(),
+  weekEndDate: new Date(),
 };
 
 const Store = ({ children }) => {

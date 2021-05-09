@@ -38,6 +38,21 @@ const NavBar = () => {
           >
             Form
           </NavLink>
+          <NavLink
+            style={{
+              textDecoration: "none",
+              padding: "20px",
+              color: "grey",
+              fontSize: "25px",
+            }}
+            activeStyle={{
+              color: "black",
+              fontSize: "26px",
+            }}
+            to="/signUp"
+          >
+            SignUp
+          </NavLink>
         </React.Fragment>
       </nav>
     </React.Fragment>
