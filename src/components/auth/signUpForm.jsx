@@ -19,10 +19,11 @@ const SignUpForm = () => {
           firstName: "",
           lastName: "",
           email: "",
+          password: "",
           acceptedTerms: false,
         }}
         onSubmit={(data) => {
-          console.log(data);
+          console.table(data);
         }}
         validationSchema={validationSchema}
       >
@@ -35,6 +36,9 @@ const SignUpForm = () => {
           </div>
           <div className={classes.root}>
             <MyTextField label="Email" name="email" type="input" />
+          </div>
+          <div className={classes.root}>
+            <MyTextField label="Password" name="password" type="password" />
           </div>
 
           <div className={classes.root}>
@@ -59,6 +63,7 @@ const validationSchema = yup.object({
   firstName: yup.string().required().max(15, "Must be 15 character or less"),
   lastName: yup.string().required().max(20, "Must be 20 character or less"),
   email: yup.string().required().email("Invalid email address"),
+  password: yup.string().required().min(6, "Must be 6 character or more"),
   acceptedTerms: yup
     .boolean()
     .required("Required")
@@ -72,6 +77,7 @@ const MyTextField = ({ label, ...props }) => {
     <TextField
       label={label}
       {...field}
+      type={props.type}
       helperText={errorText}
       error={!!errorText}
     />

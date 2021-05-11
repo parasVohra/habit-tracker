@@ -1,4 +1,5 @@
 {
   "apiUrl": "https://www.pursharthvohra.com/api/",
-  "prodUrl": "https://www.pursharthvohra.com/api/"
+  "prodUrl": "https://www.pursharthvohra.com/api/",
+  "tokenKey": "habit_token"
 }
