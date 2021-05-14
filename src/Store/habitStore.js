@@ -11,6 +11,10 @@ const initialState = {
   currentDate: new Date(),
   weekStartDate: new Date(),
   weekEndDate: new Date(),
+  token: "",
+  isAuthenticated: false,
+  userInfo: {},
+  isLoading: false,
 };
 
 const Store = ({ children }) => {

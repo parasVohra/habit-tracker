@@ -1,52 +1,59 @@
-import {
-  Button,
-  Card,
-  Checkbox,
-  FormControlLabel,
-  makeStyles,
-  TextField,
-} from "@material-ui/core";
+import React, { useContext } from "react";
+import { Button, Card, makeStyles, TextField } from "@material-ui/core";
 import { Formik, Form, useField } from "formik";
-import React from "react";
+import AuthService from "../../services/authServices";
+import TokenService from "../../utilities/tokenMethods";
+import { Context } from "../../Store/habitStore";
+import { tokenKey } from "../../config.json";
+
+import { useHistory } from "react-router-dom";
 import * as yup from "yup";
 
 const SignInForm = () => {
   const classes = useStyles();
+  const history = useHistory();
+  const [state, dispatch] = useContext(Context);
   return (
     <Card className={classes.root}>
       <Formik
         initialValues={{
-          firstName: "",
-          lastName: "",
+          password: "",
           email: "",
-          acceptedTerms: false,
         }}
-        onSubmit={(data) => {
-          console.log(data);
+        onSubmit={async (data) => {
+          try {
+            const response = await AuthService.signIn(data);
+            if (response.status === 200) {
+              const token = response.data.token;
+              TokenService.setToken(token);
+              dispatch({ type: "SET_TOKEN", payload: token });
+
+              const userInfoObj = TokenService.getUserInfo(tokenKey);
+              console.log(`user info ${userInfoObj} `);
+              dispatch({ type: "SET_USER_INFO", payload: userInfoObj });
+
+              dispatch({ type: "SET_IS_AUTHENTICATED", payload: true });
+              console.log(state);
+
+              return history.push("/");
+            }
+          } catch (err) {
+            console.log(err);
+          }
         }}
         validationSchema={validationSchema}
       >
         <Form>
           <div className={classes.root}>
-            <MyTextField label="First Name" name="firstName" type="input" />
-          </div>
-          <div className={classes.root}>
-            <MyTextField label="Last Name" name="lastName" type="input" />
-          </div>
-          <div className={classes.root}>
             <MyTextField label="Email" name="email" type="input" />
           </div>
-
           <div className={classes.root}>
-            <MyCheckBox
-              label="I accept the terms and condition"
-              name="acceptedTerms"
-            />
+            <MyTextField label="Password" name="password" type="password" />
           </div>
 
           <div className={classes.root}>
             <Button variant="contained" color="primary" type="submit">
-              Sing Me Up
+              SingIn
             </Button>
           </div>
         </Form>
@@ -56,13 +63,8 @@ const SignInForm = () => {
 };
 
 const validationSchema = yup.object({
-  firstName: yup.string().required().max(15, "Must be 15 character or less"),
-  lastName: yup.string().required().max(20, "Must be 20 character or less"),
   email: yup.string().required().email("Invalid email address"),
-  acceptedTerms: yup
-    .boolean()
-    .required("Required")
-    .oneOf([true], "You must accept the terms and conditions."),
+  password: yup.string().required().min(6, "Must be 6 character or more"),
 });
 
 const MyTextField = ({ label, ...props }) => {
@@ -72,22 +74,10 @@ const MyTextField = ({ label, ...props }) => {
     <TextField
       label={label}
       {...field}
+      type={props.type}
       helperText={errorText}
       error={!!errorText}
     />
-  );
-};
-const MyCheckBox = ({ label, ...props }) => {
-  const [field, meta] = useField({ ...props, type: "checkbox" });
-  const errorText = meta.error && meta.touched ? meta.error : "";
-  return (
-    <FormControlLabel
-      label={label}
-      labelPlacement="end"
-      control={
-        <Checkbox {...field} helperText={errorText} error={!!errorText} />
-      }
-    ></FormControlLabel>
   );
 };
 

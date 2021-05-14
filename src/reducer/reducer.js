@@ -24,6 +24,7 @@ const Reducer = (state, action) => {
     case "SET_ERROR":
       return {
         ...state,
+        error: [...state.error, payload],
       };
     case "SET_HABIT_STATUS":
       return {

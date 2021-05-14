@@ -53,6 +53,36 @@ const NavBar = () => {
           >
             SignUp
           </NavLink>
+          <NavLink
+            style={{
+              textDecoration: "none",
+              padding: "20px",
+              color: "grey",
+              fontSize: "25px",
+            }}
+            activeStyle={{
+              color: "black",
+              fontSize: "26px",
+            }}
+            to="/signIn"
+          >
+            SignIn
+          </NavLink>
+          <NavLink
+            style={{
+              textDecoration: "none",
+              padding: "20px",
+              color: "grey",
+              fontSize: "25px",
+            }}
+            activeStyle={{
+              color: "black",
+              fontSize: "26px",
+            }}
+            to="/signOut"
+          >
+            SignOut
+          </NavLink>
         </React.Fragment>
       </nav>
     </React.Fragment>

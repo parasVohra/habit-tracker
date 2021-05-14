@@ -8,10 +8,16 @@ import {
 } from "@material-ui/core";
 import { Formik, Form, useField } from "formik";
 import AuthService from "../../services/authServices";
-import React from "react";
+import TokenService from "../../utilities/tokenMethods";
+import { Context } from "../../Store/habitStore";
+import { tokenKey } from "../../config.json";
+import React, { useContext } from "react";
+import { useHistory } from "react-router-dom";
 import * as yup from "yup";
 
 const SignUpForm = () => {
+  const [state, dispatch] = useContext(Context);
+  const history = useHistory();
   const classes = useStyles();
   return (
     <Card className={classes.root}>
@@ -24,11 +30,39 @@ const SignUpForm = () => {
           acceptedTerms: false,
         }}
         onSubmit={async (data) => {
-          console.time();
-          const response = await AuthService.signUp(data);
-          console.table(response);
-          console.table(data);
-          console.timeEnd();
+          try {
+            const response = await AuthService.signUp(data);
+            console.log(response);
+            if (response.status === 200) {
+              const token = response.data.token;
+              console.log(`token  from response ${token}`);
+              TokenService.setToken(token);
+              dispatch({ type: "SET_TOKEN", payload: token });
+
+              const userInfoObj = TokenService.getUserInfo(tokenKey);
+              console.log(`user info ${userInfoObj} `);
+              dispatch({ type: "SET_USER_INFO", payload: userInfoObj });
+
+              dispatch({ type: "SET_IS_AUTHENTICATED", payload: true });
+              console.log(state);
+
+              return history.push("/");
+
+              //then save the token to the local storage
+              // dispatch token action and  take user to signIn page
+            } else if (response.status === 401) {
+              // else dispatch set error action and display error on screen
+              const responseError = response.data.error;
+              console.log(response);
+              console.log(state);
+
+              dispatch({ type: "SET_ERROR", payload: responseError });
+            } else {
+              dispatch({ type: "SET_ERROR", payload: "Unknown error" });
+            }
+          } catch (err) {
+            dispatch({ type: "SET_ERROR", payload: err });
+          }
         }}
         validationSchema={validationSchema}
       >
