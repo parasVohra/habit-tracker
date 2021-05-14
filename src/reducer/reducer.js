@@ -45,6 +45,26 @@ const Reducer = (state, action) => {
         ...state,
         weekEndDate: payload,
       };
+    case "SET_TOKEN":
+      return {
+        ...state,
+        token: payload,
+      };
+    case "SET_USER_INFO":
+      return {
+        ...state,
+        userInfo: payload,
+      };
+    case "SET_IS_AUTHENTICATED":
+      return {
+        ...state,
+        isAuthenticated: payload,
+      };
+    case "SET_IS_LOADING":
+      return {
+        ...state,
+        isLoading: payload,
+      };
 
     default:
       return state;

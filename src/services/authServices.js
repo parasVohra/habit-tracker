@@ -16,3 +16,9 @@ export async function signOut(tokenKey) {
   // remove token from the local storage
   tokenService.removeToken(tokenKey);
 }
+
+export default {
+  signUp,
+  signIn,
+  signOut,
+};

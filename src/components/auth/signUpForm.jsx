@@ -7,6 +7,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import { Formik, Form, useField } from "formik";
+import AuthService from "../../services/authServices";
 import React from "react";
 import * as yup from "yup";
 
@@ -22,8 +23,12 @@ const SignUpForm = () => {
           password: "",
           acceptedTerms: false,
         }}
-        onSubmit={(data) => {
+        onSubmit={async (data) => {
+          console.time();
+          const response = await AuthService.signUp(data);
+          console.table(response);
           console.table(data);
+          console.timeEnd();
         }}
         validationSchema={validationSchema}
       >
@@ -90,9 +95,7 @@ const MyCheckBox = ({ label, ...props }) => {
     <FormControlLabel
       label={label}
       labelPlacement="end"
-      control={
-        <Checkbox {...field} helperText={errorText} error={!!errorText} />
-      }
+      control={<Checkbox {...field} error={!!errorText} />}
     ></FormControlLabel>
   );
 };

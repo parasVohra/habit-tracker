@@ -10,20 +10,6 @@ import NavBar from "./components/navBar";
 console.log("*************** In App");
 
 function App() {
-  // initialze process
-
-  // fretch data
-
-  let fetchHabits = () => {
-    // fetch data from habit api
-  };
-
-  // after data is fetched then hydrate the store state
-
-  //hydrate global state
-
-  //perform restructuring
-
   return (
     <React.Fragment>
       <HashRouter basename="/">
