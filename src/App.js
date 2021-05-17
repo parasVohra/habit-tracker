@@ -8,6 +8,7 @@ import SignUp from "./components/auth/signUpForm";
 import SignIn from "./components/auth/signInForm";
 import NavBar from "./components/navBar";
 import SignOut from "./components/auth/signOut";
+import ProtectedRoute from "../src/components/auth/protectedRoutes";
 
 console.log("*************** In App");
 
@@ -19,12 +20,12 @@ function App() {
           <NavBar />
           <main className="container-sm">
             <Switch>
-              <Route exact path="/" component={Home} />
-              <Route path="/addHabit" component={AddHabit} />
-              <Route path="/form" component={Form} />
+              <ProtectedRoute exact path="/" component={Home} />
+              <ProtectedRoute path="/addHabit" component={AddHabit} />
+              <ProtectedRoute path="/form" component={Form} />
               <Route path="/signUp" component={SignUp} />
               <Route path="/signIn" component={SignIn} />
-              <Route path="/signOut" component={SignOut} />
+              <ProtectedRoute path="/signOut" component={SignOut} />
             </Switch>
           </main>
         </Store>

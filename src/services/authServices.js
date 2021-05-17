@@ -2,14 +2,17 @@ import http from "./httpService";
 import { apiUrl } from "../config.json";
 import tokenService from "../utilities/tokenMethods";
 
-export function signUp(data) {
-  let response = http.post(apiUrl + "signUp", data);
-  return Promise.resolve(response);
+export async function signUp(data) {
+  try {
+    const response = await http.post(apiUrl + "signUp", data);
+    return Promise.resolve(response);
+  } catch (err) {
+    return Promise.reject(err);
+  }
 }
 
 export async function signIn(data) {
-  let response = await http.post(apiUrl + "signIn", data);
-  return Promise.resolve(response);
+  return await http.post(apiUrl + "signIn", data);
 }
 
 export async function signOut(tokenKey) {

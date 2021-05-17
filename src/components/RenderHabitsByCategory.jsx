@@ -17,20 +17,10 @@ const RenderHabitsByCategory = ({ category }) => {
   const [state, dispatch] = useContext(Context);
   const [habitData, setHabitData] = useState(null);
   const [cat] = useState(category);
-  const [currentDate, setCurrentDate] = useState(null);
-  const [habitStatus, setHabitStatus] = useState(false);
-  const [startDate, setStartDate] = useState(null);
 
   useEffect(() => {
     setHabitData(state.habitRestructure);
-    setCurrentDate(state.currentDate);
-    setStartDate(state.weekStartDate);
-  }, [
-    state.habitRestructure,
-    state.category,
-    state.currentDate,
-    state.weekStartDate,
-  ]);
+  }, [state.habitRestructure]);
 
   useEffect(() => {
     const getCurrentStatus = (habit) => {

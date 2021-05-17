@@ -12,12 +12,14 @@ const SignOut = () => {
     dispatch({ type: "SET_IS_AUTHENTICATED", payload: false });
     dispatch({ type: "SET_USER_INFO", payload: {} });
     signOut(tokenKey);
+    setTimeout(() => {
+      history.push("/signIn");
+    }, 2000);
   }, []);
 
-  // history.push("/");
   return (
     <div>
-      <h1>LoggedOut</h1>
+      <h1>Signed Out</h1>
       <pre>{JSON.stringify(state.isAuthenticated, null, 2)}</pre>
     </div>
   );

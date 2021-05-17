@@ -1,6 +1,8 @@
 import {
   Button,
   Card,
+  CardContent,
+  CardHeader,
   Checkbox,
   FormControlLabel,
   makeStyles,
@@ -20,80 +22,83 @@ const SignUpForm = () => {
   const history = useHistory();
   const classes = useStyles();
   return (
-    <Card className={classes.root}>
-      <Formik
-        initialValues={{
-          firstName: "",
-          lastName: "",
-          email: "",
-          password: "",
-          acceptedTerms: false,
-        }}
-        onSubmit={async (data) => {
-          try {
-            const response = await AuthService.signUp(data);
-            console.log(response);
-            if (response.status === 200) {
-              const token = response.data.token;
-              console.log(`token  from response ${token}`);
-              TokenService.setToken(token);
-              dispatch({ type: "SET_TOKEN", payload: token });
-
-              const userInfoObj = TokenService.getUserInfo(tokenKey);
-              console.log(`user info ${userInfoObj} `);
-              dispatch({ type: "SET_USER_INFO", payload: userInfoObj });
-
-              dispatch({ type: "SET_IS_AUTHENTICATED", payload: true });
-              console.log(state);
-
-              return history.push("/");
-
-              //then save the token to the local storage
-              // dispatch token action and  take user to signIn page
-            } else if (response.status === 401) {
-              // else dispatch set error action and display error on screen
-              const responseError = response.data.error;
+    <Card raised={true} className={classes.root}>
+      <CardHeader title="SignUp" />
+      <CardContent>
+        <Formik
+          initialValues={{
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            acceptedTerms: false,
+          }}
+          onSubmit={async (data) => {
+            try {
+              const response = await AuthService.signUp(data);
               console.log(response);
-              console.log(state);
+              if (response.status === 200) {
+                const token = response.data.token;
+                console.log(`token  from response ${token}`);
+                TokenService.setToken(token);
+                dispatch({ type: "SET_TOKEN", payload: token });
 
-              dispatch({ type: "SET_ERROR", payload: responseError });
-            } else {
-              dispatch({ type: "SET_ERROR", payload: "Unknown error" });
+                const userInfoObj = TokenService.getUserInfo(tokenKey);
+                console.log(`user info ${userInfoObj} `);
+                dispatch({ type: "SET_USER_INFO", payload: userInfoObj });
+
+                dispatch({ type: "SET_IS_AUTHENTICATED", payload: true });
+                console.log(state);
+
+                return history.push("/form");
+
+                //then save the token to the local storage
+                // dispatch token action and  take user to signIn page
+              } else if (response.status === 401) {
+                // else dispatch set error action and display error on screen
+                const responseError = response.data.error;
+                console.log(response);
+                console.log(state);
+
+                dispatch({ type: "SET_ERROR", payload: responseError });
+              } else {
+                dispatch({ type: "SET_ERROR", payload: "Unknown error" });
+              }
+            } catch (err) {
+              dispatch({ type: "SET_ERROR", payload: err });
             }
-          } catch (err) {
-            dispatch({ type: "SET_ERROR", payload: err });
-          }
-        }}
-        validationSchema={validationSchema}
-      >
-        <Form>
-          <div className={classes.root}>
-            <MyTextField label="First Name" name="firstName" type="input" />
-          </div>
-          <div className={classes.root}>
-            <MyTextField label="Last Name" name="lastName" type="input" />
-          </div>
-          <div className={classes.root}>
-            <MyTextField label="Email" name="email" type="input" />
-          </div>
-          <div className={classes.root}>
-            <MyTextField label="Password" name="password" type="password" />
-          </div>
+          }}
+          validationSchema={validationSchema}
+        >
+          <Form>
+            <div className={classes.root}>
+              <MyTextField label="First Name" name="firstName" type="input" />
+            </div>
+            <div className={classes.root}>
+              <MyTextField label="Last Name" name="lastName" type="input" />
+            </div>
+            <div className={classes.root}>
+              <MyTextField label="Email" name="email" type="input" />
+            </div>
+            <div className={classes.root}>
+              <MyTextField label="Password" name="password" type="password" />
+            </div>
 
-          <div className={classes.root}>
-            <MyCheckBox
-              label="I accept the terms and condition"
-              name="acceptedTerms"
-            />
-          </div>
+            <div className={classes.root}>
+              <MyCheckBox
+                label="I accept the terms and condition"
+                name="acceptedTerms"
+              />
+            </div>
 
-          <div className={classes.root}>
-            <Button variant="contained" color="primary" type="submit">
-              Sing Me Up
-            </Button>
-          </div>
-        </Form>
-      </Formik>
+            <div className={classes.root}>
+              <Button variant="contained" color="primary" type="submit">
+                Sing Me Up
+              </Button>
+            </div>
+          </Form>
+        </Formik>
+      </CardContent>
     </Card>
   );
 };
