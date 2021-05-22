@@ -12,6 +12,7 @@ import AuthService from "../../services/authServices";
 import TokenService from "../../utilities/tokenMethods";
 import { Context } from "../../Store/habitStore";
 import { tokenKey } from "../../config.json";
+import Modal from "../modal";
 
 import { useHistory } from "react-router-dom";
 import * as yup from "yup";
@@ -21,6 +22,12 @@ const SignInForm = () => {
   const history = useHistory();
   const [error, setError] = useState([]);
   const [state, dispatch] = useContext(Context);
+  const [showModal, setModal] = useState(false);
+  const [msg, setMsg] = useState(null);
+
+  const toggleModal = () => {
+    setModal(!showModal);
+  };
   return (
     <Card raised={true} className={classes.root}>
       <div>{error.length ? <h3>{error[0]}</h3> : null}</div>
@@ -49,15 +56,16 @@ const SignInForm = () => {
                 dispatch({ type: "SET_IS_AUTHENTICATED", payload: true });
                 console.log(state);
 
-                return history.push("/form");
-              }
-              if (response.status === 401) {
-                console.log(response.data);
+                return history.push("/");
               }
             } catch (err) {
-              console.log(err.response.data);
-              setError(error.push(err.response.data));
-              console.log(error);
+              console.log(err.response);
+              if (err.response.status === 401) {
+                console.log(err.data);
+
+                setMsg(err.response.data.error);
+                toggleModal();
+              }
             }
           }}
           validationSchema={validationSchema}
@@ -77,6 +85,23 @@ const SignInForm = () => {
             </div>
           </Form>
         </Formik>
+        {showModal ? (
+          <Modal>
+            <Card raised={true}>
+              <CardContent>
+                <div style={{ margin: "20px" }}>{msg}</div>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="button"
+                  onClick={toggleModal}
+                >
+                  OK
+                </Button>
+              </CardContent>
+            </Card>
+          </Modal>
+        ) : null}
       </CardContent>
     </Card>
   );

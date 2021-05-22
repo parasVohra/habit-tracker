@@ -14,7 +14,7 @@ const initialState = {
   token: "",
   isAuthenticated: false,
   userInfo: {},
-  isLoading: false,
+  isLoading: true,
 };
 
 const Store = ({ children }) => {

@@ -5,8 +5,6 @@ import HabitService from "../services/habitService";
 import { Context } from "../Store/habitStore";
 import { addDays, format } from "date-fns";
 
-console.log("*************************In Render Categories");
-
 // First day of week is sunday
 const FIRST_WEEKDAY_INDEX = 0;
 
@@ -24,9 +22,7 @@ const RenderHabitsByCategory = ({ category }) => {
 
   useEffect(() => {
     const getCurrentStatus = (habit) => {
-      habit[cat].map((h) => {
-        //let fDate = moment(currentDate).format("DDMMYYYY");
-
+      habit[cat].forEach((h) => {
         let isHabitComplete = {};
         let name = h.habitName;
         isHabitComplete[name] = [];
@@ -36,7 +32,7 @@ const RenderHabitsByCategory = ({ category }) => {
 
           let formatDate = format(dateCounter, "ddMMyyyy");
           let status = h.habitTrack.filter((d) => d.date === formatDate);
-          //console.log(status[0].isComplete);
+
           if (status.length > 0 && status[0].isComplete) {
             isHabitComplete[name][i] = true;
           } else {
@@ -205,7 +201,10 @@ const RenderHabitsByCategory = ({ category }) => {
           );
         })
       ) : (
-        <></>
+        <div>
+          You are no tracking any habits yet, please add habits and it will show
+          here
+        </div>
       )}
     </>
   );

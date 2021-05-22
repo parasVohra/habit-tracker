@@ -11,12 +11,28 @@ import { Formik, useField } from "formik";
 import React, { useContext, useEffect, useState } from "react";
 import * as yup from "yup";
 import habitService from "../services/habitService";
+import Modal from "./modal";
+import { useHistory } from "react-router-dom";
 
 const Form = () => {
   const [habit, setHabit] = useState(null);
   const classes = useStyles();
+  const [msg, setMsg] = useState(null);
+  const history = useHistory();
+  const [habitSaved, setHabitSaved] = useState(false);
 
-  useEffect(() => {}, []);
+  const [showModal, setModal] = useState(false);
+
+  useEffect(() => {
+    if (habitSaved && !showModal) {
+      history.push("/");
+    }
+  }, [habitSaved, history, showModal]);
+
+  const toggleModal = () => {
+    setModal(!showModal);
+    setHabitSaved(true);
+  };
 
   return (
     <Card raised={true} className={classes.root}>
@@ -29,10 +45,24 @@ const Form = () => {
             types: "checkbox",
             color: "black",
           }}
-          onSubmit={(data) => {
-            console.log(data);
-            setHabit(data);
-            saveHabit(data);
+          onSubmit={async (data) => {
+            try {
+              console.log(data);
+              setHabit(data);
+              const res = await saveHabit(data);
+              if (res.status === 200) {
+                console.log(res);
+                setMsg(res.msg);
+                toggleModal();
+              }
+            } catch (err) {
+              if (err.response.status === 400) {
+                console.log(err.response);
+
+                setMsg(err.response.data.error);
+                toggleModal();
+              }
+            }
           }}
           validationSchema={validationSchema}
         >
@@ -75,11 +105,27 @@ const Form = () => {
                   Save Habit
                 </Button>
               </div>
-              <pre>{JSON.stringify(values, null, 2)}</pre>
             </form>
           )}
         </Formik>
       </CardContent>
+      {showModal ? (
+        <Modal>
+          <Card raised={true}>
+            <CardContent>
+              <div>{msg}</div>
+              <Button
+                variant="contained"
+                color="primary"
+                type="button"
+                onClick={toggleModal}
+              >
+                OK
+              </Button>
+            </CardContent>
+          </Card>
+        </Modal>
+      ) : null}
     </Card>
   );
 };
@@ -138,7 +184,7 @@ const saveHabit = async (habit) => {
 
   const response = await habitService.saveHabit(habitData);
 
-  console.log(response);
+  return response.data;
 };
 
 const useStyles = makeStyles({

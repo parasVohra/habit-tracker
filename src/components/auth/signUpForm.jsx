@@ -13,14 +13,21 @@ import AuthService from "../../services/authServices";
 import TokenService from "../../utilities/tokenMethods";
 import { Context } from "../../Store/habitStore";
 import { tokenKey } from "../../config.json";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import * as yup from "yup";
+import Modal from "../modal";
 
 const SignUpForm = () => {
   const [state, dispatch] = useContext(Context);
+  const [showModal, setModal] = useState(false);
+  const [msg, setMsg] = useState(null);
   const history = useHistory();
   const classes = useStyles();
+
+  const toggleModal = () => {
+    setModal(!showModal);
+  };
   return (
     <Card raised={true} className={classes.root}>
       <CardHeader title="SignUp" />
@@ -65,6 +72,10 @@ const SignUpForm = () => {
                 dispatch({ type: "SET_ERROR", payload: "Unknown error" });
               }
             } catch (err) {
+              if (err.response.status === 401) {
+                setMsg(err.response.data.error);
+                toggleModal();
+              }
               dispatch({ type: "SET_ERROR", payload: err });
             }
           }}
@@ -98,6 +109,23 @@ const SignUpForm = () => {
             </div>
           </Form>
         </Formik>
+        {showModal ? (
+          <Modal>
+            <Card raised={true}>
+              <CardContent>
+                <div style={{ margin: "20px" }}>{msg}</div>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="button"
+                  onClick={toggleModal}
+                >
+                  OK
+                </Button>
+              </CardContent>
+            </Card>
+          </Modal>
+        ) : null}
       </CardContent>
     </Card>
   );

@@ -8,14 +8,21 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 import RenderHabitsByCategory from "../components/RenderHabitsByCategory";
 import { Context } from "../Store/habitStore";
 
 const RenderHabits = () => {
-  const [state, dispatch] = useContext(Context);
+  const [state] = useContext(Context);
   const classes = useStyles();
+  const [isHabitEmpty, setisHabitEmpty] = useState(false);
+
+  useEffect(() => {
+    if (JSON.stringify(state.habitRestructure) === "{}") {
+      setisHabitEmpty(true);
+    }
+  }, [state.habitRestructure]);
 
   return (
     <div className={classes.root}>
@@ -39,7 +46,7 @@ const RenderHabits = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {state.habitRestructure ? (
+            {state.habitRestructure && !isHabitEmpty ? (
               <>
                 {state.category ? (
                   state.category.map((c, index) => {
@@ -57,16 +64,19 @@ const RenderHabits = () => {
                           <TableCell></TableCell>
                           <TableCell></TableCell>
                         </TableRow>
+
                         <RenderHabitsByCategory category={c} />
                       </>
                     );
                   })
                 ) : (
-                  <TableCell>ss</TableCell>
+                  <TableRow>ss</TableRow>
                 )}
               </>
             ) : (
-              <TableCell>ss</TableCell>
+              <TableRow>
+                <TableCell align="center">{`Loading ...  `} </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>

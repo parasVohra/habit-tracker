@@ -26,6 +26,7 @@ export default function Home() {
 
   useEffect(() => {
     async function hydrateStoreState() {
+      dispatch({ type: "SET_IS_LOADING", payload: true });
       const habitObj = await fetchHabitData();
 
       console.log(habitObj);
@@ -49,6 +50,7 @@ export default function Home() {
 
       dispatch({ type: "SET_WEEK_START_DATE", payload: weekStartDate });
       dispatch({ type: "SET_WEEK_END_DATE", payload: weekEndDate });
+      dispatch({ type: "SET_IS_LOADING", payload: false });
     }
 
     hydrateStoreState();
@@ -101,7 +103,13 @@ export default function Home() {
             </Grid>
           </Grid>
           <Grid container justify="center">
-            <RenderHabits />
+            {state.isLoading ? (
+              <div
+                style={{ fontSize: "4vw" }}
+              >{`Loading Habits .... \uD83E\uDD2A`}</div>
+            ) : (
+              <RenderHabits />
+            )}
           </Grid>
         </Grid>
       </Grid>
@@ -120,5 +128,10 @@ const useStyles = makeStyles({
     "&$checked": {
       color: green[600],
     },
+  },
+
+  spinIt: {
+    width: 10,
+    height: 10,
   },
 });

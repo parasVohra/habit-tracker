@@ -1,11 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { Context } from "../../Store/habitStore";
 import { tokenKey } from "../../config.json";
 
 const ProtectedRoutes = ({ path, component: Component, render, ...rest }) => {
-  const [state, dispatch] = useContext(Context);
-
   return (
     <Route
       {...rest}

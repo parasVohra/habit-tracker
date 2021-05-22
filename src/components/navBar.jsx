@@ -3,6 +3,7 @@ import { Context } from "../Store/habitStore";
 
 import { NavLink } from "react-router-dom";
 import { tokenKey } from "../config.json";
+import { Label } from "@material-ui/icons";
 
 const NavBar = () => {
   const [state] = useContext(Context);
@@ -41,7 +42,7 @@ const NavBar = () => {
               }}
               to="/form"
             >
-              Form
+              Add Habit
             </NavLink>
 
             <NavLink
@@ -59,6 +60,7 @@ const NavBar = () => {
             >
               SignOut
             </NavLink>
+            <h2>{`Hello, ${state.userInfo.firstName}`} </h2>
           </React.Fragment>
         ) : (
           <React.Fragment>
