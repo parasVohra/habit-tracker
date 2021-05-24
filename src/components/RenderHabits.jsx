@@ -9,20 +9,39 @@ import {
   TableRow,
 } from "@material-ui/core";
 import React, { useContext, useState, useEffect } from "react";
-
+import { format, eachDayOfInterval } from "date-fns";
 import RenderHabitsByCategory from "../components/RenderHabitsByCategory";
 import { Context } from "../Store/habitStore";
 
 const RenderHabits = () => {
-  const [state] = useContext(Context);
+  const [state, dispatch] = useContext(Context);
   const classes = useStyles();
-  const [isHabitEmpty, setisHabitEmpty] = useState(false);
+  const [isHabitEmpty, setIsHabitEmpty] = useState(false);
+  const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   useEffect(() => {
     if (JSON.stringify(state.habitRestructure) === "{}") {
-      setisHabitEmpty(true);
+      setIsHabitEmpty(true);
     }
   }, [state.habitRestructure]);
+
+  useEffect(() => {
+    const fetchCurrentWeekDates = () => {
+      const result = eachDayOfInterval({
+        start: state.weekStartDate,
+        end: state.weekEndDate,
+      });
+
+      const formatDates = result.map((date) => {
+        let intDate = format(date, "dd");
+        return intDate;
+      });
+
+      dispatch({ type: "SET_CURRENT_WEEK_DATES", payload: formatDates });
+    };
+
+    fetchCurrentWeekDates();
+  }, [state.weekStartDate, state.weekEndDate, dispatch]);
 
   return (
     <div className={classes.root}>
@@ -36,13 +55,11 @@ const RenderHabits = () => {
           <TableHead>
             <TableRow>
               <TableCell align="center">Habits </TableCell>
-              <TableCell align="center">S</TableCell>
-              <TableCell align="center">M</TableCell>
-              <TableCell align="center">T</TableCell>
-              <TableCell align="center">W</TableCell>
-              <TableCell align="center">T</TableCell>
-              <TableCell align="center">F</TableCell>
-              <TableCell align="center">S</TableCell>
+              {weekDays.map((day, index) => {
+                return (
+                  <TableCell align="center">{`${day} ${state.currentWeekDates[index]}`}</TableCell>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>

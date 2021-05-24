@@ -38,7 +38,7 @@ const SignUpForm = () => {
             lastName: "",
             email: "",
             password: "",
-            acceptedTerms: false,
+            termsOfServices: false,
           }}
           onSubmit={async (data) => {
             try {
@@ -98,7 +98,7 @@ const SignUpForm = () => {
             <div className={classes.root}>
               <MyCheckBox
                 label="I accept the terms and condition"
-                name="acceptedTerms"
+                name="termsOfServices"
               />
             </div>
 
@@ -132,13 +132,21 @@ const SignUpForm = () => {
 };
 
 const validationSchema = yup.object({
-  firstName: yup.string().required().max(15, "Must be 15 character or less"),
-  lastName: yup.string().required().max(20, "Must be 20 character or less"),
+  firstName: yup
+    .string()
+    .required()
+    .min(3, "First name must have at least 3 character")
+    .max(15, "First name must be 15 character or less"),
+  lastName: yup
+    .string()
+    .required()
+    .min(3, "Last name must have at least 3 character")
+    .max(20, "Last name must be 20 character or less"),
   email: yup.string().required().email("Invalid email address"),
   password: yup.string().required().min(6, "Must be 6 character or more"),
-  acceptedTerms: yup
+  termsOfServices: yup
     .boolean()
-    .required("Required")
+    .required()
     .oneOf([true], "You must accept the terms and conditions."),
 });
 

@@ -66,6 +66,11 @@ const Reducer = (state, action) => {
         ...state,
         isLoading: payload,
       };
+    case "SET_CURRENT_WEEK_DATES":
+      return {
+        ...state,
+        currentWeekDates: payload,
+      };
 
     default:
       return state;

@@ -50,8 +50,7 @@ const Form = () => {
               console.log(data);
               setHabit(data);
               const res = await saveHabit(data);
-              if (res.status === 200) {
-                console.log(res);
+              if (res) {
                 setMsg(res.msg);
                 toggleModal();
               }

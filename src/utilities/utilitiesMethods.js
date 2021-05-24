@@ -54,15 +54,16 @@ export function getTodayDate() {
 }
 
 // get start of week from date fns
-export function getWeekStartDate(date) {
+export function getWeekStartDate(date = new Date()) {
   console.log(date);
   let weekStartDate = startOfWeek(date);
   console.log(weekStartDate);
-  return Promise.resolve(weekStartDate);
+  return weekStartDate;
 }
 
 // get end of week from date fns
-export function getWeekEndDate(date) {
+export function getWeekEndDate(date = new Date()) {
   let weekEndDate = endOfWeek(date);
-  return Promise.resolve(weekEndDate);
+
+  return weekEndDate;
 }

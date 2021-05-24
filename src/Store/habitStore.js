@@ -1,5 +1,9 @@
 import { createContext, useReducer } from "react";
 import Reducer from "../reducer/reducer";
+import {
+  getWeekStartDate,
+  getWeekEndDate,
+} from "../utilities/utilitiesMethods";
 
 const initialState = {
   habits: [],
@@ -9,12 +13,13 @@ const initialState = {
   habitStatus: [],
   error: [],
   currentDate: new Date(),
-  weekStartDate: new Date(),
-  weekEndDate: new Date(),
+  weekStartDate: getWeekStartDate() || new Date(),
+  weekEndDate: getWeekEndDate() || new Date(),
   token: "",
   isAuthenticated: false,
   userInfo: {},
   isLoading: true,
+  currentWeekDates: [],
 };
 
 const Store = ({ children }) => {

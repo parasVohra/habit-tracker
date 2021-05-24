@@ -16,13 +16,13 @@ const NavBar = () => {
             <NavLink
               style={{
                 textDecoration: "none",
-                padding: "20px",
-                color: "grey",
-                fontSize: "25px",
+                padding: "15px",
+                color: "darkgrey",
+                fontSize: "4vw",
               }}
               activeStyle={{
                 color: "black",
-                fontSize: "26px",
+                fontSize: "4vw",
               }}
               to="/"
               exact
@@ -32,13 +32,13 @@ const NavBar = () => {
             <NavLink
               style={{
                 textDecoration: "none",
-                padding: "20px",
-                color: "grey",
-                fontSize: "25px",
+                padding: "15px",
+                color: "darkgrey",
+                fontSize: "4vw",
               }}
               activeStyle={{
                 color: "black",
-                fontSize: "26px",
+                fontSize: "4vw",
               }}
               to="/form"
             >
@@ -48,13 +48,13 @@ const NavBar = () => {
             <NavLink
               style={{
                 textDecoration: "none",
-                padding: "20px",
-                color: "grey",
-                fontSize: "25px",
+                padding: "15px",
+                color: "darkgrey",
+                fontSize: "4vw",
               }}
               activeStyle={{
                 color: "black",
-                fontSize: "26px",
+                fontSize: "4vw",
               }}
               to="/signOut"
             >
@@ -68,13 +68,13 @@ const NavBar = () => {
             <NavLink
               style={{
                 textDecoration: "none",
-                padding: "20px",
-                color: "grey",
-                fontSize: "25px",
+                padding: "15px",
+                color: "darkgrey",
+                fontSize: "4vw",
               }}
               activeStyle={{
                 color: "black",
-                fontSize: "26px",
+                fontSize: "4vw",
               }}
               to="/signUp"
             >
@@ -83,13 +83,13 @@ const NavBar = () => {
             <NavLink
               style={{
                 textDecoration: "none",
-                padding: "20px",
-                color: "grey",
-                fontSize: "25px",
+                padding: "15px",
+                color: "darkgrey",
+                fontSize: "4vw",
               }}
               activeStyle={{
                 color: "black",
-                fontSize: "26px",
+                fontSize: "4vw",
               }}
               to="/signIn"
             >

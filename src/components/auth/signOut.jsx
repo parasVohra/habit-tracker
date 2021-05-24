@@ -29,7 +29,7 @@ const SignOut = () => {
 
     let timeOut = setTimeout(() => {
       history.push("/signIn");
-    }, 3000);
+    }, 1000);
 
     return () => {
       clearTimeout(timeOut);

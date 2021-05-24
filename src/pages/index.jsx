@@ -3,7 +3,7 @@ import { Context } from "../Store/habitStore";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Grid } from "@material-ui/core";
 import { green } from "@material-ui/core/colors";
-import { addDays, format } from "date-fns";
+import { addDays, format, subDays } from "date-fns";
 import RenderHabits from "../components/RenderHabits";
 import TrackHabit from "../components/TrackHabit";
 import {
@@ -22,19 +22,14 @@ export default function Home() {
   const classes = useStyles();
   const [isNextDisable, setNextDisable] = useState(false);
 
-  console.log(state);
-
   useEffect(() => {
     async function hydrateStoreState() {
       dispatch({ type: "SET_IS_LOADING", payload: true });
       const habitObj = await fetchHabitData();
 
-      console.log(habitObj);
       dispatch({ type: "SET_HABIT", payload: habitObj });
-      const [
-        habitRestructure,
-        categories,
-      ] = await extractCategoriesAndRestructureHabits(habitObj);
+      const [habitRestructure, categories] =
+        await extractCategoriesAndRestructureHabits(habitObj);
 
       dispatch({ type: "SET_HABIT_RESTRUCTURE", payload: habitRestructure });
       dispatch({ type: "SET_CATEGORY", payload: categories });
@@ -58,19 +53,34 @@ export default function Home() {
 
   // this fetch function is need to extracted and need to be reused
 
-  const changeDate = async (n) => {
+  const changeDate = async (method, n) => {
     // change the current date to prev or next date
-    let changedDate = addDays(state.currentDate, n);
-    dispatch({ type: "SET_CURRENT_DATE", payload: changedDate });
-    const newStartWeekDate = await getWeekStartDate(changedDate);
+    if (method === "add") {
+      let changedDate = addDays(state.currentDate, n);
+      dispatch({ type: "SET_CURRENT_DATE", payload: changedDate });
+      const newStartWeekDate = await getWeekStartDate(changedDate);
+      const newEndWeekDate = await getWeekEndDate(changedDate);
+      dispatch({ type: "SET_WEEK_END_DATE", payload: newEndWeekDate });
+      dispatch({ type: "SET_WEEK_START_DATE", payload: newStartWeekDate });
+    }
+    if (method === "sub") {
+      let changedDate = subDays(state.currentDate, n);
+      dispatch({ type: "SET_CURRENT_DATE", payload: changedDate });
+      const newStartWeekDate = await getWeekStartDate(changedDate);
+      const newEndWeekDate = await getWeekEndDate(changedDate);
 
-    dispatch({ type: "SET_WEEK_START_DATE", payload: newStartWeekDate });
+      dispatch({ type: "SET_WEEK_START_DATE", payload: newStartWeekDate });
+      dispatch({ type: "SET_WEEK_END_DATE", payload: newEndWeekDate });
+    }
   };
 
   return (
     <React.Fragment>
       <div style={{ margin: "20px" }}>
-        {format(state.currentDate, "dd MMMM yyyy")}
+        {`${format(state.weekStartDate, "dd MMMM")} to ${format(
+          state.weekEndDate,
+          "dd MMMM"
+        )}`}
       </div>
 
       <Grid container className={classes.root} spacing={2}>
@@ -81,7 +91,7 @@ export default function Home() {
                 style={{ margin: "20px" }}
                 variant="contained"
                 color="primary"
-                onClick={() => changeDate(-7)}
+                onClick={() => changeDate("sub", 7)}
               >
                 Prev
               </Button>
@@ -92,7 +102,7 @@ export default function Home() {
                 disabled={isNextDisable}
                 variant="contained"
                 color="primary"
-                onClick={() => changeDate(7)}
+                onClick={() => changeDate("add", 7)}
               >
                 Next
               </Button>
