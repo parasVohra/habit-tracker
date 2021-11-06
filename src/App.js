@@ -9,29 +9,40 @@ import SignIn from "./components/auth/signInForm";
 import NavBar from "./components/navBar";
 import SignOut from "./components/auth/signOut";
 import ProtectedRoute from "../src/components/auth/protectedRoutes";
+import HabitCard from "./components/HabitCard/HabitCard";
 
 console.log("*************** In App");
 
 function App() {
-  return (
-    <React.Fragment>
-      <HashRouter basename="/">
-        <Store>
-          <NavBar />
-          <main className="container-sm">
-            <Switch>
-              <ProtectedRoute exact path="/" component={Home} />
-              <ProtectedRoute path="/addHabit" component={AddHabit} />
-              <ProtectedRoute path="/form" component={Form} />
-              <Route path="/signUp" component={SignUp} />
-              <Route path="/signIn" component={SignIn} />
-              <ProtectedRoute path="/signOut" component={SignOut} />
-            </Switch>
-          </main>
-        </Store>
-      </HashRouter>
-    </React.Fragment>
-  );
+    return (
+        <React.Fragment>
+            <HashRouter basename="/">
+                <Store>
+                    <NavBar />
+                    <main className="container-sm">
+                        <Switch>
+                            <ProtectedRoute exact path="/" component={Home} />
+                            <ProtectedRoute
+                                path="/addHabit"
+                                component={AddHabit}
+                            />
+                            <ProtectedRoute path="/form" component={Form} />
+                            <ProtectedRoute
+                                path="/habitCard"
+                                component={HabitCard}
+                            />
+                            <Route path="/signUp" component={SignUp} />
+                            <Route path="/signIn" component={SignIn} />
+                            <ProtectedRoute
+                                path="/signOut"
+                                component={SignOut}
+                            />
+                        </Switch>
+                    </main>
+                </Store>
+            </HashRouter>
+        </React.Fragment>
+    );
 }
 
 export default App;
