@@ -12,6 +12,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { format, eachDayOfInterval } from "date-fns";
 import RenderHabitsByCategory from "../components/RenderHabitsByCategory";
 import { Context } from "../Store/habitStore";
+import HabitCard from "./HabitCard/HabitCard";
 
 const RenderHabits = () => {
   const [state, dispatch] = useContext(Context);
