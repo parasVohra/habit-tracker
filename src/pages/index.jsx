@@ -21,6 +21,7 @@ export default function Home() {
   const [state, dispatch] = useContext(Context);
   const classes = useStyles();
   const [isNextDisable, setNextDisable] = useState(false);
+  console.log(state.habitView);
 
   useEffect(() => {
     async function hydrateStoreState() {
@@ -74,6 +75,10 @@ export default function Home() {
     }
   };
 
+  function setHabitView(viewType) {
+    dispatch({ type: "SET_HABIT_VIEW", payload: viewType });
+  }
+
   return (
     <React.Fragment>
       <div style={{ margin: "20px" }}>
@@ -105,6 +110,24 @@ export default function Home() {
                 onClick={() => changeDate("add", 7)}
               >
                 Next
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                style={{ margin: "20px" }}
+                disabled={isNextDisable}
+                onClick={() => setHabitView("daily")}
+              >
+                Daily
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                style={{ margin: "20px" }}
+                disabled={isNextDisable}
+                onClick={() => setHabitView("Weekly")}
+              >
+                Weekly
               </Button>
             </Grid>
             <Grid xs={3} item></Grid>

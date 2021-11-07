@@ -35,7 +35,7 @@ const Form = () => {
   };
 
   return (
-    <Card raised={true} className={classes.root}>
+    <Card raised={true} dark className={classes.root}>
       <CardHeader title="Add New Habit" />
       <CardContent>
         <Formik
@@ -156,6 +156,18 @@ const MySelectField = ({ label, options, ...props }) => {
     >
       {options.map((option) => (
         <MenuItem key={option.value} value={option.value}>
+          <div
+            style={{
+              display: "inline-block",
+              backgroundColor: colorCode[option.value],
+              height: "10px",
+              width: "10px",
+              borderRadius: "10px",
+              marginRight: "4px",
+            }}
+          >
+            {"   "}
+          </div>
           {option.label}
         </MenuItem>
       ))}
@@ -184,6 +196,17 @@ const saveHabit = async (habit) => {
   const response = await habitService.saveHabit(habitData);
 
   return response.data;
+};
+
+const colorCode = {
+  yellow: "#FFB427",
+  lightblue: "#4EB1CB",
+  green: "#50D890",
+  black: "#000000",
+  red: "#FF6B7A",
+  purple: "#5666F3",
+  blue: "#3a8dff",
+  orange: "#FF8C00",
 };
 
 const useStyles = makeStyles({
@@ -252,8 +275,12 @@ const colors = [
     label: "Red",
   },
   {
-    value: "blue",
-    label: "Blue",
+    value: "yellow",
+    label: "Yellow",
+  },
+  {
+    value: "lightblue",
+    label: "Light Blue",
   },
   {
     value: "black",
@@ -262,6 +289,18 @@ const colors = [
   {
     value: "green",
     label: "Green",
+  },
+  {
+    value: "orange",
+    label: "Orange",
+  },
+  {
+    value: "blue",
+    label: "Blue",
+  },
+  {
+    value: "purple",
+    label: "Purple",
   },
 ];
 

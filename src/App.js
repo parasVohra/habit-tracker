@@ -13,6 +13,7 @@ import NavBar from "./components/navBar";
 import SignOut from "./components/auth/signOut";
 import ProtectedRoute from "../src/components/auth/protectedRoutes";
 import HabitCard from "./components/HabitCard/HabitCard";
+import DailyHabitCard from "./components/DailyHabitCard/DailyHabitCard";
 
 function App() {
   return (
@@ -26,6 +27,10 @@ function App() {
               <ProtectedRoute path="/addHabit" component={AddHabit} />
               <ProtectedRoute path="/form" component={Form} />
               <ProtectedRoute path="/habitCard" component={HabitCard} />
+              <ProtectedRoute
+                path="/dailyHabitCard"
+                component={DailyHabitCard}
+              />
               <Route path="/signUp" component={SignUp} />
               <Route path="/signIn" component={SignIn} />
               <ProtectedRoute path="/signOut" component={SignOut} />

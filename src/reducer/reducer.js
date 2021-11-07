@@ -71,6 +71,11 @@ const Reducer = (state, action) => {
         ...state,
         currentWeekDates: payload,
       };
+    case "SET_HABIT_VIEW":
+      return {
+        ...state,
+        habitView: payload,
+      };
 
     default:
       return state;

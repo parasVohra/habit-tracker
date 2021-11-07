@@ -11,22 +11,22 @@ function HabitCard(habits) {
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const colors = {
     yellow: "#FFB427",
-    blue: "#4EB1CB",
+    lightblue: "#4EB1CB",
     green: "#50D890",
-    white: "#FFFFFF",
     black: "#000000",
     red: "#FF6B7A",
     purple: "#5666F3",
+    blue: "#3a8dff",
+    orange: "#FF8C00",
   };
   const dateColor = {
     color: colors[habit.color],
   };
-  console.log(state);
 
   const dateClasses = (dateColor) =>
     makeStyles(() => ({
       selected: {
-        marginTop: "10px",
+        marginTop: "0.2rem",
         height: "2rem",
         width: "2rem",
         textAlign: "center",
@@ -35,11 +35,13 @@ function HabitCard(habits) {
         border: "2px solid",
         borderRadius: "2rem",
         backgroundColor: dateColor.color,
+        //background: `linear-gradient(to right, ${dateColor.color} 0%,  ${dateColor.color}  30%, rgba(0,0,0,0) 30%,rgba(0,0,0,0) 100%)`,
         borderColor: dateColor.color,
         cursor: "pointer",
+        boxShadow: "1px 1px 10px 0px #000000ab",
       },
       unSelected: {
-        marginTop: "10px",
+        marginTop: "0.2rem",
         height: "2rem",
         width: "2rem",
         textAlign: "center",
@@ -121,7 +123,7 @@ function HabitCard(habits) {
                 <Grid item className={classes.titleText}>
                   <Typography
                     align="center"
-                    variant="subtitle1"
+                    variant="h6"
                     className={classes.textGrey}
                   >{`${day}`}</Typography>
                   {state.habitStatus[habit.habitName][index]

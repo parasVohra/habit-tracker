@@ -1,13 +1,4 @@
-import {
-  makeStyles,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@material-ui/core";
+import { makeStyles, Typography } from "@material-ui/core";
 import React, { useContext, useState, useEffect } from "react";
 import { format, eachDayOfInterval } from "date-fns";
 import RenderHabitsByCategory from "../components/RenderHabitsByCategory";
@@ -18,7 +9,6 @@ const RenderHabits = () => {
   const [state, dispatch] = useContext(Context);
   const classes = useStyles();
   const [isHabitEmpty, setIsHabitEmpty] = useState(false);
-  const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   useEffect(() => {
     if (JSON.stringify(state.habitRestructure) === "{}") {
@@ -46,59 +36,23 @@ const RenderHabits = () => {
 
   return (
     <div className={classes.root}>
-      <TableContainer className={classes.table} component={Paper}>
-        <Table
-          aria-label="simple table"
-          padding="none"
-          size="small"
-          stickyHeader
-        >
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">Habits </TableCell>
-              {weekDays.map((day, index) => {
-                return (
-                  <TableCell align="center">{`${day} ${state.currentWeekDates[index]}`}</TableCell>
-                );
-              })}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {state.habitRestructure && !isHabitEmpty ? (
-              <>
-                {state.category ? (
-                  state.category.map((c, index) => {
-                    return (
-                      <>
-                        <TableRow key={c}>
-                          <TableCell>
-                            <strong>{c}</strong>
-                          </TableCell>
-                          <TableCell></TableCell>
-                          <TableCell></TableCell>
-                          <TableCell></TableCell>
-                          <TableCell></TableCell>
-                          <TableCell></TableCell>
-                          <TableCell></TableCell>
-                          <TableCell></TableCell>
-                        </TableRow>
-
-                        <RenderHabitsByCategory category={c} />
-                      </>
-                    );
-                  })
-                ) : (
-                  <TableRow>ss</TableRow>
-                )}
-              </>
-            ) : (
-              <TableRow>
-                <TableCell align="center">{`Loading ...  `} </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {state.habitRestructure && !isHabitEmpty ? (
+        <>
+          {state.category ? (
+            state.category.map((c, index) => {
+              return (
+                <>
+                  <RenderHabitsByCategory category={c} />
+                </>
+              );
+            })
+          ) : (
+            <div>ss</div>
+          )}
+        </>
+      ) : (
+        <Typography align="center">{`Loading ...  `} </Typography>
+      )}
     </div>
   );
 };

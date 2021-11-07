@@ -1,4 +1,3 @@
-import { Checkbox, TableCell, TableRow } from "@material-ui/core";
 import React, {
   useEffect,
   useState,
@@ -11,6 +10,8 @@ import HabitService from "../services/habitService";
 import { Context } from "../Store/habitStore";
 import { addDays, format } from "date-fns";
 import HabitCard from "./HabitCard/HabitCard";
+import DailyHabitCard from "./DailyHabitCard/DailyHabitCard";
+import { Button } from "@material-ui/core";
 
 // First day of week is sunday
 const FIRST_WEEKDAY_INDEX = 0;
@@ -59,14 +60,11 @@ const RenderHabitsByCategory = ({ category }) => {
     getCurrentStatus(state.habitRestructure);
   }, [cat, dispatch, state.weekStartDate, state.habitRestructure]);
 
-  const check = useRef();
-
   const updateStatus = async (data) => {
     let response = await HabitService.updateHabitStatus(data);
 
     if (response.status === 200) {
       alert("Habit Status updated");
-      check.current.focus();
     }
   };
 
@@ -107,106 +105,11 @@ const RenderHabitsByCategory = ({ category }) => {
         habitData[cat].map((h) => {
           return (
             <Fragment>
-              <HabitCard habit={h} />
-              {/* <TableRow key={h._id}>
-                <TableCell key={h._id} align="center">
-                  {h.habitName}
-                </TableCell>
-                <TableCell align="center">
-                  <Checkbox
-                    checked={state.habitStatus[h.habitName][0] || false}
-                    index={0}
-                    id={h._id}
-                    onChange={(e) => handelChange(e, h, 0)}
-                    ref={check}
-                    size="small"
-                  ></Checkbox>
-                </TableCell>
-                <TableCell align="center">
-                  <Checkbox
-                    checked={
-                      state.habitStatus
-                        ? state.habitStatus[h.habitName][1]
-                        : false
-                    }
-                    index={1}
-                    id={h._id}
-                    onChange={(e) => handelChange(e, h, 1)}
-                    ref={check}
-                    size="small"
-                  ></Checkbox>
-                </TableCell>
-                <TableCell align="center">
-                  <Checkbox
-                    checked={
-                      state.habitStatus
-                        ? state.habitStatus[h.habitName][2]
-                        : false
-                    }
-                    index={2}
-                    id={h._id}
-                    onChange={(e) => handelChange(e, h, 2)}
-                    ref={check}
-                    size="small"
-                  ></Checkbox>
-                </TableCell>
-                <TableCell align="center">
-                  <Checkbox
-                    checked={
-                      state.habitStatus
-                        ? state.habitStatus[h.habitName][3]
-                        : false
-                    }
-                    index={3}
-                    id={h._id}
-                    onChange={(e) => handelChange(e, h, 3)}
-                    ref={check}
-                    size="small"
-                  ></Checkbox>
-                </TableCell>
-                <TableCell align="center">
-                  <Checkbox
-                    checked={
-                      state.habitStatus
-                        ? state.habitStatus[h.habitName][4]
-                        : false
-                    }
-                    index={4}
-                    id={h._id}
-                    onChange={(e) => handelChange(e, h, 4)}
-                    ref={check}
-                    size="small"
-                  ></Checkbox>
-                </TableCell>
-                <TableCell align="center">
-                  <Checkbox
-                    checked={
-                      state.habitStatus
-                        ? state.habitStatus[h.habitName][5]
-                        : false
-                    }
-                    index={5}
-                    id={h._id}
-                    onChange={(e) => handelChange(e, h, 5)}
-                    ref={check}
-                    size="small"
-                  ></Checkbox>
-                </TableCell>
-                <TableCell align="center">
-                  <Checkbox
-                    checked={
-                      state.habitStatus
-                        ? state.habitStatus[h.habitName][6]
-                        : false
-                    }
-                    index={6}
-                    id={h._id}
-                    onChange={(e) => handelChange(e, h, 6)}
-                    ref={check}
-                    size="small"
-                  ></Checkbox>
-                </TableCell>
-              </TableRow> */}
+              {state.habitView === "daily" ? (
+                <DailyHabitCard habit={h} />
+              ) : (
+                <HabitCard habit={h} />
+              )}
             </Fragment>
           );
         })

@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: "2rem",
+    marginTop: "0.5rem",
     minWidth: "15rem",
     padding: "2px",
   },
@@ -16,15 +16,18 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     minWidth: "20rem",
     maxWidth: "50rem",
-    minHeight: "10rem",
+    minHeight: "7rem",
     margin: "auto",
     backgroundColor: "#303038",
     borderRadius: "10px",
     padding: "0.5rem",
   },
+  textGrey: {
+    color: "#6c6c72",
+  },
   habitTitleBox: {
     width: "100%",
-    padding: "1rem 1rem 1rem 1rem",
+    padding: "0rem 0.5rem 0rem 0.5rem",
     color: "white",
   },
   grey: {
@@ -80,7 +83,6 @@ const useStyles = makeStyles((theme) => ({
   },
   datesBox: {
     marginTop: "10px",
-
     height: "2rem",
     width: "2rem",
     textAlign: "center",
