@@ -1,15 +1,20 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useStyles from "./useStyles";
 import { Grid, Container, Paper, Typography } from "@material-ui/core";
 import { Context } from "../../Store/habitStore";
 import { makeStyles } from "@material-ui/core/styles";
-import { getDay } from "date-fns";
+import { getDay, parse, differenceInDays } from "date-fns";
 
 function DailyHabitCard({ habit }) {
   const classes = useStyles();
   //const habit = habits.habit;
   const [state, dispatch] = useContext(Context);
   const todayDayIndex = getDay(new Date());
+  const [streak, setStreak] = useState({
+    count: 0,
+    longestStreak: 0,
+    previousDate: null,
+  });
   const colors = {
     yellow: "#FFB427",
     lightblue: "#4EB1CB",
@@ -23,6 +28,12 @@ function DailyHabitCard({ habit }) {
   const dateColor = {
     color: colors[habit.color],
   };
+
+  useEffect(() => {
+    if (state.habits) {
+      setStreak(calculateStreak(habit.habitTrack));
+    }
+  }, [habit.habitTrack, state.habits]);
 
   const dateClasses = (dateColor) =>
     makeStyles(() => ({
@@ -95,7 +106,7 @@ function DailyHabitCard({ habit }) {
                 className={classes.textStreak}
                 variant="h5"
               >
-                26 🔥
+                {streak.longestStreak} 🔥
               </Typography>
             </Grid>
           </Grid>
@@ -142,7 +153,7 @@ function DailyHabitCard({ habit }) {
                 className={classes.textStreak}
                 variant="h5"
               >
-                26 🔥
+                {streak.longestStreak} 🔥
               </Typography>
             </Grid>
           </Grid>
@@ -163,6 +174,65 @@ function DailyHabitCard({ habit }) {
   return state.habitStatus[habit.habitName][todayDayIndex]
     ? SelectedDate(todayDayIndex)
     : UnSelectedDate(todayDayIndex);
+}
+
+function calculateStreak(habit) {
+  const sortedDates = sortByDates(habit);
+  let result = sortedDates.reduce(
+    (streak, habit) => {
+      if (streak.previousDate === null) {
+        streak.previousDate = habit.date;
+      } else {
+        if (habit.isComplete) {
+          let preDate = parse(streak.previousDate, "ddMMyyyy", new Date());
+          let currDate = parse(habit.date, "ddMMyyyy", new Date());
+          let diff = differenceInDays(currDate, preDate);
+          if (diff === 1) {
+            if (streak.tempStartDate === null) {
+              streak.tempStartDate = preDate;
+            }
+
+            streak.count = streak.count + 1;
+            streak.longestStreak = Math.max(streak.count, streak.longestStreak);
+            if (streak.longestStreak >= streak.count) {
+              streak.startDate = streak.tempStartDate;
+              streak.endDate = currDate;
+            }
+          } else {
+            streak.count = 0;
+            streak.tempStartDate = null;
+            streak.tempEndDate = null;
+          }
+          streak.previousDate = habit.date;
+        }
+      }
+      return streak;
+    },
+    {
+      count: 0,
+      longestStreak: 0,
+      previousDate: null,
+      tempStartDate: null,
+      tempEndDate: null,
+      startDate: null,
+      endDate: null,
+    }
+  );
+  console.log(result);
+  return result;
+}
+
+function isPreviousDateNull(date) {
+  return date === null;
+}
+
+function sortByDates(habit) {
+  const res = habit.sort(
+    (a, b) =>
+      parse(a.date, "ddMMyyyy", new Date()) -
+      parse(b.date, "ddMMyyyy", new Date())
+  );
+  return res;
 }
 
 export default DailyHabitCard;

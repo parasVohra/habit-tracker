@@ -38,7 +38,7 @@ function HabitCard(habits) {
         //background: `linear-gradient(to right, ${dateColor.color} 0%,  ${dateColor.color}  30%, rgba(0,0,0,0) 30%,rgba(0,0,0,0) 100%)`,
         borderColor: dateColor.color,
         cursor: "pointer",
-        boxShadow: "1px 1px 10px 0px #000000ab",
+        boxShadow: "1px 1px 4px 0px #000000ab",
       },
       unSelected: {
         marginTop: "0.2rem",

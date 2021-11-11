@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../Store/habitStore";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, Grid } from "@material-ui/core";
+import { Button, Grid, CircularProgress } from "@material-ui/core";
 import { green } from "@material-ui/core/colors";
 import { addDays, format, subDays } from "date-fns";
 import RenderHabits from "../components/RenderHabits";
@@ -91,7 +91,7 @@ export default function Home() {
       <Grid container className={classes.root} spacing={2}>
         <Grid item xs={12}>
           <Grid container justify="center">
-            <Grid item>
+            {/* <Grid item>
               <Button
                 style={{ margin: "20px" }}
                 variant="contained"
@@ -111,11 +111,16 @@ export default function Home() {
               >
                 Next
               </Button>
-            </Grid>
+            </Grid> */}
             <Grid item>
               <Button
-                style={{ margin: "20px" }}
+                style={{ margin: "5px" }}
                 disabled={isNextDisable}
+                className={
+                  state.habitView === "daily"
+                    ? classes.activeButton
+                    : classes.disabledButton
+                }
                 onClick={() => setHabitView("daily")}
               >
                 Daily
@@ -123,23 +128,29 @@ export default function Home() {
             </Grid>
             <Grid item>
               <Button
-                style={{ margin: "20px" }}
+                style={{ margin: "5px" }}
                 disabled={isNextDisable}
-                onClick={() => setHabitView("Weekly")}
+                className={
+                  state.habitView === "weekly"
+                    ? classes.activeButton
+                    : classes.disabledButton
+                }
+                onClick={() => setHabitView("weekly")}
               >
                 Weekly
               </Button>
             </Grid>
-            <Grid xs={3} item></Grid>
-            <Grid item justify="flex-end">
+            {/* <Grid xs={3} item></Grid> */}
+            {/* <Grid item justify="flex-end">
               <TrackHabit />
-            </Grid>
+            </Grid> */}
           </Grid>
           <Grid container justify="center">
             {state.isLoading ? (
-              <div
-                style={{ fontSize: "4vw" }}
-              >{`Loading Habits .... \uD83E\uDD2A`}</div>
+              <div style={{ fontSize: "4vw" }}>
+                <CircularProgress style={{ color: "white" }} />
+                {/* {`Loading Habits .... \uD83E\uDD2A`} */}
+              </div>
             ) : (
               <RenderHabits />
             )}
@@ -161,6 +172,15 @@ const useStyles = makeStyles({
     "&$checked": {
       color: green[600],
     },
+  },
+
+  activeButton: {
+    background: "rgba(196, 196, 196, 0.19)",
+    color: "#FFFFFF",
+  },
+  disabledButton: {
+    background: "rgba(196, 196, 196, 0.04)",
+    color: "#8F8E8E",
   },
 
   spinIt: {

@@ -114,10 +114,7 @@ const RenderHabitsByCategory = ({ category }) => {
           );
         })
       ) : (
-        <div>
-          You are no tracking any habits yet, please add habits and it will show
-          here
-        </div>
+        <div></div>
       )}
     </>
   );
