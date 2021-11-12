@@ -31,7 +31,7 @@ function DailyHabitCard({ habit }) {
 
   useEffect(() => {
     if (state.habits) {
-      setStreak(calculateStreak(habit.habitTrack));
+      setStreak(calculateLongestStreak(habit.habitTrack));
     }
   }, [habit.habitTrack, state.habits]);
 
@@ -176,8 +176,8 @@ function DailyHabitCard({ habit }) {
     : UnSelectedDate(todayDayIndex);
 }
 
-function calculateStreak(habit) {
-  const sortedDates = sortByDates(habit);
+function calculateLongestStreak(habit) {
+  const sortedDates = sortByDates(habit, "asc");
   let result = sortedDates.reduce(
     (streak, habit) => {
       if (streak.previousDate === null) {
@@ -194,22 +194,26 @@ function calculateStreak(habit) {
 
             streak.count = streak.count + 1;
             streak.longestStreak = Math.max(streak.count, streak.longestStreak);
-            if (streak.longestStreak >= streak.count) {
+            if (streak.count >= streak.longestStreak) {
               streak.startDate = streak.tempStartDate;
               streak.endDate = currDate;
             }
           } else {
-            streak.count = 0;
+            if (streak.count >= streak.longestStreak) {
+              streak.endDate = preDate;
+            }
             streak.tempStartDate = null;
-            streak.tempEndDate = null;
+
+            streak.count = 1;
           }
+
           streak.previousDate = habit.date;
         }
       }
       return streak;
     },
     {
-      count: 0,
+      count: 1,
       longestStreak: 0,
       previousDate: null,
       tempStartDate: null,
@@ -222,17 +226,32 @@ function calculateStreak(habit) {
   return result;
 }
 
-function isPreviousDateNull(date) {
-  return date === null;
+function calculateCurrentStreak(habit) {
+  const sortedDates = sortByDates(habit, "desc");
+  // get today date and
+
+  // if habitTrack date array does not have yesterday date then current Streak is  0
+
+  // else  if it has yesterday date date then caculate the longest stresk form yesterday.
 }
 
-function sortByDates(habit) {
-  const res = habit.sort(
-    (a, b) =>
-      parse(a.date, "ddMMyyyy", new Date()) -
-      parse(b.date, "ddMMyyyy", new Date())
-  );
-  return res;
+function sortByDates(habit, option) {
+  if (option === "asc") {
+    const res = habit.sort(
+      (a, b) =>
+        parse(a.date, "ddMMyyyy", new Date()) -
+        parse(b.date, "ddMMyyyy", new Date())
+    );
+    return res;
+  }
+  if (option === "desc") {
+    const res = habit.sort(
+      (a, b) =>
+        parse(b.date, "ddMMyyyy", new Date()) -
+        parse(a.date, "ddMMyyyy", new Date())
+    );
+    return res;
+  }
 }
 
 export default DailyHabitCard;
