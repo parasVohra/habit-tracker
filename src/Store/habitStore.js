@@ -19,6 +19,7 @@ const initialState = {
   isAuthenticated: false,
   userInfo: {},
   isLoading: true,
+  habitView: "daily",
   currentWeekDates: [],
 };
 
