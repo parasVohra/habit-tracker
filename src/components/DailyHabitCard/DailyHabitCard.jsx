@@ -3,7 +3,13 @@ import useStyles from "./useStyles";
 import { Grid, Container, Paper, Typography } from "@material-ui/core";
 import { Context } from "../../Store/habitStore";
 import { makeStyles } from "@material-ui/core/styles";
-import { getDay, parse, differenceInDays } from "date-fns";
+import {
+  getDay,
+  parse,
+  differenceInDays,
+  isYesterday,
+  isToday,
+} from "date-fns";
 
 function DailyHabitCard({ habit }) {
   const classes = useStyles();
@@ -29,9 +35,19 @@ function DailyHabitCard({ habit }) {
     color: colors[habit.color],
   };
 
+  //  const demoData = [
+  //    { date: "11112021", isComplete: true },
+  //    { date: "10112021", isComplete: true },
+  //    { date: "08112021", isComplete: true },
+  //    { date: "12102021", isComplete: true },
+  //    { date: "11102021", isComplete: true },
+  //    { date: "09102021", isComplete: true },
+  //    { date: "06102021", isComplete: true },
+  //  ];
+
   useEffect(() => {
     if (state.habits) {
-      setStreak(calculateLongestStreak(habit.habitTrack));
+      setStreak(calculateCurrentStreak(habit.habitTrack));
     }
   }, [habit.habitTrack, state.habits]);
 
@@ -71,6 +87,7 @@ function DailyHabitCard({ habit }) {
     }));
 
   const dateC = dateClasses(dateColor)();
+
   function handleClick(habitName, index) {
     let updateStatus = state.habitStatus;
     updateStatus[habitName][index] = !updateStatus[habitName][index];
@@ -153,7 +170,7 @@ function DailyHabitCard({ habit }) {
                 className={classes.textStreak}
                 variant="h5"
               >
-                {streak.longestStreak} 🔥
+                {streak.currentStreak} 🔥
               </Typography>
             </Grid>
           </Grid>
@@ -222,17 +239,78 @@ function calculateLongestStreak(habit) {
       endDate: null,
     }
   );
-  console.log(result);
   return result;
 }
 
 function calculateCurrentStreak(habit) {
+  // sorted the habit tracker date in descending order
   const sortedDates = sortByDates(habit, "desc");
-  // get today date and
+
+  // check if the latest date of habit tracked data is yesterday
+  const isLatestDateIsYesterday = isYesterday(
+    parse(sortedDates[0].date, "ddMMyyyy", new Date())
+  );
+
+  // check if the latest date of habit tracked data is today
+  const isLatestDateIsToday = isToday(
+    parse(sortedDates[0].date, "ddMMyyyy", new Date())
+  );
+
+  if (isLatestDateIsYesterday || isLatestDateIsToday) {
+    // run reducer to calculate the count of the continues streak
+    return calculateRecentContinuousStreak(sortedDates);
+  }
+
+  if (!isLatestDateIsToday && !isLatestDateIsYesterday) {
+    return {
+      currentStreak: 0,
+      startDate: null,
+      endDate: null,
+    };
+  }
 
   // if habitTrack date array does not have yesterday date then current Streak is  0
 
   // else  if it has yesterday date date then caculate the longest stresk form yesterday.
+}
+
+function calculateRecentContinuousStreak(trackData) {
+  const result = trackData.reduce(
+    (streak, trackData) => {
+      if (streak.previousDate === null) {
+        streak.previousDate = trackData.date;
+      } else {
+        if (trackData.isComplete) {
+          let preDate = parse(streak.previousDate, "ddMMyyyy", new Date());
+          let currDate = parse(trackData.date, "ddMMyyyy", new Date());
+          let diff = differenceInDays(preDate, currDate);
+          if (diff === 1) {
+            if (streak.tempStartDate === null) {
+              streak.tempStartDate = preDate;
+            }
+            streak.count += 1;
+            streak.currentStreak = Math.max(streak.count, streak.currentStreak);
+            streak.startDate = currDate;
+            streak.endDate = streak.tempStartDate;
+          } else {
+            return streak;
+          }
+          streak.previousDate = trackData.date;
+        }
+      }
+      return streak;
+    },
+    {
+      count: 1,
+      tempStartDate: null,
+      previousDate: null,
+      currentStreak: 1,
+      startDate: null,
+      endDate: null,
+    }
+  );
+
+  return result;
 }
 
 function sortByDates(habit, option) {
