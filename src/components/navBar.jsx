@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../Store/habitStore";
 import {
   Button,
@@ -21,11 +21,25 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 const NavBar = () => {
   const [state] = useContext(Context);
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [width, setWidth] = useState(window.innerWidth);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener("resize", handleWindowSizeChange);
+    return () => {
+      window.removeEventListener("resize", handleWindowSizeChange);
+    };
+  }, []);
+
+  let isMobile = width <= 768;
+
+  console.log(isMobile);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -38,13 +52,12 @@ const NavBar = () => {
           <React.Fragment>
             <Fab
               aria-label="add"
-              variant="extended"
+              size="small"
               color="secondary"
               onClick={handleClick}
               className={classes.topProfileButton}
             >
               <PersonIcon className={classes.addIcon} />
-              Pursharth
             </Fab>
             <Menu
               id="simple-menu"
@@ -57,11 +70,11 @@ const NavBar = () => {
               anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
               transformOrigin={{ vertical: "top", horizontal: "center" }}
             >
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={handleClose} className={classes.menuItem}>
                 <NavLink className={classes.link} to="/signOut">
-                  <ExitToAppIcon />
+                  <ExitToAppIcon fontSize="small" />
                   <Typography
-                    variant="subtitle1"
+                    variant="subtitle2"
                     className={classes.optionText}
                   >
                     Sign Out
@@ -112,15 +125,16 @@ const useStyles = makeStyles((theme) => ({
     color: "#FFFFFF",
   },
   menuItem: {
-    background: "#303038",
-    color: "#FFFFFF",
+    padding: "0 4px",
+    minHeight: "1rem",
   },
   optionText: {
-    marginLeft: "1rem",
+    marginLeft: "0.5rem",
+    textAlign: "center",
   },
   topProfileButton: {
-    position: "fixed",
-    right: "2rem",
+    position: "absolute",
+    right: "1rem",
     top: "1rem",
     fontWeight: "bold",
   },
