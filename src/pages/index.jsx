@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../Store/habitStore";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, Grid, CircularProgress } from "@material-ui/core";
+import { Button, Grid, CircularProgress, Typography } from "@material-ui/core";
 import { green } from "@material-ui/core/colors";
 import { addDays, format, subDays } from "date-fns";
 import RenderHabits from "../components/RenderHabits";
@@ -14,6 +14,7 @@ import {
   getWeekEndDate,
   extractHabitNames,
 } from "../utilities/utilitiesMethods";
+import BottomNav from "../components/BottomNav/BottomNav";
 
 console.log("************ In Home page Component ");
 
@@ -81,37 +82,17 @@ export default function Home() {
 
   return (
     <React.Fragment>
-      <div style={{ margin: "20px" }}>
-        {`${format(state.weekStartDate, "dd MMMM")} to ${format(
-          state.weekEndDate,
-          "dd MMMM"
-        )}`}
-      </div>
-
       <Grid container className={classes.root} spacing={2}>
         <Grid item xs={12}>
+          <Typography
+            variant="h3"
+            align="center"
+            color="textSecondary"
+            className={classes.title}
+          >
+            HABITS
+          </Typography>
           <Grid container justify="center">
-            {/* <Grid item>
-              <Button
-                style={{ margin: "20px" }}
-                variant="contained"
-                color="primary"
-                onClick={() => changeDate("sub", 7)}
-              >
-                Prev
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                style={{ margin: "20px" }}
-                disabled={isNextDisable}
-                variant="contained"
-                color="primary"
-                onClick={() => changeDate("add", 7)}
-              >
-                Next
-              </Button>
-            </Grid> */}
             <Grid item>
               <Button
                 style={{ margin: "5px" }}
@@ -140,16 +121,11 @@ export default function Home() {
                 Weekly
               </Button>
             </Grid>
-            {/* <Grid xs={3} item></Grid> */}
-            {/* <Grid item justify="flex-end">
-              <TrackHabit />
-            </Grid> */}
           </Grid>
           <Grid container justify="center">
             {state.isLoading ? (
               <div style={{ fontSize: "4vw" }}>
                 <CircularProgress style={{ color: "white" }} />
-                {/* {`Loading Habits .... \uD83E\uDD2A`} */}
               </div>
             ) : (
               <RenderHabits />
@@ -157,6 +133,7 @@ export default function Home() {
           </Grid>
         </Grid>
       </Grid>
+      <BottomNav />
     </React.Fragment>
   );
 }
@@ -172,6 +149,11 @@ const useStyles = makeStyles({
     "&$checked": {
       color: green[600],
     },
+  },
+  title: {
+    fontWeight: "bold",
+    marginTop: "4rem",
+    marginBottom: "4rem",
   },
 
   activeButton: {
