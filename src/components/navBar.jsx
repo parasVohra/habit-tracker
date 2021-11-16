@@ -17,29 +17,15 @@ import { Label } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import BottomNav from "./BottomNav/BottomNav";
 
 const NavBar = () => {
   const [state] = useContext(Context);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [width, setWidth] = useState(window.innerWidth);
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  function handleWindowSizeChange() {
-    setWidth(window.innerWidth);
-  }
-  useEffect(() => {
-    window.addEventListener("resize", handleWindowSizeChange);
-    return () => {
-      window.removeEventListener("resize", handleWindowSizeChange);
-    };
-  }, []);
-
-  let isMobile = width <= 768;
-
-  console.log(isMobile);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -82,6 +68,7 @@ const NavBar = () => {
                 </NavLink>
               </MenuItem>
             </Menu>
+            <BottomNav />
           </React.Fragment>
         ) : (
           <React.Fragment>

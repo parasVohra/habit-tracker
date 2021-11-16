@@ -20,6 +20,23 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
   },
 
+  bottomContainer: {
+    position: "fixed",
+    bottom: 0,
+    height: "3rem",
+    width: "100%",
+    marginTop: "1rem",
+    backgroundColor: "#272730",
+  },
+  icon: {
+    fill: "#ffffff",
+    textAlign: "center",
+  },
+  bottomGrid: {
+    display: "flex",
+    alignItems: "center",
+    height: "100%",
+  },
   addIcon: {
     marginRight: "0.5rem",
   },

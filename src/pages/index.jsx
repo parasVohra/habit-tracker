@@ -82,7 +82,7 @@ export default function Home() {
 
   return (
     <React.Fragment>
-      <Grid container className={classes.root} spacing={2}>
+      <Grid container className={classes.root}>
         <Grid item xs={12}>
           <Typography
             variant="h3"
@@ -133,7 +133,6 @@ export default function Home() {
           </Grid>
         </Grid>
       </Grid>
-      <BottomNav />
     </React.Fragment>
   );
 }
@@ -143,6 +142,9 @@ const useStyles = makeStyles({
     minWidth: 200,
     maxWidth: 600,
     paddingLeft: 10,
+  },
+  root: {
+    marginBottom: "8rem",
   },
   checkbox: {
     color: green[400],

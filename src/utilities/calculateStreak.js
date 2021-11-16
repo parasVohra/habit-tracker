@@ -68,29 +68,34 @@ function calculateLongestStreak(habitTrack) {
  *
  * @param {Array} habitTrack
  * @description
- *
  * This function will  calculate the current streak of a habit
  * First sort the habit tracker date in descending order
  * check if the latest date of habit tracked data is yesterday || today
  * run reducer to calculate the count of the continues streak
- *
- *
  * @returns Object with streak data
  */
 function calculateCurrentStreak(habitTrack) {
-  const sortedDates = sortByDates(habitTrack, "desc");
-  const isLatestDateIsYesterday = isYesterday(
-    parse(sortedDates[0].date, "ddMMyyyy", new Date())
-  );
-  const isLatestDateIsToday = isToday(
-    parse(sortedDates[0].date, "ddMMyyyy", new Date())
-  );
+  if (habitTrack.length) {
+    const sortedDates = sortByDates(habitTrack, "desc");
+    const isLatestDateIsYesterday = isYesterday(
+      parse(sortedDates[0].date, "ddMMyyyy", new Date())
+    );
+    const isLatestDateIsToday = isToday(
+      parse(sortedDates[0].date, "ddMMyyyy", new Date())
+    );
 
-  if (isLatestDateIsYesterday || isLatestDateIsToday) {
-    return calculateRecentContinuousStreak(sortedDates);
-  }
+    if (isLatestDateIsYesterday || isLatestDateIsToday) {
+      return calculateRecentContinuousStreak(sortedDates);
+    }
 
-  if (!isLatestDateIsToday && !isLatestDateIsYesterday) {
+    if (!isLatestDateIsToday && !isLatestDateIsYesterday) {
+      return {
+        currentStreak: 0,
+        startDate: null,
+        endDate: null,
+      };
+    }
+  } else {
     return {
       currentStreak: 0,
       startDate: null,
