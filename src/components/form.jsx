@@ -6,6 +6,9 @@ import {
   makeStyles,
   TextField,
   MenuItem,
+  Grid,
+  Container,
+  Paper,
 } from "@material-ui/core";
 import { Formik, useField } from "formik";
 import React, { useContext, useEffect, useState } from "react";
@@ -35,9 +38,17 @@ const Form = () => {
   };
 
   return (
-    <Card raised={true} dark className={classes.root}>
-      <CardHeader title="Add New Habit" />
-      <CardContent>
+    <Container className={classes.root}>
+      <Grid
+        container
+        direction="column"
+        xs={12}
+        sm={12}
+        md={12}
+        elevation={6}
+        component={Paper}
+        className={classes.formBox}
+      >
         <Formik
           initialValues={{
             category: "General",
@@ -70,6 +81,7 @@ const Form = () => {
               <div className={classes.root}>
                 <MySelectField
                   value={values.category}
+                  color="secondary"
                   select
                   label="Category"
                   name="category"
@@ -107,7 +119,8 @@ const Form = () => {
             </form>
           )}
         </Formik>
-      </CardContent>
+      </Grid>
+
       {showModal ? (
         <Modal>
           <Card raised={true}>
@@ -125,7 +138,7 @@ const Form = () => {
           </Card>
         </Modal>
       ) : null}
-    </Card>
+    </Container>
   );
 };
 
@@ -211,8 +224,15 @@ const colorCode = {
 
 const useStyles = makeStyles({
   root: {
-    minWidth: 275,
-    padding: 20,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: "0.5rem",
+    minWidth: "15rem",
+    padding: "2px",
+  },
+  formBox: {
+    backgroundColor: "#303038",
   },
   bullet: {
     display: "inline-block",

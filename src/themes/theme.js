@@ -10,8 +10,9 @@ export const theme = createMuiTheme({
     },
   },
   palette: {
+    type: "dark",
     primary: { main: "#3A8DFF" },
-    secondary: { main: "#ff5630" },
+    secondary: { main: "#303038" },
     argumentColor: {
       red: { main: "#FF6B7A" },
       green: { main: "#50D890" },
@@ -30,6 +31,11 @@ export const theme = createMuiTheme({
       },
       pickerView: {
         minWidth: "30rem",
+      },
+    },
+    MuiPaper: {
+      root: {
+        backgroundColor: "#303038",
       },
     },
     MuiPickersCalendarHeader: {
