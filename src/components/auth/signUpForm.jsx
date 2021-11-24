@@ -7,7 +7,9 @@ import {
   Checkbox,
   FormControlLabel,
   makeStyles,
+  Typography,
   TextField,
+  CircularProgress,
 } from "@material-ui/core";
 import { Formik, Form, useField } from "formik";
 import AuthService from "../../services/authServices";
@@ -15,7 +17,7 @@ import TokenService from "../../utilities/tokenMethods";
 import { Context } from "../../Store/habitStore";
 import { tokenKey } from "../../config.json";
 import React, { useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import * as yup from "yup";
 import Modal from "../modal";
 
@@ -25,6 +27,7 @@ const SignUpForm = () => {
   const [msg, setMsg] = useState(null);
   const history = useHistory();
   const classes = useStyles();
+  const [isSubmitting, setSubmitting] = useState(false);
 
   const toggleModal = () => {
     setModal(!showModal);
@@ -41,6 +44,7 @@ const SignUpForm = () => {
         }}
         onSubmit={async (data) => {
           try {
+            setSubmitting(true);
             const response = await AuthService.signUp(data);
             console.log(response);
             if (response.status === 200) {
@@ -55,7 +59,7 @@ const SignUpForm = () => {
 
               dispatch({ type: "SET_IS_AUTHENTICATED", payload: true });
               console.log(state);
-
+              setSubmitting(false);
               return history.push("/form");
 
               //then save the token to the local storage
@@ -81,7 +85,7 @@ const SignUpForm = () => {
         validationSchema={validationSchema}
       >
         <Form className={classes.form}>
-          <CardHeader title="SignUp" />
+          <CardHeader title="Sign Up" />
           <div className={classes.input}>
             <MyTextField label="First Name" name="firstName" type="input" />
           </div>
@@ -102,15 +106,27 @@ const SignUpForm = () => {
             />
           </div>
 
-          <div className={classes.input}>
+          <div className={classes.button}>
             <Button
               variant="contained"
               color="primary"
               type="submit"
               size="large"
             >
-              Sing Me Up
+              {isSubmitting ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                <Typography>Sing Me Up</Typography>
+              )}
             </Button>
+          </div>
+          <div className={classes.singUpWrapper}>
+            <Typography variant="subtitle2">Already a member? </Typography>
+            <Link to="/signIn" color="primary" className={classes.link}>
+              <Typography color="primary" variant="subtitle2">
+                Sign In
+              </Typography>
+            </Link>
           </div>
         </Form>
       </Formik>
@@ -177,7 +193,7 @@ const MyCheckBox = ({ label, ...props }) => {
     <FormControlLabel
       label={label}
       labelPlacement="end"
-      control={<Checkbox {...field} error={!!errorText} />}
+      control={<Checkbox color="primary" {...field} error={!!errorText} />}
     ></FormControlLabel>
   );
 };
@@ -214,6 +230,20 @@ const useStyles = makeStyles({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
+  },
+  button: {
+    marginTop: "2rem",
+  },
+  singUpWrapper: {
+    display: "flex",
+    alignItems: "center",
+    minWidth: "20rem",
+    justifyContent: "center",
+    marginTop: "1rem",
+  },
+  link: {
+    paddingLeft: "0.5rem",
+    textDecoration: "none",
   },
   textInput: {
     width: "100%",

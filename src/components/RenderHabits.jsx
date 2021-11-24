@@ -51,7 +51,9 @@ const RenderHabits = () => {
           )}
         </>
       ) : (
-        <Typography align="center">{`Loading ...  `} </Typography>
+        <Typography align="center" className={classes.noHabit} color="primary">
+          {`No habits to display. `}
+        </Typography>
       )}
     </div>
   );
@@ -60,6 +62,9 @@ const RenderHabits = () => {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+  },
+  noHabit: {
+    marginTop: "5rem",
   },
   paper: {
     padding: "5px",

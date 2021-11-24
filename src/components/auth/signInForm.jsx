@@ -7,6 +7,8 @@ import {
   CardHeader,
   makeStyles,
   TextField,
+  Typography,
+  CircularProgress,
 } from "@material-ui/core";
 import { Formik, Form, useField } from "formik";
 import AuthService from "../../services/authServices";
@@ -15,7 +17,7 @@ import { Context } from "../../Store/habitStore";
 import { tokenKey } from "../../config.json";
 import Modal from "../modal";
 
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import * as yup from "yup";
 
 const SignInForm = () => {
@@ -25,6 +27,7 @@ const SignInForm = () => {
   const [state, dispatch] = useContext(Context);
   const [showModal, setModal] = useState(false);
   const [msg, setMsg] = useState(null);
+  const [isSubmitting, setSubmitting] = useState(false);
 
   const toggleModal = () => {
     setModal(!showModal);
@@ -40,6 +43,7 @@ const SignInForm = () => {
         }}
         onSubmit={async (data) => {
           setError([]);
+          setSubmitting(true);
           console.log(error);
           try {
             const response = await AuthService.signIn(data);
@@ -50,12 +54,10 @@ const SignInForm = () => {
               dispatch({ type: "SET_TOKEN", payload: token });
 
               const userInfoObj = TokenService.getUserInfo(tokenKey);
-              console.log(`user info ${userInfoObj} `);
               dispatch({ type: "SET_USER_INFO", payload: userInfoObj });
 
               dispatch({ type: "SET_IS_AUTHENTICATED", payload: true });
-              console.log(state);
-
+              setSubmitting(false);
               return history.push("/");
             }
           } catch (err) {
@@ -71,7 +73,7 @@ const SignInForm = () => {
         validationSchema={validationSchema}
       >
         <Form className={classes.form}>
-          <CardHeader title="Sign In" />
+          <CardHeader title="Welcome Back!" />
           <div className={classes.input}>
             <MyTextField label="Email" name="email" type="input" />
           </div>
@@ -79,15 +81,27 @@ const SignInForm = () => {
             <MyTextField label="Password" name="password" type="password" />
           </div>
 
-          <div className={classes.input}>
+          <div className={classes.button}>
             <Button
               variant="contained"
               size="large"
               color="primary"
               type="submit"
             >
-              SingIn
+              {isSubmitting ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                <Typography>SingIn</Typography>
+              )}
             </Button>
+          </div>
+          <div className={classes.singUpWrapper}>
+            <Typography variant="subtitle2">Don't have account? </Typography>
+            <Link to="/signUp" color="primary" className={classes.link}>
+              <Typography color="primary" variant="subtitle2">
+                Create an account
+              </Typography>
+            </Link>
           </div>
         </Form>
       </Formik>
@@ -165,6 +179,20 @@ const useStyles = makeStyles({
   },
   textInput: {
     width: "100%",
+  },
+  button: {
+    marginTop: "2rem",
+  },
+  singUpWrapper: {
+    display: "flex",
+    alignItems: "center",
+    minWidth: "20rem",
+    justifyContent: "center",
+    marginTop: "1rem",
+  },
+  link: {
+    paddingLeft: "0.5rem",
+    textDecoration: "none",
   },
   title: {
     fontSize: 14,

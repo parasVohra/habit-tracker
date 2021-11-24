@@ -71,34 +71,7 @@ const NavBar = () => {
             <BottomNav />
           </React.Fragment>
         ) : (
-          <React.Fragment>
-            <Grid container justify="center">
-              <Grid item>
-                <NavLink
-                  className={classes.link}
-                  activeStyle={{
-                    background: "rgba(196, 196, 196, 0.19)",
-                    color: "#FFFFFF",
-                  }}
-                  to="/signUp"
-                >
-                  <Button>Sign Up</Button>
-                </NavLink>
-              </Grid>
-              <Grid item>
-                <NavLink
-                  className={classes.link}
-                  activeStyle={{
-                    background: "rgba(196, 196, 196, 0.19)",
-                    color: "#FFFFFF",
-                  }}
-                  to="/signIn"
-                >
-                  <Button>Sign In</Button>
-                </NavLink>
-              </Grid>
-            </Grid>
-          </React.Fragment>
+          <React.Fragment></React.Fragment>
         )}
       </nav>
     </React.Fragment>

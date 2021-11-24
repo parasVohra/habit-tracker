@@ -12,7 +12,7 @@ function DailyHabitCard({ habit }) {
   const [state, dispatch] = useContext(Context);
   const todayDayIndex = getDay(new Date());
   const [streak, setStreak] = useState({
-    count: 0,
+    currentStreak: 0,
     longestStreak: 0,
     previousDate: null,
   });
@@ -108,7 +108,7 @@ function DailyHabitCard({ habit }) {
                 className={classes.textStreak}
                 variant="h5"
               >
-                {streak.longestStreak} 🔥
+                {streak.currentStreak} 🔥
               </Typography>
             </Grid>
           </Grid>
