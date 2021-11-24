@@ -5,7 +5,6 @@ import { Button, Grid, CircularProgress, Typography } from "@material-ui/core";
 import { green } from "@material-ui/core/colors";
 import { addDays, format, subDays } from "date-fns";
 import RenderHabits from "../components/RenderHabits";
-import TrackHabit from "../components/TrackHabit";
 import {
   fetchHabitData,
   extractCategoriesAndRestructureHabits,
@@ -14,9 +13,6 @@ import {
   getWeekEndDate,
   extractHabitNames,
 } from "../utilities/utilitiesMethods";
-import BottomNav from "../components/BottomNav/BottomNav";
-
-console.log("************ In Home page Component ");
 
 export default function Home() {
   const [state, dispatch] = useContext(Context);

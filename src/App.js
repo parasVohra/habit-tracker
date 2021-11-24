@@ -6,7 +6,7 @@ import { theme } from "./themes/theme";
 import Store from "./Store/habitStore";
 import Home from "./pages";
 import AddHabit from "./pages/addHabit";
-import Form from "./components/form";
+import Form from "./components/CreateHabitForm/form";
 import SignUp from "./components/auth/signUpForm";
 import SignIn from "./components/auth/signInForm";
 import NavBar from "./components/navBar";
