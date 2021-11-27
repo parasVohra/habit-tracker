@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "left",
-        maxWidth: "20rem",
+        maxWidth: "25rem",
         margin: "auto",
     },
     title: {
@@ -20,10 +20,20 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: "2rem",
     },
     pos: {
-        marginBottom: 12,
+        marginBottom: "1.5rem",
+    },
+    submitButton: {
+        display: "flex",
+        justifyContent: "center",
+        marginBottom: "4rem",
+    },
+    directionRow: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
     },
     buttonMargin: {
-        margin: "0.5rem 1rem 0 0",
+        margin: "0 1rem 0.5rem 0",
     },
     activeButton: {
         background: "rgba(196, 196, 196, 0.19)",

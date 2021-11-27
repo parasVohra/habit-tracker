@@ -67,10 +67,13 @@ const Form = () => {
             </Typography>
             <Formik
                 initialValues={{
-                    category: "General",
+                    category: "",
                     habitName: "",
-                    types: "checkbox",
-                    color: "black",
+                    dailyGoal: 1,
+                    weeklyGoal: 7,
+                    habitUnit: null,
+                    inputType: "number",
+                    color: "red",
                 }}
                 onSubmit={async (data) => {
                     try {
@@ -94,7 +97,7 @@ const Form = () => {
             >
                 {({ values, handleSubmit, handleChange, handleBlur }) => (
                     <form onSubmit={handleSubmit} className={classes.form}>
-                        <Grid>
+                        <Grid className={classes.pos}>
                             <FormInputLabel label="HABIT NAME" />
                             <MyTextField
                                 name="habitName"
@@ -102,11 +105,12 @@ const Form = () => {
                                 placeholder="e.g. Cold Shower, Read Book"
                             />
                         </Grid>
-                        <Grid>
+                        <Grid className={classes.pos}>
                             <FormInputLabel label="CATEGORY" />
                             {categories.map((category, index) => {
                                 return (
                                     <Button
+                                        size="large"
                                         key={index}
                                         className={
                                             activeCategoryIndex === index
@@ -125,25 +129,29 @@ const Form = () => {
                                 );
                             })}
                         </Grid>
-                        <Grid>
+                        <Grid className={classes.pos}>
                             <FormInputLabel label="HOW MANY TIMES PER DAY?" />
                             <NumberCounter />
                         </Grid>
-                        <Grid>
-                            <FormInputLabel label="HOW MANY TIMES PER WEEK?" />
-                            <Button
-                                className={`${classes.activeButton} ${classes.buttonMargin}`}
-                            >
-                                DAILY
-                            </Button>
-                            <Button
-                                className={`${classes.disabledButton} ${classes.buttonMargin}`}
-                            >
-                                CUSTOM
-                            </Button>
-                            <NumberCounter />
+                        <Grid className={`${classes.pos}`}>
+                            <FormInputLabel label="HOW MANY DAYS PER WEEK?" />
+                            <Grid className={`${classes.directionRow}`}>
+                                <Button
+                                    size="large"
+                                    className={`${classes.activeButton} ${classes.buttonMargin}`}
+                                >
+                                    DAILY
+                                </Button>
+                                <Button
+                                    size="large"
+                                    className={`${classes.disabledButton} ${classes.buttonMargin}`}
+                                >
+                                    CUSTOM
+                                </Button>
+                                <NumberCounter />
+                            </Grid>
                         </Grid>
-                        <Grid>
+                        <Grid className={classes.pos}>
                             <Grid item>
                                 <FormInputLabel label="COLOR" />
                             </Grid>
@@ -186,44 +194,50 @@ const Form = () => {
                                 })}
                             </Grid>
                         </Grid>
-                        <Grid>
+                        <Grid className={classes.pos}>
                             <FormInputLabel label="HABIT UNIT" />
                             <Button
+                                size="large"
                                 className={`${classes.activeButton} ${classes.buttonMargin}`}
                             >
                                 NO UNIT
                             </Button>
                             <Button
+                                size="large"
                                 className={`${classes.disabledButton} ${classes.buttonMargin}`}
                             >
                                 CUSTOM
                             </Button>
                             <MyTextField
-                                name="unit"
+                                name="habitUnit"
                                 type="text"
                                 placeholder="e.g. Km, Pages, glasses"
                             />
                         </Grid>
-                        <Grid>
+                        <Grid className={classes.pos}>
                             <FormInputLabel label="TRACK INPUT TYPE" />
                             <Button
+                                size="large"
                                 className={`${classes.activeButton} ${classes.buttonMargin}`}
                             >
                                 NUMBER
                             </Button>
                             <Button
+                                size="large"
                                 className={`${classes.disabledButton} ${classes.buttonMargin}`}
                             >
                                 TEXT
                             </Button>
                             <Button
+                                size="large"
                                 className={`${classes.disabledButton} ${classes.buttonMargin}`}
                             >
                                 TIME
                             </Button>
                         </Grid>
-                        <Grid>
+                        <Grid className={classes.submitButton}>
                             <Button
+                                size="large"
                                 variant="contained"
                                 type="submit"
                                 color="primary"
@@ -241,6 +255,7 @@ const Form = () => {
                         <CardContent>
                             <div>{msg}</div>
                             <Button
+                                size="large"
                                 variant="contained"
                                 color="primary"
                                 type="button"
@@ -265,6 +280,7 @@ const MyTextField = ({ placeholder, ...props }) => {
             variant="outlined"
             placeholder={placeholder ? placeholder : " "}
             helperText={errorText}
+            size="small"
             error={!!errorText}
         />
     );
@@ -273,6 +289,9 @@ const MyTextField = ({ placeholder, ...props }) => {
 const validationSchema = yup.object({
     category: yup.string().required("Category is Required").max(30),
     habitName: yup.string().required("Habit Name is Required").max(30),
+    dailyGoal: yup.number().min(1).max(15),
+    weeklyGoal: yup.number().min(1).max(7),
+    habitUnit: yup.string(),
     types: yup.string().required(),
     color: yup.string().required(),
 });
