@@ -10,9 +10,10 @@ import {
     Container,
     Paper,
     Fab,
+    CircularProgress,
     Typography,
 } from "@material-ui/core";
-import { Formik, useField } from "formik";
+import { Formik, Form, useField } from "formik";
 import React, { useContext, useEffect, useState } from "react";
 import useStyles from "./useStyles";
 import * as yup from "yup";
@@ -22,15 +23,23 @@ import { useHistory } from "react-router-dom";
 import FormInputLabel from "../FormComponents/InputLabel/InputLabel";
 import BackButton from "../FormComponents/BackButton/BackButton";
 import NumberCounter from "../FormComponents/NumberCounter/NumberCounter";
+import { FormContext } from "../../Store/habitFormContext";
 
-const Form = () => {
+const CreateHabitForm = () => {
     const [habit, setHabit] = useState(null);
+    const [habitForm, dispatch] = useContext(FormContext);
+    const [isSubmitting, setSubmitting] = useState(false);
     const classes = useStyles();
     const [msg, setMsg] = useState(null);
     const history = useHistory();
     const [habitSaved, setHabitSaved] = useState(false);
     const [activeCategoryIndex, setCategoryIndex] = useState(0);
     const [activeColorIndex, setColorIndex] = useState(0);
+    const [weeklyGoalInputType, setWeeklyGoalInputType] = useState(
+        habitForm.weeklyInputType
+    );
+    const [unityType, setUnitType] = useState(habitForm.habitUnitType);
+    const [trackType, setTrackType] = useState(habitForm.inputType);
 
     const [showModal, setModal] = useState(false);
 
@@ -42,11 +51,25 @@ const Form = () => {
 
     const handleCategoryClick = (index, value) => {
         setCategoryIndex(index);
-        console.log(value);
+        dispatch({ type: "SET_CATEGORY", payload: value });
     };
     const handleColorClick = (index, value) => {
         setColorIndex(index);
-        console.log(value);
+        dispatch({ type: "SET_COLOR", payload: value });
+    };
+
+    const handleWeeklyInput = (type) => {
+        setWeeklyGoalInputType(type);
+        dispatch({ type: "SET_WEEKLY_INPUT_TYPE", payload: type });
+    };
+
+    const handleUnitInput = (type) => {
+        setUnitType(type);
+        dispatch({ type: "SET_HABIT_UNIT_TYPE", payload: type });
+    };
+    const handleTrackInput = (type) => {
+        setTrackType(type);
+        dispatch({ type: "SET_INPUT_TYPE", payload: type });
     };
 
     const toggleModal = () => {
@@ -67,24 +90,36 @@ const Form = () => {
             </Typography>
             <Formik
                 initialValues={{
-                    category: "",
-                    habitName: "",
-                    dailyGoal: 1,
-                    weeklyGoal: 7,
-                    habitUnit: null,
-                    inputType: "number",
-                    color: "red",
+                    category: habitForm.category,
+                    habitName: habitForm.habitName,
+                    dailyGoal: habitForm.dailyGoal,
+                    weeklyGoal: habitForm.weeklyGoal,
+                    habitUnit: habitForm.habitUnit,
+                    inputType: habitForm.inputType,
+                    color: habitForm.color,
                 }}
                 onSubmit={async (data) => {
                     try {
-                        console.log(data);
-                        setHabit(data);
-                        const res = await saveHabit(data);
-                        if (res) {
-                            setMsg(res.msg);
-                            toggleModal();
-                        }
+                        //setSubmitting(true);
+                        dispatch({
+                            type: "SET_HABIT_NAME",
+                            payload: data.habitName,
+                        });
+                        dispatch({
+                            type: "SET_HABIT_UNIT",
+                            payload: data.habitUnit,
+                        });
+
+                        console.log("form data", data);
+                        console.log(habitForm);
+                        // setHabit(data);
+                        // const res = await saveHabit(data);
+                        // if (res) {
+                        //     setMsg(res.msg);
+                        //     toggleModal();
+                        // }
                     } catch (err) {
+                        console.log(err);
                         if (err.response.status === 400) {
                             console.log(err.response);
 
@@ -95,158 +130,198 @@ const Form = () => {
                 }}
                 validationSchema={validationSchema}
             >
-                {({ values, handleSubmit, handleChange, handleBlur }) => (
-                    <form onSubmit={handleSubmit} className={classes.form}>
-                        <Grid className={classes.pos}>
-                            <FormInputLabel label="HABIT NAME" />
-                            <MyTextField
-                                name="habitName"
-                                type="text"
-                                placeholder="e.g. Cold Shower, Read Book"
-                            />
-                        </Grid>
-                        <Grid className={classes.pos}>
-                            <FormInputLabel label="CATEGORY" />
-                            {categories.map((category, index) => {
-                                return (
-                                    <Button
-                                        size="large"
-                                        key={index}
-                                        className={
-                                            activeCategoryIndex === index
-                                                ? `${classes.activeButton} ${classes.buttonMargin}`
-                                                : `${classes.disabledButton} ${classes.buttonMargin}`
-                                        }
-                                        onClick={() =>
-                                            handleCategoryClick(
-                                                index,
-                                                category.value
-                                            )
-                                        }
-                                    >
-                                        {category.label}
-                                    </Button>
-                                );
-                            })}
-                        </Grid>
-                        <Grid className={classes.pos}>
-                            <FormInputLabel label="HOW MANY TIMES PER DAY?" />
-                            <NumberCounter />
-                        </Grid>
-                        <Grid className={`${classes.pos}`}>
-                            <FormInputLabel label="HOW MANY DAYS PER WEEK?" />
-                            <Grid className={`${classes.directionRow}`}>
+                <Form className={classes.form}>
+                    <Grid className={classes.pos}>
+                        <FormInputLabel label="HABIT NAME" />
+                        <MyTextField
+                            name="habitName"
+                            type="text"
+                            placeholder="e.g. Cold Shower, Read Book"
+                        />
+                    </Grid>
+                    <Grid className={classes.pos}>
+                        <FormInputLabel label="CATEGORY" />
+                        {categories.map((category, index) => {
+                            return (
                                 <Button
                                     size="large"
-                                    className={`${classes.activeButton} ${classes.buttonMargin}`}
+                                    key={index}
+                                    className={
+                                        activeCategoryIndex === index
+                                            ? `${classes.activeButton} ${classes.buttonMargin}`
+                                            : `${classes.disabledButton} ${classes.buttonMargin}`
+                                    }
+                                    onClick={() =>
+                                        handleCategoryClick(
+                                            index,
+                                            category.value
+                                        )
+                                    }
                                 >
-                                    DAILY
+                                    {category.label}
                                 </Button>
-                                <Button
-                                    size="large"
-                                    className={`${classes.disabledButton} ${classes.buttonMargin}`}
-                                >
-                                    CUSTOM
-                                </Button>
-                                <NumberCounter />
-                            </Grid>
-                        </Grid>
-                        <Grid className={classes.pos}>
-                            <Grid item>
-                                <FormInputLabel label="COLOR" />
-                            </Grid>
-                            <Grid container xs={12}>
-                                {colorCode.map((color, index) => {
-                                    return (
-                                        <Grid
-                                            xs={2}
-                                            className={classes.colorBox}
-                                        >
-                                            <div
-                                                key={index}
-                                                className={
-                                                    activeColorIndex === index
-                                                        ? `${
-                                                              classes.activeColor
-                                                          } 
-                                                ${classes.colorCircle} ${
-                                                              classes[
-                                                                  `${color.name}`
-                                                              ]
-                                                          }`
-                                                        : ` ${
-                                                              classes.colorCircle
-                                                          } ${
-                                                              classes[
-                                                                  `${color.name}`
-                                                              ]
-                                                          }`
-                                                }
-                                                onClick={() =>
-                                                    handleColorClick(
-                                                        index,
-                                                        color
-                                                    )
-                                                }
-                                            ></div>
-                                        </Grid>
-                                    );
-                                })}
-                            </Grid>
-                        </Grid>
-                        <Grid className={classes.pos}>
-                            <FormInputLabel label="HABIT UNIT" />
+                            );
+                        })}
+                    </Grid>
+                    <Grid className={classes.pos}>
+                        <FormInputLabel label="HOW MANY TIMES PER DAY?" />
+                        <NumberCounter type="daily" />
+                    </Grid>
+                    <Grid className={`${classes.pos}`}>
+                        <FormInputLabel label="HOW MANY DAYS PER WEEK?" />
+                        <Grid className={`${classes.directionRow}`}>
                             <Button
                                 size="large"
-                                className={`${classes.activeButton} ${classes.buttonMargin}`}
+                                className={
+                                    weeklyGoalInputType === "daily"
+                                        ? `${classes.activeButton} ${classes.buttonMargin}`
+                                        : `${classes.disabledButton} ${classes.buttonMargin}`
+                                }
+                                onClick={() => handleWeeklyInput("daily")}
                             >
-                                NO UNIT
+                                DAILY
                             </Button>
                             <Button
                                 size="large"
-                                className={`${classes.disabledButton} ${classes.buttonMargin}`}
+                                className={
+                                    weeklyGoalInputType === "custom"
+                                        ? `${classes.activeButton} ${classes.buttonMargin}`
+                                        : `${classes.disabledButton} ${classes.buttonMargin}`
+                                }
+                                onClick={() => handleWeeklyInput("custom")}
                             >
                                 CUSTOM
                             </Button>
+                            {weeklyGoalInputType === "custom" ? (
+                                <NumberCounter type="weekly" />
+                            ) : (
+                                <></>
+                            )}
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.pos}>
+                        <Grid item>
+                            <FormInputLabel label="COLOR" />
+                        </Grid>
+                        <Grid container xs={12}>
+                            {colorCode.map((color, index) => {
+                                return (
+                                    <Grid xs={2} className={classes.colorBox}>
+                                        <div
+                                            key={index}
+                                            className={
+                                                activeColorIndex === index
+                                                    ? `${classes.activeColor} 
+                                                ${classes.colorCircle} ${
+                                                          classes[
+                                                              `${color.name}`
+                                                          ]
+                                                      }`
+                                                    : ` ${
+                                                          classes.colorCircle
+                                                      } ${
+                                                          classes[
+                                                              `${color.name}`
+                                                          ]
+                                                      }`
+                                            }
+                                            onClick={() =>
+                                                handleColorClick(index, color)
+                                            }
+                                        ></div>
+                                    </Grid>
+                                );
+                            })}
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.pos}>
+                        <FormInputLabel label="HABIT UNIT" />
+                        <Button
+                            size="large"
+                            name="habitUnit"
+                            className={
+                                unityType === "noUnit"
+                                    ? `${classes.activeButton} ${classes.buttonMargin}`
+                                    : `${classes.disabledButton} ${classes.buttonMargin}`
+                            }
+                            onClick={() => handleUnitInput("noUnit")}
+                        >
+                            NO UNIT
+                        </Button>
+                        <Button
+                            size="large"
+                            className={
+                                unityType === "custom"
+                                    ? `${classes.activeButton} ${classes.buttonMargin}`
+                                    : `${classes.disabledButton} ${classes.buttonMargin}`
+                            }
+                            onClick={() => handleUnitInput("custom")}
+                        >
+                            CUSTOM
+                        </Button>
+                        {unityType === "custom" ? (
                             <MyTextField
                                 name="habitUnit"
                                 type="text"
                                 placeholder="e.g. Km, Pages, glasses"
                             />
-                        </Grid>
-                        <Grid className={classes.pos}>
-                            <FormInputLabel label="TRACK INPUT TYPE" />
-                            <Button
-                                size="large"
-                                className={`${classes.activeButton} ${classes.buttonMargin}`}
-                            >
-                                NUMBER
-                            </Button>
-                            <Button
-                                size="large"
-                                className={`${classes.disabledButton} ${classes.buttonMargin}`}
-                            >
-                                TEXT
-                            </Button>
-                            <Button
-                                size="large"
-                                className={`${classes.disabledButton} ${classes.buttonMargin}`}
-                            >
-                                TIME
-                            </Button>
-                        </Grid>
-                        <Grid className={classes.submitButton}>
-                            <Button
-                                size="large"
-                                variant="contained"
-                                type="submit"
-                                color="primary"
-                            >
-                                CREATE
-                            </Button>
-                        </Grid>
-                    </form>
-                )}
+                        ) : (
+                            <></>
+                        )}
+                    </Grid>
+                    <Grid className={classes.pos}>
+                        <FormInputLabel label="TRACK INPUT TYPE" />
+                        <Button
+                            size="large"
+                            name="inputType"
+                            className={
+                                trackType === "number"
+                                    ? `${classes.activeButton} ${classes.buttonMargin}`
+                                    : `${classes.disabledButton} ${classes.buttonMargin}`
+                            }
+                            onClick={() => handleTrackInput("number")}
+                        >
+                            NUMBER
+                        </Button>
+                        <Button
+                            size="large"
+                            className={
+                                trackType === "text"
+                                    ? `${classes.activeButton} ${classes.buttonMargin}`
+                                    : `${classes.disabledButton} ${classes.buttonMargin}`
+                            }
+                            onClick={() => handleTrackInput("text")}
+                        >
+                            TEXT
+                        </Button>
+                        <Button
+                            size="large"
+                            name="inputType"
+                            className={
+                                trackType === "time"
+                                    ? `${classes.activeButton} ${classes.buttonMargin}`
+                                    : `${classes.disabledButton} ${classes.buttonMargin}`
+                            }
+                            onClick={() => handleTrackInput("time")}
+                        >
+                            TIME
+                        </Button>
+                    </Grid>
+                    <div className={classes.submitButton}>
+                        <Button
+                            size="large"
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                        >
+                            {isSubmitting ? (
+                                <CircularProgress size={20} color="inherit" />
+                            ) : (
+                                <Typography>CREATE</Typography>
+                            )}
+                        </Button>
+                    </div>
+                </Form>
             </Formik>
 
             {showModal ? (
@@ -271,7 +346,7 @@ const Form = () => {
     );
 };
 
-const MyTextField = ({ placeholder, ...props }) => {
+const MyTextField = ({ placeholder, value, func, ...props }) => {
     const [field, meta] = useField(props);
     const errorText = meta.error && meta.touched ? meta.error : "";
     return (
@@ -291,9 +366,9 @@ const validationSchema = yup.object({
     habitName: yup.string().required("Habit Name is Required").max(30),
     dailyGoal: yup.number().min(1).max(15),
     weeklyGoal: yup.number().min(1).max(7),
-    habitUnit: yup.string(),
-    types: yup.string().required(),
-    color: yup.string().required(),
+    habitUnit: yup.mixed(),
+    types: yup.string(),
+    color: yup.string(),
 });
 
 const saveHabit = async (habit) => {
@@ -400,4 +475,4 @@ const colors = [
     },
 ];
 
-export default Form;
+export default CreateHabitForm;

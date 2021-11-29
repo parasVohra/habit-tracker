@@ -14,32 +14,48 @@ import SignOut from "./components/auth/signOut";
 import ProtectedRoute from "../src/components/auth/protectedRoutes";
 import HabitCard from "./components/HabitCard/HabitCard";
 import DailyHabitCard from "./components/DailyHabitCard/DailyHabitCard";
+import HabitFormContext from "./Store/habitFormContext";
 
 function App() {
-  return (
-    <MuiThemeProvider theme={theme}>
-      <HashRouter basename="/">
-        <Store>
-          <NavBar />
-          <main className="container-sm">
-            <Switch>
-              <ProtectedRoute exact path="/" component={Home} />
-              <ProtectedRoute path="/addHabit" component={AddHabit} />
-              <ProtectedRoute path="/form" component={Form} />
-              <ProtectedRoute path="/habitCard" component={HabitCard} />
-              <ProtectedRoute
-                path="/dailyHabitCard"
-                component={DailyHabitCard}
-              />
-              <Route path="/signUp" component={SignUp} />
-              <Route path="/signIn" component={SignIn} />
-              <ProtectedRoute path="/signOut" component={SignOut} />
-            </Switch>
-          </main>
-        </Store>
-      </HashRouter>
-    </MuiThemeProvider>
-  );
+    return (
+        <MuiThemeProvider theme={theme}>
+            <HashRouter basename="/">
+                <Store>
+                    <HabitFormContext>
+                        <NavBar />
+                        <main className="container-sm">
+                            <Switch>
+                                <ProtectedRoute
+                                    exact
+                                    path="/"
+                                    component={Home}
+                                />
+                                <ProtectedRoute
+                                    path="/addHabit"
+                                    component={AddHabit}
+                                />
+                                <ProtectedRoute path="/form" component={Form} />
+                                <ProtectedRoute
+                                    path="/habitCard"
+                                    component={HabitCard}
+                                />
+                                <ProtectedRoute
+                                    path="/dailyHabitCard"
+                                    component={DailyHabitCard}
+                                />
+                                <Route path="/signUp" component={SignUp} />
+                                <Route path="/signIn" component={SignIn} />
+                                <ProtectedRoute
+                                    path="/signOut"
+                                    component={SignOut}
+                                />
+                            </Switch>
+                        </main>
+                    </HabitFormContext>
+                </Store>
+            </HashRouter>
+        </MuiThemeProvider>
+    );
 }
 
 export default App;

@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
     activeButton: {
         background: "rgba(196, 196, 196, 0.19)",
         color: "#FFFFFF",
+        "&:hover": {
+            backgroundColor: "rgba(196, 196, 196, 0.19)",
+        },
     },
     disabledButton: {
         background: "rgba(196, 196, 196, 0.04)",
