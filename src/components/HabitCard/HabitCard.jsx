@@ -20,7 +20,7 @@ function HabitCard(habits) {
     orange: "#FF8C00",
   };
   const dateColor = {
-    color: colors[habit.color],
+    color: habit.color,
   };
 
   const dateClasses = (dateColor) =>
@@ -34,8 +34,8 @@ function HabitCard(habits) {
         color: "#ffffff",
         border: "2px solid",
         borderRadius: "2rem",
-        backgroundColor: dateColor.color,
-        //background: `linear-gradient(to right, ${dateColor.color} 0%,  ${dateColor.color}  30%, rgba(0,0,0,0) 30%,rgba(0,0,0,0) 100%)`,
+        //backgroundColor: dateColor.color,
+        background: `linear-gradient(to right, ${dateColor.color} 0%,  ${dateColor.color}  80%, rgba(0,0,0,0) 80%,rgba(0,0,0,0) 100%)`,
         borderColor: dateColor.color,
         cursor: "pointer",
         boxShadow: "1px 1px 4px 0px #000000ab",

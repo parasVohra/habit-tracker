@@ -48,7 +48,6 @@ const NavBar = () => {
             <Menu
               id="simple-menu"
               anchorEl={anchorEl}
-              dark
               keepMounted
               open={Boolean(anchorEl)}
               onClose={handleClose}

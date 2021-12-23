@@ -27,7 +27,7 @@ function DailyHabitCard({ habit }) {
     orange: "#FF8C00",
   };
   const dateColor = {
-    color: colors[habit.color],
+    color: habit.color,
   };
 
   useEffect(() => {
@@ -50,7 +50,7 @@ function DailyHabitCard({ habit }) {
         borderStyle: "solid",
         borderWidth: "1px",
         //backgroundColor: dateColor.color,
-        background: `linear-gradient(to right, ${dateColor.color} 0%,  ${dateColor.color}  100%, rgba(0,0,0,0) 100%,rgba(0,0,0,0) 100%)`,
+        background: `linear-gradient(to right, ${dateColor.color} 0%,  ${dateColor.color}  88%, rgba(0,0,0,0) 88%,rgba(0,0,0,0) 100%)`,
         borderColor: dateColor.color,
         cursor: "pointer",
         boxShadow: "1px 1px 10px 0px #000000ab",
@@ -95,6 +95,7 @@ function DailyHabitCard({ habit }) {
           elevation={6}
           className={dateC.selected}
           component={Paper}
+          item
         >
           <Grid item container className={classes.habitTitleBox}>
             <Grid item xs={6}>
