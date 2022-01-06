@@ -18,7 +18,6 @@ export async function fetchHabitData() {
  * @returns habitsNameList
  */
 export function extractHabitNames(habitObject) {
-  console.log(habitObject);
   return habitObject.map((habit) => {
     return habit.habitName;
   }, []);

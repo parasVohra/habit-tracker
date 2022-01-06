@@ -29,7 +29,7 @@ function DailyHabitCard({ habit }) {
   const dateColor = {
     color: habit.color,
   };
-
+  console.log(habit.dailyGoal);
   useEffect(() => {
     if (state.habits) {
       setStreak(calculateCurrentStreak(habit.habitTrack));
