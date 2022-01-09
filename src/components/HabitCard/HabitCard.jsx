@@ -20,10 +20,10 @@ function HabitCard(habits) {
     orange: "#FF8C00",
   };
   const dateColor = {
-    color: colors[habit.color],
+    color: habit.color,
   };
 
-  const dateClasses = (dateColor) =>
+  const dateClasses = (dateColor, index) =>
     makeStyles(() => ({
       selected: {
         marginTop: "0.2rem",
@@ -34,8 +34,14 @@ function HabitCard(habits) {
         color: "#ffffff",
         border: "2px solid",
         borderRadius: "2rem",
-        backgroundColor: dateColor.color,
-        //background: `linear-gradient(to right, ${dateColor.color} 0%,  ${dateColor.color}  30%, rgba(0,0,0,0) 30%,rgba(0,0,0,0) 100%)`,
+        //backgroundColor: dateColor.color,
+        background: `linear-gradient(to right, ${dateColor.color} 0%,  ${
+          dateColor.color
+        }  ${
+          state.habitStatus[habit.habitName][index].percentageDone
+        }%, rgba(0,0,0,0) ${
+          state.habitStatus[habit.habitName][index].percentageDone
+        }%,rgba(0,0,0,0) 100%)`,
         borderColor: dateColor.color,
         cursor: "pointer",
         boxShadow: "1px 1px 4px 0px #000000ab",
@@ -54,7 +60,6 @@ function HabitCard(habits) {
       },
     }));
 
-  const dateC = dateClasses(dateColor)();
   function handleClick(e) {
     const id = e.target.id;
     const [habitName, index] = id.split(",");
@@ -65,6 +70,7 @@ function HabitCard(habits) {
   }
 
   function SelectedDate(index) {
+    const dateC = dateClasses(dateColor, index)();
     return (
       <div
         id={`${habit.habitName},${index}`}
@@ -77,6 +83,7 @@ function HabitCard(habits) {
   }
 
   function UnSelectedDate(index) {
+    const dateC = dateClasses(dateColor, index)();
     return (
       <div
         id={`${habit.habitName},${index}`}
@@ -119,7 +126,7 @@ function HabitCard(habits) {
         <Grid item container direction="row">
           {weekDays.map((day, index) => {
             return (
-              <Fragment>
+              <Fragment key={index}>
                 <Grid item className={classes.titleText}>
                   <Typography
                     align="center"

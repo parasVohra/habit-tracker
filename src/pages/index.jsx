@@ -5,7 +5,6 @@ import { Button, Grid, CircularProgress, Typography } from "@material-ui/core";
 import { green } from "@material-ui/core/colors";
 import { addDays, format, subDays } from "date-fns";
 import RenderHabits from "../components/RenderHabits";
-import TrackHabit from "../components/TrackHabit";
 import {
   fetchHabitData,
   extractCategoriesAndRestructureHabits,
@@ -13,16 +12,13 @@ import {
   getWeekStartDate,
   getWeekEndDate,
   extractHabitNames,
+  processHabitStatus,
 } from "../utilities/utilitiesMethods";
-import BottomNav from "../components/BottomNav/BottomNav";
-
-console.log("************ In Home page Component ");
 
 export default function Home() {
   const [state, dispatch] = useContext(Context);
   const classes = useStyles();
   const [isNextDisable, setNextDisable] = useState(false);
-  console.log(state.habitView);
 
   useEffect(() => {
     async function hydrateStoreState() {
@@ -47,6 +43,10 @@ export default function Home() {
 
       dispatch({ type: "SET_WEEK_START_DATE", payload: weekStartDate });
       dispatch({ type: "SET_WEEK_END_DATE", payload: weekEndDate });
+
+      const habitStatus = await processHabitStatus(habitObj, weekStartDate);
+      dispatch({ type: "SET_HABIT_STATUS", payload: habitStatus });
+
       dispatch({ type: "SET_IS_LOADING", payload: false });
     }
 

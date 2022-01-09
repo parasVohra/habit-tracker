@@ -3,7 +3,7 @@
  */
 
 //Dependencies
-import { startOfWeek, endOfWeek } from "date-fns";
+import { startOfWeek, endOfWeek, addDays, format } from "date-fns";
 import habitService from "../services/habitService";
 
 // fetch data from habit server
@@ -18,7 +18,6 @@ export async function fetchHabitData() {
  * @returns habitsNameList
  */
 export function extractHabitNames(habitObject) {
-  console.log(habitObject);
   return habitObject.map((habit) => {
     return habit.habitName;
   }, []);
@@ -66,4 +65,64 @@ export function getWeekEndDate(date = new Date()) {
   let weekEndDate = endOfWeek(date);
 
   return weekEndDate;
+}
+
+/**
+ *
+ * @param {Array} habits
+ * @param {Date} weekStartDate
+ * @returns
+ */
+export function processHabitStatus(habits, weekStartDate) {
+  const FIRST_WEEKDAY_INDEX = 0;
+  const LAST_WEEKDAY_INDEX = 6;
+
+  console.log(habits, weekStartDate);
+
+  const isHabitComplete = {};
+
+  habits.forEach((habit) => {
+    console.log(habit.habitTrack);
+    const habitName = habit.habitName;
+    isHabitComplete[habitName] = [];
+
+    for (let i = FIRST_WEEKDAY_INDEX; i <= LAST_WEEKDAY_INDEX; i++) {
+      let dateCounter = addDays(weekStartDate, i);
+      let formatDate = format(dateCounter, "ddMMyyyy");
+      let status = habit.habitTrack.filter((d) => d.date === formatDate);
+      console.log(status);
+      if (status.length > 0) {
+        isHabitComplete[habitName][i] = {
+          isFullyComplete: status[0].isFullyComplete,
+          isPartialComplete: status[0].isPartialComplete,
+          done: status[0].done,
+          percentageDone: calculateHabitDonePercentage(
+            status[0].done,
+            habit.dailyGoal
+          ),
+        };
+      } else {
+        isHabitComplete[habitName][i] = {
+          isFullyComplete: false,
+          isPartialComplete: false,
+          done: 0,
+          percentageDone: 0,
+        };
+      }
+    }
+  });
+
+  return Promise.resolve(isHabitComplete);
+}
+
+export function calculateHabitDonePercentage(done, dailyGoal) {
+  return 100 * (done / dailyGoal);
+}
+
+export function isFullyComplete(habit) {
+  if (habit.dailyGoal === 1) return true;
+}
+
+export function isPartialComplete(habit) {
+  if (habit.dailyGoal === 1) return true;
 }
