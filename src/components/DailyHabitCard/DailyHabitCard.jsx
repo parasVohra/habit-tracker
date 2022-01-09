@@ -3,8 +3,10 @@ import useStyles from "./useStyles";
 import { Grid, Container, Paper, Typography } from "@material-ui/core";
 import { Context } from "../../Store/habitStore";
 import { makeStyles } from "@material-ui/core/styles";
-import { getDay } from "date-fns";
+import { getDay, format } from "date-fns";
 import { calculateCurrentStreak } from "../../utilities/calculateStreak";
+import HabitService from "../../services/habitService";
+import { calculateHabitDonePercentage } from "../../utilities/utilitiesMethods";
 
 function DailyHabitCard({ habit }) {
   const classes = useStyles();
@@ -29,12 +31,13 @@ function DailyHabitCard({ habit }) {
   const dateColor = {
     color: habit.color,
   };
-  console.log(habit.dailyGoal);
   useEffect(() => {
     if (state.habits) {
       setStreak(calculateCurrentStreak(habit.habitTrack));
     }
   }, [habit.habitTrack, state.habits]);
+
+  console.log(state);
 
   const dateClasses = (dateColor) =>
     makeStyles(() => ({
@@ -50,7 +53,13 @@ function DailyHabitCard({ habit }) {
         borderStyle: "solid",
         borderWidth: "1px",
         //backgroundColor: dateColor.color,
-        background: `linear-gradient(to right, ${dateColor.color} 0%,  ${dateColor.color}  88%, rgba(0,0,0,0) 88%,rgba(0,0,0,0) 100%)`,
+        background: `linear-gradient(to right, ${dateColor.color} 0%,  ${
+          dateColor.color
+        }  ${
+          state.habitStatus[habit.habitName][todayDayIndex].percentageDone
+        }%, rgba(0,0,0,0) ${
+          state.habitStatus[habit.habitName][todayDayIndex].percentageDone
+        }%,rgba(0,0,0,0) 100%)`,
         borderColor: dateColor.color,
         cursor: "pointer",
         boxShadow: "1px 1px 10px 0px #000000ab",
@@ -74,11 +83,60 @@ function DailyHabitCard({ habit }) {
   const dateC = dateClasses(dateColor)();
 
   function handleClick(habitName, index) {
-    let updateStatus = state.habitStatus;
-    updateStatus[habitName][index] = !updateStatus[habitName][index];
-    dispatch({ type: "SET_HABIT_STATUS", payload: updateStatus });
-    //update database
+    const clickedHabitStatus = state.habitStatus[habitName][index];
+    console.log("clicked habit status", clickedHabitStatus);
+    if (clickedHabitStatus.done !== habit.dailyGoal) {
+      const dailyGoalOfCurrentHabit = habit.dailyGoal;
+      const updatedTrackObj = {
+        id: habit._id,
+        date: format(state.currentDate, "ddMMyyyy"),
+        day: format(state.currentDate, "EEE"),
+        data: "",
+      };
+
+      const updatedStatusObj = {};
+
+      if (dailyGoalOfCurrentHabit === clickedHabitStatus.done + 1) {
+        updatedTrackObj.isFullyComplete =
+          updatedStatusObj.isFullyComplete = true;
+        updatedTrackObj.isPartialComplete =
+          updatedStatusObj.isPartialComplete = true;
+        updatedTrackObj.done = updatedStatusObj.done =
+          clickedHabitStatus.done + 1;
+        updatedStatusObj.percentageDone = calculateHabitDonePercentage(
+          clickedHabitStatus.done + 1,
+          dailyGoalOfCurrentHabit
+        );
+      } else {
+        updatedTrackObj.isFullyComplete =
+          updatedStatusObj.isFullyComplete = false;
+        updatedTrackObj.isPartialComplete = true;
+        updatedTrackObj.isPartialComplete =
+          updatedStatusObj.isPartialComplete = true;
+        updatedTrackObj.done = updatedStatusObj.done =
+          clickedHabitStatus.done + 1;
+        updatedStatusObj.percentageDone = calculateHabitDonePercentage(
+          clickedHabitStatus.done + 1,
+          dailyGoalOfCurrentHabit
+        );
+      }
+
+      const newStatus = state.habitStatus;
+      newStatus[habitName][index] = updatedStatusObj;
+      dispatch({ type: "SET_HABIT_STATUS", payload: newStatus });
+      console.log(updatedTrackObj, updatedStatusObj);
+      console.log(state.habitStatus);
+
+      updateStatus(updatedTrackObj);
+    }
   }
+  const updateStatus = async (data) => {
+    let response = await HabitService.updateHabitStatus(data);
+
+    if (response.status === 200) {
+      alert("Habit Status updated");
+    }
+  };
 
   function SelectedDate(index) {
     return (
@@ -120,7 +178,9 @@ function DailyHabitCard({ habit }) {
               variant="subtitle2"
               className={classes.doneText}
             >
-              DONE: 0 / 2
+              {`DONE ${state.habitStatus[habit.habitName][index].done} / ${
+                habit.dailyGoal
+              } `}
             </Typography>
           </Grid>
         </Grid>

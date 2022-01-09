@@ -12,13 +12,13 @@ import {
   getWeekStartDate,
   getWeekEndDate,
   extractHabitNames,
+  processHabitStatus,
 } from "../utilities/utilitiesMethods";
 
 export default function Home() {
   const [state, dispatch] = useContext(Context);
   const classes = useStyles();
   const [isNextDisable, setNextDisable] = useState(false);
-  console.log(state.habitView);
 
   useEffect(() => {
     async function hydrateStoreState() {
@@ -43,6 +43,10 @@ export default function Home() {
 
       dispatch({ type: "SET_WEEK_START_DATE", payload: weekStartDate });
       dispatch({ type: "SET_WEEK_END_DATE", payload: weekEndDate });
+
+      const habitStatus = await processHabitStatus(habitObj, weekStartDate);
+      dispatch({ type: "SET_HABIT_STATUS", payload: habitStatus });
+
       dispatch({ type: "SET_IS_LOADING", payload: false });
     }
 

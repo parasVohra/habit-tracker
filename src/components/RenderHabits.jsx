@@ -1,9 +1,9 @@
 import { makeStyles, Typography } from "@material-ui/core";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, Fragment } from "react";
 import { format, eachDayOfInterval } from "date-fns";
-import RenderHabitsByCategory from "../components/RenderHabitsByCategory";
 import { Context } from "../Store/habitStore";
 import HabitCard from "./HabitCard/HabitCard";
+import DailyHabitCard from "./DailyHabitCard/DailyHabitCard";
 
 const RenderHabits = () => {
   const [state, dispatch] = useContext(Context);
@@ -38,12 +38,16 @@ const RenderHabits = () => {
     <div className={classes.root}>
       {state.habitRestructure && !isHabitEmpty ? (
         <>
-          {state.category ? (
-            state.category.map((c, index) => {
+          {state.habits ? (
+            state.habits.map((habit, index) => {
               return (
-                <>
-                  <RenderHabitsByCategory category={c} />
-                </>
+                <Fragment key={habit.habitName}>
+                  {state.habitView === "daily" ? (
+                    <DailyHabitCard habit={habit} />
+                  ) : (
+                    <HabitCard habit={habit} />
+                  )}
+                </Fragment>
               );
             })
           ) : (
