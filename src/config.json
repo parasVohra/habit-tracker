@@ -1,5 +1,5 @@
 {
-  "apiUrl": "http://18.209.7.211:8080/api/",
+  "apiUrl": "https://app.pursharthvohra.com/api/",
   "prodUrl": "https://www.pursharthvohra.com/api/",
   "tokenKey": "habit_token"
 }
