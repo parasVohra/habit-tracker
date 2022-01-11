@@ -7,6 +7,7 @@ import { getDay, format } from "date-fns";
 import { calculateCurrentStreak } from "../../utilities/calculateStreak";
 import HabitService from "../../services/habitService";
 import { calculateHabitDonePercentage } from "../../utilities/utilitiesMethods";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 function DailyHabitCard({ habit }) {
   const classes = useStyles();
@@ -36,8 +37,6 @@ function DailyHabitCard({ habit }) {
       setStreak(calculateCurrentStreak(habit.habitTrack));
     }
   }, [habit.habitTrack, state.habits]);
-
-  console.log(state);
 
   const dateClasses = (dateColor) =>
     makeStyles(() => ({
@@ -84,9 +83,9 @@ function DailyHabitCard({ habit }) {
 
   function handleClick(habitName, index) {
     const clickedHabitStatus = state.habitStatus[habitName][index];
+    const dailyGoalOfCurrentHabit = habit.dailyGoal;
     console.log("clicked habit status", clickedHabitStatus);
     if (clickedHabitStatus.done !== habit.dailyGoal) {
-      const dailyGoalOfCurrentHabit = habit.dailyGoal;
       const updatedTrackObj = {
         id: habit._id,
         date: format(state.currentDate, "ddMMyyyy"),
@@ -121,6 +120,28 @@ function DailyHabitCard({ habit }) {
         );
       }
 
+      const newStatus = state.habitStatus;
+      newStatus[habitName][index] = updatedStatusObj;
+      dispatch({ type: "SET_HABIT_STATUS", payload: newStatus });
+      console.log(updatedTrackObj, updatedStatusObj);
+      console.log(state.habitStatus);
+
+      updateStatus(updatedTrackObj);
+    } else {
+      const updatedTrackObj = {
+        id: habit._id,
+        date: format(state.currentDate, "ddMMyyyy"),
+        day: format(state.currentDate, "EEE"),
+        data: "",
+      };
+      const updatedStatusObj = {};
+      updatedTrackObj.isFullyComplete =
+        updatedStatusObj.isFullyComplete = false;
+      updatedTrackObj.isPartialComplete = false;
+      updatedTrackObj.isPartialComplete =
+        updatedStatusObj.isPartialComplete = false;
+      updatedTrackObj.done = updatedStatusObj.done = 0;
+      updatedStatusObj.percentageDone = 0;
       const newStatus = state.habitStatus;
       newStatus[habitName][index] = updatedStatusObj;
       dispatch({ type: "SET_HABIT_STATUS", payload: newStatus });

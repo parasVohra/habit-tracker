@@ -48,22 +48,18 @@ export function extractCategoriesAndRestructureHabits(habits) {
 
 export function getTodayDate() {
   const date = new Date();
-  console.log(date);
   return Promise.resolve(date);
 }
 
 // get start of week from date fns
 export function getWeekStartDate(date = new Date()) {
-  console.log(date);
   let weekStartDate = startOfWeek(date);
-  console.log(weekStartDate);
   return weekStartDate;
 }
 
 // get end of week from date fns
 export function getWeekEndDate(date = new Date()) {
   let weekEndDate = endOfWeek(date);
-
   return weekEndDate;
 }
 
@@ -82,7 +78,6 @@ export function processHabitStatus(habits, weekStartDate) {
   const isHabitComplete = {};
 
   habits.forEach((habit) => {
-    console.log(habit.habitTrack);
     const habitName = habit.habitName;
     isHabitComplete[habitName] = [];
 
@@ -90,7 +85,6 @@ export function processHabitStatus(habits, weekStartDate) {
       let dateCounter = addDays(weekStartDate, i);
       let formatDate = format(dateCounter, "ddMMyyyy");
       let status = habit.habitTrack.filter((d) => d.date === formatDate);
-      console.log(status);
       if (status.length > 0) {
         isHabitComplete[habitName][i] = {
           isFullyComplete: status[0].isFullyComplete,
