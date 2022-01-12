@@ -1,26 +1,14 @@
-import React, { useContext, useState, useEffect } from "react";
-import { Context } from "../Store/habitStore";
-import {
-  Button,
-  Grid,
-  CircularProgress,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  Typography,
-} from "@material-ui/core";
+import React, { useState } from "react";
+import { Menu, MenuItem, Typography } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
 import { tokenKey } from "../config.json";
 import Fab from "@material-ui/core/Fab";
-import AddIcon from "@material-ui/icons/Add";
-import { Label } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import BottomNav from "./BottomNav/BottomNav";
 
 const NavBar = () => {
-  const [state] = useContext(Context);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event) => {

@@ -3,7 +3,7 @@ import { Context } from "../Store/habitStore";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Grid, CircularProgress, Typography } from "@material-ui/core";
 import { green } from "@material-ui/core/colors";
-import { addDays, format, subDays } from "date-fns";
+import { addDays, subDays } from "date-fns";
 import RenderHabits from "../components/RenderHabits";
 import {
   fetchHabitData,
@@ -55,26 +55,26 @@ export default function Home() {
 
   // this fetch function is need to extracted and need to be reused
 
-  const changeDate = async (method, n) => {
-    // change the current date to prev or next date
-    if (method === "add") {
-      let changedDate = addDays(state.currentDate, n);
-      dispatch({ type: "SET_CURRENT_DATE", payload: changedDate });
-      const newStartWeekDate = await getWeekStartDate(changedDate);
-      const newEndWeekDate = await getWeekEndDate(changedDate);
-      dispatch({ type: "SET_WEEK_END_DATE", payload: newEndWeekDate });
-      dispatch({ type: "SET_WEEK_START_DATE", payload: newStartWeekDate });
-    }
-    if (method === "sub") {
-      let changedDate = subDays(state.currentDate, n);
-      dispatch({ type: "SET_CURRENT_DATE", payload: changedDate });
-      const newStartWeekDate = await getWeekStartDate(changedDate);
-      const newEndWeekDate = await getWeekEndDate(changedDate);
+  // const changeDate = async (method, n) => {
+  //   // change the current date to prev or next date
+  //   if (method === "add") {
+  //     let changedDate = addDays(state.currentDate, n);
+  //     dispatch({ type: "SET_CURRENT_DATE", payload: changedDate });
+  //     const newStartWeekDate = await getWeekStartDate(changedDate);
+  //     const newEndWeekDate = await getWeekEndDate(changedDate);
+  //     dispatch({ type: "SET_WEEK_END_DATE", payload: newEndWeekDate });
+  //     dispatch({ type: "SET_WEEK_START_DATE", payload: newStartWeekDate });
+  //   }
+  //   if (method === "sub") {
+  //     let changedDate = subDays(state.currentDate, n);
+  //     dispatch({ type: "SET_CURRENT_DATE", payload: changedDate });
+  //     const newStartWeekDate = await getWeekStartDate(changedDate);
+  //     const newEndWeekDate = await getWeekEndDate(changedDate);
 
-      dispatch({ type: "SET_WEEK_START_DATE", payload: newStartWeekDate });
-      dispatch({ type: "SET_WEEK_END_DATE", payload: newEndWeekDate });
-    }
-  };
+  //     dispatch({ type: "SET_WEEK_START_DATE", payload: newStartWeekDate });
+  //     dispatch({ type: "SET_WEEK_END_DATE", payload: newEndWeekDate });
+  //   }
+  // };
 
   function setHabitView(viewType) {
     dispatch({ type: "SET_HABIT_VIEW", payload: viewType });

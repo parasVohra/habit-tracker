@@ -72,9 +72,6 @@ export function getWeekEndDate(date = new Date()) {
 export function processHabitStatus(habits, weekStartDate) {
   const FIRST_WEEKDAY_INDEX = 0;
   const LAST_WEEKDAY_INDEX = 6;
-
-  console.log(habits, weekStartDate);
-
   const isHabitComplete = {};
 
   habits.forEach((habit) => {
