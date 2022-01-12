@@ -62,7 +62,7 @@ const BottomNav = () => {
                     color: "black",
                     fontSize: "4vw",
                   }}
-                  to="/form"
+                  to="/summary"
                 >
                   <BarChartIcon className={classes.icon} />
                 </NavLink>
@@ -89,15 +89,23 @@ const BottomNav = () => {
               ADD HABIT
             </Fab>
           </NavLink>
-          <Fab
-            aria-label="add"
-            variant="extended"
-            color="secondary"
-            className={classes.bottomSummaryButton}
+          <NavLink
+            activeStyle={{
+              color: "black",
+              fontSize: "4vw",
+            }}
+            to="/summary"
           >
-            <BarChartIcon className={classes.addIcon} />
-            Summary
-          </Fab>
+            <Fab
+              aria-label="add"
+              variant="extended"
+              color="secondary"
+              className={classes.bottomSummaryButton}
+            >
+              <BarChartIcon className={classes.addIcon} />
+              Summary
+            </Fab>
+          </NavLink>
         </Fragment>
       )}
     </Fragment>

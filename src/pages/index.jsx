@@ -3,7 +3,6 @@ import { Context } from "../Store/habitStore";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Grid, CircularProgress, Typography } from "@material-ui/core";
 import { green } from "@material-ui/core/colors";
-import { addDays, subDays } from "date-fns";
 import RenderHabits from "../components/RenderHabits";
 import {
   fetchHabitData,
@@ -18,7 +17,7 @@ import {
 export default function Home() {
   const [state, dispatch] = useContext(Context);
   const classes = useStyles();
-  const [isNextDisable, setNextDisable] = useState(false);
+  const [isNextDisable] = useState(false);
 
   useEffect(() => {
     async function hydrateStoreState() {
