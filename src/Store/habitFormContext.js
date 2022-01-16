@@ -7,7 +7,7 @@ export const initialState = {
   dailyGoal: 1,
   habitUnit: null || "",
   habitUnitType: null,
-  inputType: "checkbox",
+  inputType: "Checkbox",
   color: "#FFB427",
   weeklyGoal: 7,
   weeklyInputType: "daily",

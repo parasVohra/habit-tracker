@@ -4,7 +4,6 @@ import {
   CardContent,
   TextField,
   Grid,
-  Container,
   CircularProgress,
   Typography,
 } from "@material-ui/core";
@@ -16,7 +15,6 @@ import habitService from "../../services/habitService";
 import Modal from "../modal";
 import { useHistory, useLocation } from "react-router-dom";
 import FormInputLabel from "../FormComponents/InputLabel/InputLabel";
-import BackButton from "../FormComponents/BackButton/BackButton";
 import NumberCounter from "../FormComponents/NumberCounter/NumberCounter";
 import { FormContext } from "../../Store/habitFormContext";
 
@@ -36,6 +34,8 @@ const HabitForm = () => {
   const [unityType, setUnitType] = useState(habitForm.habitUnitType);
   const [trackType, setTrackType] = useState(habitForm.inputType);
   const [habitText, setHabitText] = useState(habitForm.habitName);
+
+  console.log("habit form context", habitForm);
 
   const [showModal, setModal] = useState(false);
 
@@ -90,16 +90,6 @@ const HabitForm = () => {
   };
 
   return (
-    // <Container>
-    //   <BackButton />
-    //   <Typography
-    //     variant="h6"
-    //     align="center"
-    //     color="textSecondary"
-    //     className={classes.title}
-    //   >
-    //     CREATE A NEW HABIT
-    //   </Typography>
     <>
       <Formik
         initialValues={habitForm}
@@ -146,7 +136,7 @@ const HabitForm = () => {
                   size="large"
                   key={category.label}
                   className={
-                    activeCategoryIndex === index
+                    category.label === habitForm.category
                       ? `${classes.activeButton} ${classes.buttonMargin}`
                       : `${classes.disabledButton} ${classes.buttonMargin}`
                   }
@@ -209,7 +199,7 @@ const HabitForm = () => {
                     <div
                       key={color.color}
                       className={
-                        activeColorIndex === index
+                        color.color === habitForm.color
                           ? `${classes.activeColor} 
                                                 ${classes.colorCircle} ${
                               classes[`${color.name}`]
@@ -231,7 +221,7 @@ const HabitForm = () => {
               size="large"
               name="habitUnit"
               className={
-                unityType === null
+                unityType === ""
                   ? `${classes.activeButton} ${classes.buttonMargin}`
                   : `${classes.disabledButton} ${classes.buttonMargin}`
               }
@@ -318,7 +308,6 @@ const HabitForm = () => {
           </Card>
         </Modal>
       ) : null}
-      {/* </Container> */}
     </>
   );
 };
@@ -389,7 +378,7 @@ const colorCode = [
 
 const inputTypes = [
   {
-    value: "checkbox",
+    value: "Checkbox",
     label: "CHECK BOX",
   },
   {

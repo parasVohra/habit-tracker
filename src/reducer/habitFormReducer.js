@@ -23,6 +23,11 @@ const HabitFormReducer = (state, action) => {
         ...state,
         weeklyGoal: payload,
       };
+    case "SET_WEEKLY_INPUT_TYPE":
+      return {
+        ...state,
+        weeklyInputType: payload,
+      };
     case "SET_COLOR":
       return {
         ...state,
@@ -33,20 +38,15 @@ const HabitFormReducer = (state, action) => {
         ...state,
         habitUnit: payload,
       };
-    case "SET_INPUT_TYPE":
-      return {
-        ...state,
-        inputType: payload,
-      };
-    case "SET_WEEKLY_INPUT_TYPE":
-      return {
-        ...state,
-        weeklyInputType: payload,
-      };
     case "SET_HABIT_UNIT_TYPE":
       return {
         ...state,
         habitUnitType: payload,
+      };
+    case "SET_INPUT_TYPE":
+      return {
+        ...state,
+        inputType: payload,
       };
     case "RESET_HABIT_FORM":
       return {
