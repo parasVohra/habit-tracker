@@ -7,11 +7,9 @@ import { getDay, format } from "date-fns";
 import { calculateCurrentStreak } from "../../utilities/calculateStreak";
 import HabitService from "../../services/habitService";
 import { calculateHabitDonePercentage } from "../../utilities/utilitiesMethods";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 function DailyHabitCard({ habit }) {
   const classes = useStyles();
-  //const habit = habits.habit;
   const [state, dispatch] = useContext(Context);
   const todayDayIndex = getDay(new Date());
   const [streak, setStreak] = useState({
@@ -19,16 +17,6 @@ function DailyHabitCard({ habit }) {
     longestStreak: 0,
     previousDate: null,
   });
-  const colors = {
-    yellow: "#FFB427",
-    lightblue: "#4EB1CB",
-    green: "#50D890",
-    black: "#000000",
-    red: "#FF6B7A",
-    purple: "#5666F3",
-    blue: "#3a8dff",
-    orange: "#FF8C00",
-  };
   const dateColor = {
     color: habit.color,
   };

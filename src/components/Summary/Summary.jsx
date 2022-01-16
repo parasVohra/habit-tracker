@@ -3,7 +3,7 @@ import useStyles from "./useStyles";
 import { Grid, Container, Paper, Typography, Button } from "@material-ui/core";
 import { Context } from "../../Store/habitStore";
 import BackButton from "../FormComponents/BackButton/BackButton";
-import { NavLink, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { FormContext } from "../../Store/habitFormContext";
 
 const Summary = () => {
@@ -12,11 +12,8 @@ const Summary = () => {
   const [state] = useContext(Context);
   const [habitForm, dispatch] = useContext(FormContext);
 
-  function handleClick(habit) {
-    console.log("clicked with ", habit);
-  }
-
   function handleEditClick({
+    _id,
     category,
     color,
     dailyGoal,
@@ -26,6 +23,7 @@ const Summary = () => {
     trackType,
   }) {
     console.log(
+      _id,
       category,
       color,
       dailyGoal,
@@ -34,6 +32,7 @@ const Summary = () => {
       weeklyGoal,
       trackType
     );
+    dispatch({ type: "SET_HABIT_ID", payload: _id });
     dispatch({ type: "SET_CATEGORY", payload: category });
     dispatch({ type: "SET_HABIT_NAME", payload: habitName });
     dispatch({ type: "SET_DAILY_GOAL", payload: dailyGoal });
@@ -52,11 +51,7 @@ const Summary = () => {
       {state.habits.length
         ? state.habits.map((habit) => {
             return (
-              <Container
-                className={classes.root}
-                key={habit._id}
-                onClick={() => handleClick(habit)}
-              >
+              <Container className={classes.root} key={habit._id}>
                 <Grid
                   container
                   direction="column"
@@ -73,30 +68,13 @@ const Summary = () => {
                       <Typography>{habit.habitName}</Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      {/* <NavLink
-                        activeStyle={{
-                          color: "black",
-                          fontSize: "4vw",
-                        }}
-                        to="/updateHabit"
-                      >
-                        <Button>Edit</Button>
-                      </NavLink> */}
                       <Button onClick={() => handleEditClick(habit)}>
                         Edit
                       </Button>
                     </Grid>
                   </Grid>
 
-                  <Grid item container direction="row">
-                    <Typography
-                      align="left"
-                      variant="subtitle2"
-                      className={classes.doneText}
-                    >
-                      C
-                    </Typography>
-                  </Grid>
+                  <Grid item container direction="row"></Grid>
                 </Grid>
               </Container>
             );

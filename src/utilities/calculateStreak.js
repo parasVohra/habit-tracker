@@ -1,14 +1,14 @@
 import { parse, differenceInDays, isYesterday, isToday } from "date-fns";
 
-const testData = [
-  { date: "11112021", isComplete: true },
-  { date: "10112021", isComplete: true },
-  { date: "08112021", isComplete: true },
-  { date: "12102021", isComplete: true },
-  { date: "11102021", isComplete: true },
-  { date: "09102021", isComplete: true },
-  { date: "06102021", isComplete: true },
-];
+// const testData = [
+//   { date: "11112021", isComplete: true },
+//   { date: "10112021", isComplete: true },
+//   { date: "08112021", isComplete: true },
+//   { date: "12102021", isComplete: true },
+//   { date: "11102021", isComplete: true },
+//   { date: "09102021", isComplete: true },
+//   { date: "06102021", isComplete: true },
+// ];
 
 /**
  *

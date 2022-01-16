@@ -17,6 +17,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import FormInputLabel from "../FormComponents/InputLabel/InputLabel";
 import NumberCounter from "../FormComponents/NumberCounter/NumberCounter";
 import { FormContext } from "../../Store/habitFormContext";
+import { Context } from "../../Store/habitStore";
 
 const HabitForm = () => {
   const [habitForm, dispatch] = useContext(FormContext);
@@ -32,7 +33,7 @@ const HabitForm = () => {
     habitForm.weeklyInputType
   );
   const [unityType, setUnitType] = useState(habitForm.habitUnitType);
-  const [trackType, setTrackType] = useState(habitForm.inputType);
+  const [trackType, setTrackType] = useState(habitForm.trackType);
   const [habitText, setHabitText] = useState(habitForm.habitName);
 
   console.log("habit form context", habitForm);
@@ -71,9 +72,9 @@ const HabitForm = () => {
       dispatch({ type: "SET_HABIT_UNIT", payload: null });
     }
   };
-  const handleTrackInput = (type) => {
-    setTrackType(type);
-    dispatch({ type: "SET_INPUT_TYPE", payload: type });
+  const handleTrackInput = (value) => {
+    setTrackType(value);
+    dispatch({ type: "SET_INPUT_TYPE", payload: value });
   };
   const handleHabitName = (value) => {
     setHabitText(value);
@@ -96,14 +97,27 @@ const HabitForm = () => {
         onSubmit={async (data) => {
           try {
             setSubmitting(true);
-            const res = await saveHabit(data);
-            if (res) {
-              setMsg(res.msg);
-              dispatch({
-                type: "RESET_HABIT_FORM",
-              });
-              setSubmitting(false);
-              toggleModal();
+            if (pathname === "/updateHabit") {
+              const updateRes = await updateHabit(data, habitForm.habitId);
+              if (updateRes) {
+                setMsg(updateRes.msg);
+                dispatch({
+                  type: "RESET_HABIT_FORM",
+                });
+                setSubmitting(false);
+                toggleModal();
+              }
+            }
+            if (pathname === "/createHabit") {
+              const res = await saveHabit(data);
+              if (res) {
+                setMsg(res.msg);
+                dispatch({
+                  type: "RESET_HABIT_FORM",
+                });
+                setSubmitting(false);
+                toggleModal();
+              }
             }
           } catch (err) {
             console.log(err);
@@ -221,7 +235,7 @@ const HabitForm = () => {
               size="large"
               name="habitUnit"
               className={
-                unityType === ""
+                unityType === null
                   ? `${classes.activeButton} ${classes.buttonMargin}`
                   : `${classes.disabledButton} ${classes.buttonMargin}`
               }
@@ -257,10 +271,10 @@ const HabitForm = () => {
               return (
                 <Button
                   size="large"
-                  name="inputType"
+                  name="trackType"
                   key={type.value}
                   className={
-                    trackType === type.value
+                    type.value === trackType
                       ? `${classes.activeButton} ${classes.buttonMargin}`
                       : `${classes.disabledButton} ${classes.buttonMargin}`
                   }
@@ -346,7 +360,7 @@ const validationSchema = yup.object({
 const saveHabit = async (habit) => {
   //make a object of habit in order to send post
 
-  let habitData = {
+  const habitData = {
     category: habit.category,
     habitName: habit.habitName,
     inputType: habit.types,
@@ -357,11 +371,29 @@ const saveHabit = async (habit) => {
       value: habit.weeklyGoal,
     },
     dailyGoal: habit.dailyGoal,
+    trackType: habit.trackType,
   };
-  console.log("in save habit");
-
   const response = await habitService.saveHabit(habitData);
 
+  return response.data;
+};
+
+const updateHabit = async (habit, habitId) => {
+  const newHabitData = {
+    habitId: habitId,
+    category: habit.category,
+    habitName: habit.habitName,
+    inputType: habit.types,
+    color: habit.color,
+    habitUnit: { type: habit.habitUnitType, value: habit.habitUnit },
+    weeklyGoal: {
+      type: habit.weeklyInputType,
+      value: habit.weeklyGoal,
+    },
+    dailyGoal: habit.dailyGoal,
+    trackType: habit.trackType,
+  };
+  const response = await habitService.updateHabitContent(newHabitData);
   return response.data;
 };
 

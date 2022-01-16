@@ -3,6 +3,11 @@ import { initialState } from "../Store/habitFormContext";
 const HabitFormReducer = (state, action) => {
   const { type, payload } = action;
   switch (type) {
+    case "SET_HABIT_ID":
+      return {
+        ...state,
+        habitId: payload,
+      };
     case "SET_CATEGORY":
       return {
         ...state,
@@ -46,7 +51,7 @@ const HabitFormReducer = (state, action) => {
     case "SET_INPUT_TYPE":
       return {
         ...state,
-        inputType: payload,
+        trackType: payload,
       };
     case "RESET_HABIT_FORM":
       return {
