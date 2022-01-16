@@ -51,7 +51,7 @@ const BottomNav = () => {
                     color: "black",
                     fontSize: "4vw",
                   }}
-                  to="/form"
+                  to="/createHabit"
                 >
                   <AddIcon className={classes.icon} />
                 </NavLink>
@@ -77,7 +77,7 @@ const BottomNav = () => {
               color: "black",
               fontSize: "4vw",
             }}
-            to="/form"
+            to="/createHabit"
           >
             <Fab
               aria-label="add"

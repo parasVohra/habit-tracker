@@ -3,11 +3,11 @@ import useStyles from "./useStyles";
 import { Grid, Container, Paper, Typography, Button } from "@material-ui/core";
 import { Context } from "../../Store/habitStore";
 import BackButton from "../FormComponents/BackButton/BackButton";
+import { NavLink } from "react-router-dom";
 
 const Summary = () => {
   const classes = useStyles();
   const [state, dispatch] = useContext(Context);
-  console.log("sumMry", state);
 
   function handleClick(habit) {
     console.log("clicked with ", habit.habitName);
@@ -39,7 +39,15 @@ const Summary = () => {
                       <Typography>{habit.habitName}</Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Button>Edit</Button>
+                      <NavLink
+                        activeStyle={{
+                          color: "black",
+                          fontSize: "4vw",
+                        }}
+                        to="/updateHabit"
+                      >
+                        <Button>Edit</Button>
+                      </NavLink>
                     </Grid>
                   </Grid>
 

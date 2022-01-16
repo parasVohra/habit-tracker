@@ -14,18 +14,19 @@ import useStyles from "./useStyles";
 import * as yup from "yup";
 import habitService from "../../services/habitService";
 import Modal from "../modal";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import FormInputLabel from "../FormComponents/InputLabel/InputLabel";
 import BackButton from "../FormComponents/BackButton/BackButton";
 import NumberCounter from "../FormComponents/NumberCounter/NumberCounter";
 import { FormContext } from "../../Store/habitFormContext";
 
-const CreateHabitForm = () => {
+const HabitForm = () => {
   const [habitForm, dispatch] = useContext(FormContext);
   const [isSubmitting, setSubmitting] = useState(false);
   const classes = useStyles();
   const [msg, setMsg] = useState(null);
   const history = useHistory();
+  const { pathname } = useLocation();
   const [habitSaved, setHabitSaved] = useState(false);
   const [activeCategoryIndex, setCategoryIndex] = useState(0);
   const [activeColorIndex, setColorIndex] = useState(0);
@@ -89,16 +90,17 @@ const CreateHabitForm = () => {
   };
 
   return (
-    <Container>
-      <BackButton />
-      <Typography
-        variant="h6"
-        align="center"
-        color="textSecondary"
-        className={classes.title}
-      >
-        CREATE A NEW HABIT
-      </Typography>
+    // <Container>
+    //   <BackButton />
+    //   <Typography
+    //     variant="h6"
+    //     align="center"
+    //     color="textSecondary"
+    //     className={classes.title}
+    //   >
+    //     CREATE A NEW HABIT
+    //   </Typography>
+    <>
       <Formik
         initialValues={habitForm}
         onSubmit={async (data) => {
@@ -288,8 +290,10 @@ const CreateHabitForm = () => {
             >
               {isSubmitting ? (
                 <CircularProgress size={20} color="inherit" />
-              ) : (
+              ) : pathname === "/createHabit" ? (
                 <Typography>CREATE</Typography>
+              ) : (
+                <Typography>UPDATE</Typography>
               )}
             </Button>
           </div>
@@ -314,7 +318,8 @@ const CreateHabitForm = () => {
           </Card>
         </Modal>
       ) : null}
-    </Container>
+      {/* </Container> */}
+    </>
   );
 };
 
@@ -428,4 +433,4 @@ const categories = [
   },
 ];
 
-export default CreateHabitForm;
+export default HabitForm;

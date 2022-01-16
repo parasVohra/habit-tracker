@@ -6,7 +6,7 @@ import { theme } from "./themes/theme";
 import Store from "./Store/habitStore";
 import Home from "./pages";
 import AddHabit from "./pages/addHabit";
-import Form from "./components/CreateHabitForm/form";
+import CreateHabitForm from "./components/CreateHabitForm/CreateHabitForm";
 import SignUp from "./components/auth/signUpForm";
 import SignIn from "./components/auth/signInForm";
 import NavBar from "./components/navBar";
@@ -17,6 +17,7 @@ import DailyHabitCard from "./components/DailyHabitCard/DailyHabitCard";
 import HabitFormContext from "./Store/habitFormContext";
 import Summary from "./components/Summary/Summary";
 import SummaryDetails from "./components/SummaryDetails/SummaryDetails";
+import UpdateHabit from "./components/UpdateHabit/UpdateHabit";
 
 function App() {
   return (
@@ -29,12 +30,16 @@ function App() {
               <Switch>
                 <ProtectedRoute exact path="/" component={Home} />
                 <ProtectedRoute path="/addHabit" component={AddHabit} />
-                <ProtectedRoute path="/form" component={Form} />
+                <ProtectedRoute
+                  path="/createHabit"
+                  component={CreateHabitForm}
+                />
                 <ProtectedRoute path="/habitCard" component={HabitCard} />
                 <ProtectedRoute
                   path="/dailyHabitCard"
                   component={DailyHabitCard}
                 />
+                <ProtectedRoute path="/updateHabit" component={UpdateHabit} />
                 <ProtectedRoute path="/summary" component={Summary} />
                 <ProtectedRoute
                   path="/summaryDetails"
