@@ -3,6 +3,11 @@ import { initialState } from "../Store/habitFormContext";
 const HabitFormReducer = (state, action) => {
   const { type, payload } = action;
   switch (type) {
+    case "SET_HABIT_ID":
+      return {
+        ...state,
+        habitId: payload,
+      };
     case "SET_CATEGORY":
       return {
         ...state,
@@ -23,6 +28,11 @@ const HabitFormReducer = (state, action) => {
         ...state,
         weeklyGoal: payload,
       };
+    case "SET_WEEKLY_INPUT_TYPE":
+      return {
+        ...state,
+        weeklyInputType: payload,
+      };
     case "SET_COLOR":
       return {
         ...state,
@@ -33,20 +43,15 @@ const HabitFormReducer = (state, action) => {
         ...state,
         habitUnit: payload,
       };
-    case "SET_INPUT_TYPE":
-      return {
-        ...state,
-        inputType: payload,
-      };
-    case "SET_WEEKLY_INPUT_TYPE":
-      return {
-        ...state,
-        weeklyInputType: payload,
-      };
     case "SET_HABIT_UNIT_TYPE":
       return {
         ...state,
         habitUnitType: payload,
+      };
+    case "SET_INPUT_TYPE":
+      return {
+        ...state,
+        trackType: payload,
       };
     case "RESET_HABIT_FORM":
       return {

@@ -4,7 +4,6 @@ import {
   CardContent,
   TextField,
   Grid,
-  Container,
   CircularProgress,
   Typography,
 } from "@material-ui/core";
@@ -14,18 +13,19 @@ import useStyles from "./useStyles";
 import * as yup from "yup";
 import habitService from "../../services/habitService";
 import Modal from "../modal";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import FormInputLabel from "../FormComponents/InputLabel/InputLabel";
-import BackButton from "../FormComponents/BackButton/BackButton";
 import NumberCounter from "../FormComponents/NumberCounter/NumberCounter";
 import { FormContext } from "../../Store/habitFormContext";
+import { Context } from "../../Store/habitStore";
 
-const CreateHabitForm = () => {
+const HabitForm = () => {
   const [habitForm, dispatch] = useContext(FormContext);
   const [isSubmitting, setSubmitting] = useState(false);
   const classes = useStyles();
   const [msg, setMsg] = useState(null);
   const history = useHistory();
+  const { pathname } = useLocation();
   const [habitSaved, setHabitSaved] = useState(false);
   const [activeCategoryIndex, setCategoryIndex] = useState(0);
   const [activeColorIndex, setColorIndex] = useState(0);
@@ -33,8 +33,10 @@ const CreateHabitForm = () => {
     habitForm.weeklyInputType
   );
   const [unityType, setUnitType] = useState(habitForm.habitUnitType);
-  const [trackType, setTrackType] = useState(habitForm.inputType);
+  const [trackType, setTrackType] = useState(habitForm.trackType);
   const [habitText, setHabitText] = useState(habitForm.habitName);
+
+  console.log("habit form context", habitForm);
 
   const [showModal, setModal] = useState(false);
 
@@ -70,9 +72,9 @@ const CreateHabitForm = () => {
       dispatch({ type: "SET_HABIT_UNIT", payload: null });
     }
   };
-  const handleTrackInput = (type) => {
-    setTrackType(type);
-    dispatch({ type: "SET_INPUT_TYPE", payload: type });
+  const handleTrackInput = (value) => {
+    setTrackType(value);
+    dispatch({ type: "SET_INPUT_TYPE", payload: value });
   };
   const handleHabitName = (value) => {
     setHabitText(value);
@@ -89,29 +91,33 @@ const CreateHabitForm = () => {
   };
 
   return (
-    <Container>
-      <BackButton />
-      <Typography
-        variant="h6"
-        align="center"
-        color="textSecondary"
-        className={classes.title}
-      >
-        CREATE A NEW HABIT
-      </Typography>
+    <>
       <Formik
         initialValues={habitForm}
         onSubmit={async (data) => {
           try {
             setSubmitting(true);
-            const res = await saveHabit(data);
-            if (res) {
-              setMsg(res.msg);
-              dispatch({
-                type: "RESET_HABIT_FORM",
-              });
-              setSubmitting(false);
-              toggleModal();
+            if (pathname === "/updateHabit") {
+              const updateRes = await updateHabit(data, habitForm.habitId);
+              if (updateRes) {
+                setMsg(updateRes.msg);
+                dispatch({
+                  type: "RESET_HABIT_FORM",
+                });
+                setSubmitting(false);
+                toggleModal();
+              }
+            }
+            if (pathname === "/createHabit") {
+              const res = await saveHabit(data);
+              if (res) {
+                setMsg(res.msg);
+                dispatch({
+                  type: "RESET_HABIT_FORM",
+                });
+                setSubmitting(false);
+                toggleModal();
+              }
             }
           } catch (err) {
             console.log(err);
@@ -144,7 +150,7 @@ const CreateHabitForm = () => {
                   size="large"
                   key={category.label}
                   className={
-                    activeCategoryIndex === index
+                    category.label === habitForm.category
                       ? `${classes.activeButton} ${classes.buttonMargin}`
                       : `${classes.disabledButton} ${classes.buttonMargin}`
                   }
@@ -207,7 +213,7 @@ const CreateHabitForm = () => {
                     <div
                       key={color.color}
                       className={
-                        activeColorIndex === index
+                        color.color === habitForm.color
                           ? `${classes.activeColor} 
                                                 ${classes.colorCircle} ${
                               classes[`${color.name}`]
@@ -265,10 +271,10 @@ const CreateHabitForm = () => {
               return (
                 <Button
                   size="large"
-                  name="inputType"
+                  name="trackType"
                   key={type.value}
                   className={
-                    trackType === type.value
+                    type.value === trackType
                       ? `${classes.activeButton} ${classes.buttonMargin}`
                       : `${classes.disabledButton} ${classes.buttonMargin}`
                   }
@@ -288,8 +294,10 @@ const CreateHabitForm = () => {
             >
               {isSubmitting ? (
                 <CircularProgress size={20} color="inherit" />
-              ) : (
+              ) : pathname === "/createHabit" ? (
                 <Typography>CREATE</Typography>
+              ) : (
+                <Typography>UPDATE</Typography>
               )}
             </Button>
           </div>
@@ -314,7 +322,7 @@ const CreateHabitForm = () => {
           </Card>
         </Modal>
       ) : null}
-    </Container>
+    </>
   );
 };
 
@@ -352,7 +360,7 @@ const validationSchema = yup.object({
 const saveHabit = async (habit) => {
   //make a object of habit in order to send post
 
-  let habitData = {
+  const habitData = {
     category: habit.category,
     habitName: habit.habitName,
     inputType: habit.types,
@@ -363,11 +371,29 @@ const saveHabit = async (habit) => {
       value: habit.weeklyGoal,
     },
     dailyGoal: habit.dailyGoal,
+    trackType: habit.trackType,
   };
-  console.log("in save habit");
-
   const response = await habitService.saveHabit(habitData);
 
+  return response.data;
+};
+
+const updateHabit = async (habit, habitId) => {
+  const newHabitData = {
+    habitId: habitId,
+    category: habit.category,
+    habitName: habit.habitName,
+    inputType: habit.types,
+    color: habit.color,
+    habitUnit: { type: habit.habitUnitType, value: habit.habitUnit },
+    weeklyGoal: {
+      type: habit.weeklyInputType,
+      value: habit.weeklyGoal,
+    },
+    dailyGoal: habit.dailyGoal,
+    trackType: habit.trackType,
+  };
+  const response = await habitService.updateHabitContent(newHabitData);
   return response.data;
 };
 
@@ -384,7 +410,7 @@ const colorCode = [
 
 const inputTypes = [
   {
-    value: "checkbox",
+    value: "Checkbox",
     label: "CHECK BOX",
   },
   {
@@ -428,4 +454,4 @@ const categories = [
   },
 ];
 
-export default CreateHabitForm;
+export default HabitForm;

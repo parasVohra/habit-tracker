@@ -2,12 +2,13 @@ import { createContext, useReducer } from "react";
 import HabitFormReducer from "../reducer/habitFormReducer";
 
 export const initialState = {
+  habitId: "",
   category: "General",
   habitName: "",
   dailyGoal: 1,
   habitUnit: null || "",
   habitUnitType: null,
-  inputType: "checkbox",
+  trackType: "Checkbox",
   color: "#FFB427",
   weeklyGoal: 7,
   weeklyInputType: "daily",

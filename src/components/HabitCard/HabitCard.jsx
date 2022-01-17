@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useContext } from "react";
+import React, { Fragment, useContext } from "react";
 import useStyles from "./useStyles";
 import { Grid, Container, Paper, Typography } from "@material-ui/core";
 import { Context } from "../../Store/habitStore";
@@ -9,16 +9,7 @@ function HabitCard(habits) {
   const habit = habits.habit;
   const [state, dispatch] = useContext(Context);
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const colors = {
-    yellow: "#FFB427",
-    lightblue: "#4EB1CB",
-    green: "#50D890",
-    black: "#000000",
-    red: "#FF6B7A",
-    purple: "#5666F3",
-    blue: "#3a8dff",
-    orange: "#FF8C00",
-  };
+
   const dateColor = {
     color: habit.color,
   };

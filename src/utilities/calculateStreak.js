@@ -1,14 +1,14 @@
 import { parse, differenceInDays, isYesterday, isToday } from "date-fns";
 
-const testData = [
-  { date: "11112021", isComplete: true },
-  { date: "10112021", isComplete: true },
-  { date: "08112021", isComplete: true },
-  { date: "12102021", isComplete: true },
-  { date: "11102021", isComplete: true },
-  { date: "09102021", isComplete: true },
-  { date: "06102021", isComplete: true },
-];
+// const testData = [
+//   { date: "11112021", isComplete: true },
+//   { date: "10112021", isComplete: true },
+//   { date: "08112021", isComplete: true },
+//   { date: "12102021", isComplete: true },
+//   { date: "11102021", isComplete: true },
+//   { date: "09102021", isComplete: true },
+//   { date: "06102021", isComplete: true },
+// ];
 
 /**
  *
@@ -75,8 +75,9 @@ function calculateLongestStreak(habitTrack) {
  * @returns Object with streak data
  */
 function calculateCurrentStreak(habitTrack) {
-  if (habitTrack.length) {
-    const sortedDates = sortByDates(habitTrack, "desc");
+  const completedHabits = filterCompletedHabits(habitTrack);
+  if (completedHabits.length) {
+    const sortedDates = sortByDates(completedHabits, "desc");
     const isLatestDateIsYesterday = isYesterday(
       parse(sortedDates[0].date, "ddMMyyyy", new Date())
     );
@@ -115,7 +116,7 @@ function calculateRecentContinuousStreak(trackData) {
       if (streak.previousDate === null) {
         streak.previousDate = trackData.date;
       } else {
-        if (trackData.isComplete) {
+        if (trackData.isFullComplete || trackData.isPartialComplete) {
           let preDate = parse(streak.previousDate, "ddMMyyyy", new Date());
           let currDate = parse(trackData.date, "ddMMyyyy", new Date());
           let diff = differenceInDays(preDate, currDate);
@@ -171,6 +172,12 @@ function sortByDates(habitTrack, option) {
     );
     return res;
   }
+}
+
+function filterCompletedHabits(habitTrack) {
+  return habitTrack.filter(
+    (habit) => habit.isFullComplete || habit.isPartialComplete
+  );
 }
 
 export {
