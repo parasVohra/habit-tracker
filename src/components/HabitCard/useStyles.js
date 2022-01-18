@@ -25,6 +25,10 @@ const useStyles = makeStyles((theme) => ({
   textGrey: {
     color: "#6c6c72",
   },
+  textWhite: {
+    color: "#ffffff",
+    fontWeight: "bold",
+  },
   habitTitleBox: {
     width: "100%",
     padding: "0rem 0.5rem 0rem 0.5rem",

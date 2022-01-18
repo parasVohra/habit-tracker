@@ -3,12 +3,14 @@ import useStyles from "./useStyles";
 import { Grid, Container, Paper, Typography } from "@material-ui/core";
 import { Context } from "../../Store/habitStore";
 import { makeStyles } from "@material-ui/core/styles";
+import { getDay } from "date-fns";
 
 function HabitCard(habits) {
   const classes = useStyles();
   const habit = habits.habit;
   const [state, dispatch] = useContext(Context);
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const todayDayIndex = getDay(state.currentDate);
 
   const dateColor = {
     color: habit.color,
@@ -119,11 +121,20 @@ function HabitCard(habits) {
             return (
               <Fragment key={index}>
                 <Grid item className={classes.titleText}>
-                  <Typography
-                    align="center"
-                    variant="h6"
-                    className={classes.textGrey}
-                  >{`${day}`}</Typography>
+                  {todayDayIndex === index ? (
+                    <Typography
+                      align="center"
+                      variant="h6"
+                      className={classes.textWhite}
+                    >{`${day}`}</Typography>
+                  ) : (
+                    <Typography
+                      align="center"
+                      variant="h6"
+                      className={classes.textGrey}
+                    >{`${day}`}</Typography>
+                  )}
+
                   {state.habitStatus[habit.habitName][index]
                     ? SelectedDate(index)
                     : UnSelectedDate(index)}
