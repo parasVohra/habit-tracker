@@ -7,13 +7,22 @@ import { makeStyles } from "@material-ui/core/styles";
 import PersonIcon from "@material-ui/icons/Person";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import BottomNav from "./BottomNav/BottomNav";
+import { Context } from "../Store/habitStore";
+import { useEffect, useContext } from "react";
 
 const NavBar = () => {
   const classes = useStyles();
+  const [state, dispatch] = useContext(Context);
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const [isAuth, setAuth] = useState(false);
+
+  useEffect(() => {
+    setAuth(state.isAuthenticated);
+  }, [state.isAuthenticated]);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -22,7 +31,7 @@ const NavBar = () => {
   return (
     <React.Fragment>
       <nav>
-        {localStorage.getItem(tokenKey) ? (
+        {isAuth ? (
           <React.Fragment>
             <Fab
               aria-label="add"

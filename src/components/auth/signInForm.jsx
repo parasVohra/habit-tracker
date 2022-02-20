@@ -32,16 +32,18 @@ const SignInForm = () => {
   const toggleModal = () => {
     setModal(!showModal);
   };
+
   return (
     <Container className={classes.root}>
       <div>{error.length ? <h3>{error[0]}</h3> : null}</div>
 
       <Formik
         initialValues={{
-          password: "",
-          email: "",
+          password: "123456",
+          email: "demo@gmail.com",
         }}
         onSubmit={async (data) => {
+          console.log(data);
           setError([]);
           setSubmitting(true);
           console.log(error);
@@ -51,12 +53,10 @@ const SignInForm = () => {
             if (response.status === 200) {
               const token = response.data.token;
               TokenService.setToken(token);
+              dispatch({ type: "SET_IS_AUTHENTICATED", payload: true });
               dispatch({ type: "SET_TOKEN", payload: token });
-
               const userInfoObj = TokenService.getUserInfo(tokenKey);
               dispatch({ type: "SET_USER_INFO", payload: userInfoObj });
-
-              dispatch({ type: "SET_IS_AUTHENTICATED", payload: true });
               setSubmitting(false);
               return history.push("/");
             }
@@ -64,8 +64,8 @@ const SignInForm = () => {
             console.log(err.response);
             if (err.response.status === 401) {
               console.log(err.data);
-
               setMsg(err.response.data.error);
+              setSubmitting(false);
               toggleModal();
             }
           }
@@ -91,7 +91,7 @@ const SignInForm = () => {
               {isSubmitting ? (
                 <CircularProgress size={20} color="inherit" />
               ) : (
-                <Typography>SingIn</Typography>
+                <Typography>Sing In</Typography>
               )}
             </Button>
           </div>
