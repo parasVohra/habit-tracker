@@ -15,6 +15,7 @@ import {
   isHabitDailyGoalMetAfterClick,
   isHabitFullyDone,
 } from "../../utilities/updateHabitMethods";
+import { compose } from "ramda";
 
 function DailyHabitCard({ habit }) {
   const classes = useStyles();
@@ -29,7 +30,6 @@ function DailyHabitCard({ habit }) {
     color: habit.color,
   };
 
-  console.log(state);
   useEffect(() => {
     if (state.habits) {
       setStreak(calculateCurrentStreak(habit.habitTrack));
@@ -105,44 +105,45 @@ function DailyHabitCard({ habit }) {
           clickedHabitStatus
         )
       ) {
-        const updatedTrackObj = updateTrackObjToFullyComplete({
-          trackObj,
-          dailyGoal: habit.dailyGoal,
-        });
-
-        const updatedStatusObj = updateStatusObjToFullyComplete({
-          dailyGoal: habit.dailyGoal,
-        });
-
         updateLocalHabitStatus({
           habit,
           habitStatus: state.habitStatus,
-          updatedStatusObj,
+          updatedStatusObj: updateStatusObjToFullyComplete({
+            dailyGoal: habit.dailyGoal,
+          }),
           dispatch,
           index,
         });
-        updateStatus(updatedTrackObj);
+
+        compose(
+          updateStatus,
+          updateTrackObjToFullyComplete({
+            trackObj,
+            dailyGoal: habit.dailyGoal,
+          })
+        );
+
+        //updateStatus(updatedTrackObj);
       } else {
         // if the habit daily goal does not meet after updating clicking the habit -> update Partial and fully complete status obj
-
-        const updatedPartialTrackObj = updateTrackObjToPartialComplete({
-          trackObj,
-          currentGoalCount: clickedHabitStatus.done,
-        });
-
-        const updatedPartialStatusObj = updateStatusObjToPartialComplete({
-          currentGoal: clickedHabitStatus.done,
-          dailyGoal: dailyGoalOfCurrentHabit,
-        });
-
         updateLocalHabitStatus({
           habit,
           habitStatus: state.habitStatus,
-          updatedStatusObj: updatedPartialStatusObj,
+          updatedStatusObj: updateStatusObjToPartialComplete({
+            currentGoal: clickedHabitStatus.done,
+            dailyGoal: dailyGoalOfCurrentHabit,
+          }),
           dispatch,
           index,
         });
-        updateStatus(updatedPartialTrackObj);
+
+        compose(
+          updateStatus,
+          updateTrackObjToPartialComplete({
+            trackObj,
+            currentGoalCount: clickedHabitStatus.done,
+          })
+        );
       }
     } else {
       // if daily goal is already meat -> reset the track object
@@ -174,7 +175,7 @@ function DailyHabitCard({ habit }) {
         //alert("Habit Status updated");
       }
     } catch {
-      // alert("Something went wrong, Please try again");
+      alert("Something went wrong, Please try again");
     }
   };
 

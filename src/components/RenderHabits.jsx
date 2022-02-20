@@ -41,7 +41,7 @@ const RenderHabits = () => {
           {state.habits ? (
             state.habits.map((habit, index) => {
               return (
-                <Fragment key={habit.habitName}>
+                <Fragment key={`${habit.habitName}-${index}`}>
                   {state.habitView === "daily" ? (
                     <DailyHabitCard habit={habit} />
                   ) : (

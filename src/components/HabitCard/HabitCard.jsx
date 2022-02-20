@@ -15,6 +15,11 @@ function HabitCard(habits) {
   const dateColor = {
     color: habit.color,
   };
+  console.log(habits);
+
+  const isDateInFuture = (todayDayIndex, dateIndex) => {
+    return dateIndex <= todayDayIndex ? true : false;
+  };
 
   const dateClasses = (dateColor, index) =>
     makeStyles(() => ({
@@ -51,6 +56,12 @@ function HabitCard(habits) {
         borderColor: dateColor.color,
         cursor: "pointer",
       },
+      noPointer: {
+        pointerEvents: "none",
+      },
+      pointer: {
+        pointerEvents: "all",
+      },
     }));
 
   function handleClick(e) {
@@ -64,11 +75,14 @@ function HabitCard(habits) {
 
   function SelectedDate(index) {
     const dateC = dateClasses(dateColor, index)();
+    const isClickable = isDateInFuture(todayDayIndex, index);
+    const pointerClass = isClickable ? dateC.pointer : dateC.noPointer;
+
     return (
       <div
         id={`${habit.habitName},${index}`}
         onClick={(e) => handleClick(e)}
-        className={dateC.selected}
+        className={`${dateC.selected} ${pointerClass}`}
       >
         {state.currentWeekDates[index]}
       </div>
@@ -77,11 +91,14 @@ function HabitCard(habits) {
 
   function UnSelectedDate(index) {
     const dateC = dateClasses(dateColor, index)();
+    const isClickable = isDateInFuture(todayDayIndex, index);
+    const pointerClass = isClickable ? dateC.pointer : dateC.noPointer;
+
     return (
       <div
         id={`${habit.habitName},${index}`}
         onClick={(e) => handleClick(e)}
-        className={dateC.unSelected}
+        className={`${dateC.unSelected} ${pointerClass}`}
       >
         {state.currentWeekDates[index]}
       </div>
@@ -111,7 +128,7 @@ function HabitCard(habits) {
               className={classes.textGrey}
               variant="subtitle1"
             >
-              6 times a week
+              {habit.weeklyGoal.value} times a week
             </Typography>
           </Grid>
         </Grid>
