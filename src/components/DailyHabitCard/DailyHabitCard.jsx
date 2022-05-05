@@ -115,8 +115,7 @@ function DailyHabitCard({ habit }) {
           index,
         });
 
-        compose(
-          updateStatus,
+        updateStatus(
           updateTrackObjToFullyComplete({
             trackObj,
             dailyGoal: habit.dailyGoal,
@@ -137,8 +136,7 @@ function DailyHabitCard({ habit }) {
           index,
         });
 
-        compose(
-          updateStatus,
+        updateStatus(
           updateTrackObjToPartialComplete({
             trackObj,
             currentGoalCount: clickedHabitStatus.done,

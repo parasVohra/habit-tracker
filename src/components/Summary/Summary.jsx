@@ -44,6 +44,9 @@ const Summary = () => {
     dispatch({ type: "SET_INPUT_TYPE", payload: trackType });
     history.push("/updateHabit");
   }
+  function handleStatsClick(habit) {
+    history.push("/habitStats");
+  }
 
   return (
     <>
@@ -71,10 +74,15 @@ const Summary = () => {
                       <Button onClick={() => handleEditClick(habit)}>
                         Edit
                       </Button>
+                      <Button onClick={() => handleStatsClick(habit)}>
+                        stats
+                      </Button>
                     </Grid>
                   </Grid>
 
-                  <Grid item container direction="row"></Grid>
+                  <Grid item container direction="row">
+                    {/* { here all the stats will be displayed} */}
+                  </Grid>
                 </Grid>
               </Container>
             );
