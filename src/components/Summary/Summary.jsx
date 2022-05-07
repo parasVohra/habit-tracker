@@ -62,15 +62,15 @@ const Summary = () => {
                   sm={12}
                   md={12}
                   elevation={6}
-                  className={classes.box}
+                  className={classes.habitContainer}
                   component={Paper}
                   item
                 >
                   <Grid item container>
-                    <Grid item xs={6}>
+                    <Grid item xs={8}>
                       <Typography>{habit.habitName}</Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                       <Button onClick={() => handleEditClick(habit)}>
                         Edit
                       </Button>
@@ -80,8 +80,47 @@ const Summary = () => {
                     </Grid>
                   </Grid>
 
-                  <Grid item container direction="row">
-                    {/* { here all the stats will be displayed} */}
+                  <Grid item container direction="row" className={classes.box}>
+                    <Grid item>
+                      <Typography className={classes.statsText}>
+                        Concurred
+                      </Typography>
+                      <Typography className={classes.statsText} align="center">
+                        48%
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography className={classes.statsText}>
+                        Completed
+                      </Typography>
+                      <Typography className={classes.statsText} align="center">
+                        23
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography className={classes.statsText}>
+                        Partial
+                      </Typography>
+                      <Typography className={classes.statsText} align="center">
+                        12
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography className={classes.statsText}>
+                        Passed
+                      </Typography>
+                      <Typography className={classes.statsText} align="center">
+                        42
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography className={classes.statsText}>
+                        Longest Streak
+                      </Typography>
+                      <Typography className={classes.statsText} align="center">
+                        87
+                      </Typography>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Container>
