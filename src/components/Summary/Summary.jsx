@@ -5,6 +5,11 @@ import { Context } from "../../Store/habitStore";
 import BackButton from "../FormComponents/BackButton/BackButton";
 import { useHistory } from "react-router-dom";
 import { FormContext } from "../../Store/habitFormContext";
+import { calculateLongestStreak } from "../../utilities/calculateStreak";
+import {
+  calculatePartiallyCompletedHabitCount,
+  calculateFullyCompletedHabitCount,
+} from "../../utilities/utilitiesMethods";
 
 const Summary = () => {
   const classes = useStyles();
@@ -54,7 +59,11 @@ const Summary = () => {
       {state.habits.length
         ? state.habits.map((habit) => {
             return (
-              <Container className={classes.root} key={habit._id}>
+              <Container
+                className={classes.root}
+                style={{ color: `${habit.color}` }}
+                key={habit._id}
+              >
                 <Grid
                   container
                   direction="column"
@@ -64,6 +73,7 @@ const Summary = () => {
                   elevation={6}
                   className={classes.habitContainer}
                   component={Paper}
+                  style={{ color: `${habit.color}` }}
                   item
                 >
                   <Grid item container>
@@ -81,44 +91,28 @@ const Summary = () => {
                   </Grid>
 
                   <Grid item container direction="row" className={classes.box}>
-                    <Grid item>
-                      <Typography className={classes.statsText}>
-                        Concurred
-                      </Typography>
+                    <Grid item xs={4}>
                       <Typography className={classes.statsText} align="center">
-                        48%
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography className={classes.statsText}>
                         Completed
                       </Typography>
                       <Typography className={classes.statsText} align="center">
-                        23
+                        {getCompletedHabitCount(habit)}
                       </Typography>
                     </Grid>
-                    <Grid item>
-                      <Typography className={classes.statsText}>
+                    <Grid item xs={4}>
+                      <Typography className={classes.statsText} align="center">
                         Partial
                       </Typography>
                       <Typography className={classes.statsText} align="center">
-                        12
+                        {getPartiallyCompletedHabitCount(habit)}
                       </Typography>
                     </Grid>
-                    <Grid item>
-                      <Typography className={classes.statsText}>
-                        Passed
-                      </Typography>
+                    <Grid item xs={4}>
                       <Typography className={classes.statsText} align="center">
-                        42
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography className={classes.statsText}>
                         Longest Streak
                       </Typography>
                       <Typography className={classes.statsText} align="center">
-                        87
+                        {getLongestStreak(habit.habitTrack)}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -130,5 +124,19 @@ const Summary = () => {
     </>
   );
 };
+function getConcurredPercentage(habit) {
+  return 23;
+}
+function getCompletedHabitCount(habit) {
+  let res = calculateFullyCompletedHabitCount(habit.habitTrack);
+  return res.count;
+}
+function getPartiallyCompletedHabitCount(habit) {
+  let res = calculatePartiallyCompletedHabitCount(habit.habitTrack);
+  return res.count;
+}
+function getLongestStreak(habitTrack) {
+  return calculateLongestStreak(habitTrack).longestStreak;
+}
 
 export default Summary;
