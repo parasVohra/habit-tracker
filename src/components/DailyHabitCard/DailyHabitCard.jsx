@@ -6,7 +6,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import { getDay, format } from "date-fns";
 import { calculateCurrentStreak } from "../../utilities/calculateStreak";
 import HabitService from "../../services/habitService";
-import { calculateHabitDonePercentage } from "../../utilities/utilitiesMethods";
+import {
+  updateLocalHabitStatus,
+  updateStatusObjToFullyComplete,
+  updateStatusObjToPartialComplete,
+  updateTrackObjToFullyComplete,
+  updateTrackObjToPartialComplete,
+  isHabitDailyGoalMetAfterClick,
+  isHabitFullyDone,
+} from "../../utilities/updateHabitMethods";
+import { compose } from "ramda";
 
 function DailyHabitCard({ habit }) {
   const classes = useStyles();
@@ -20,6 +29,7 @@ function DailyHabitCard({ habit }) {
   const dateColor = {
     color: habit.color,
   };
+
   useEffect(() => {
     if (state.habits) {
       setStreak(calculateCurrentStreak(habit.habitTrack));
@@ -69,81 +79,101 @@ function DailyHabitCard({ habit }) {
 
   const dateC = dateClasses(dateColor)();
 
-  function handleClick(habitName, index) {
-    const clickedHabitStatus = state.habitStatus[habitName][index];
+  function handleClick(habit, index) {
+    // getting status of clicked habit
+    const clickedHabitStatus = state.habitStatus[`${habit.habitName}`][index];
+    // get daily goal of habit
     const dailyGoalOfCurrentHabit = habit.dailyGoal;
-    console.log("clicked habit status", clickedHabitStatus);
-    if (clickedHabitStatus.done !== habit.dailyGoal) {
-      const updatedTrackObj = {
-        id: habit._id,
-        date: format(state.currentDate, "ddMMyyyy"),
-        day: format(state.currentDate, "EEE"),
-        data: "",
-      };
 
-      const updatedStatusObj = {};
+    // initializing track obj
+    const trackObj = {
+      id: habit._id,
+      date: format(state.currentDate, "ddMMyyyy"),
+      day: format(state.currentDate, "EEE"),
+      data: "",
+      isFullyComplete: false,
+      isPartialComplete: false,
+      done: 0,
+    };
 
-      if (dailyGoalOfCurrentHabit === clickedHabitStatus.done + 1) {
-        updatedTrackObj.isFullyComplete =
-          updatedStatusObj.isFullyComplete = true;
-        updatedTrackObj.isPartialComplete =
-          updatedStatusObj.isPartialComplete = true;
-        updatedTrackObj.done = updatedStatusObj.done =
-          clickedHabitStatus.done + 1;
-        updatedStatusObj.percentageDone = calculateHabitDonePercentage(
-          clickedHabitStatus.done + 1,
-          dailyGoalOfCurrentHabit
+    // if habit does not meet daily goal
+    if (!isHabitFullyDone(clickedHabitStatus, habit)) {
+      // if the habit daily goal meet after updating clicking the habit -> update update Partial and fully complete status obj
+      if (
+        isHabitDailyGoalMetAfterClick(
+          dailyGoalOfCurrentHabit,
+          clickedHabitStatus
+        )
+      ) {
+        updateLocalHabitStatus({
+          habit,
+          habitStatus: state.habitStatus,
+          updatedStatusObj: updateStatusObjToFullyComplete({
+            dailyGoal: habit.dailyGoal,
+          }),
+          dispatch,
+          index,
+        });
+
+        updateStatus(
+          updateTrackObjToFullyComplete({
+            trackObj,
+            dailyGoal: habit.dailyGoal,
+          })
         );
+
+        //updateStatus(updatedTrackObj);
       } else {
-        updatedTrackObj.isFullyComplete =
-          updatedStatusObj.isFullyComplete = false;
-        updatedTrackObj.isPartialComplete = true;
-        updatedTrackObj.isPartialComplete =
-          updatedStatusObj.isPartialComplete = true;
-        updatedTrackObj.done = updatedStatusObj.done =
-          clickedHabitStatus.done + 1;
-        updatedStatusObj.percentageDone = calculateHabitDonePercentage(
-          clickedHabitStatus.done + 1,
-          dailyGoalOfCurrentHabit
+        // if the habit daily goal does not meet after updating clicking the habit -> update Partial and fully complete status obj
+        updateLocalHabitStatus({
+          habit,
+          habitStatus: state.habitStatus,
+          updatedStatusObj: updateStatusObjToPartialComplete({
+            currentGoal: clickedHabitStatus.done,
+            dailyGoal: dailyGoalOfCurrentHabit,
+          }),
+          dispatch,
+          index,
+        });
+
+        updateStatus(
+          updateTrackObjToPartialComplete({
+            trackObj,
+            currentGoalCount: clickedHabitStatus.done,
+          })
         );
       }
-
-      const newStatus = state.habitStatus;
-      newStatus[habitName][index] = updatedStatusObj;
-      dispatch({ type: "SET_HABIT_STATUS", payload: newStatus });
-      console.log(updatedTrackObj, updatedStatusObj);
-      console.log(state.habitStatus);
-
-      updateStatus(updatedTrackObj);
     } else {
-      const updatedTrackObj = {
-        id: habit._id,
-        date: format(state.currentDate, "ddMMyyyy"),
-        day: format(state.currentDate, "EEE"),
-        data: "",
+      // if daily goal is already meat -> reset the track object
+      const resetStatusObj = {
+        isFullyComplete: false,
+        isPartialComplete: false,
+        done: 0,
+        percentageDone: 0,
       };
-      const updatedStatusObj = {};
-      updatedTrackObj.isFullyComplete =
-        updatedStatusObj.isFullyComplete = false;
-      updatedTrackObj.isPartialComplete = false;
-      updatedTrackObj.isPartialComplete =
-        updatedStatusObj.isPartialComplete = false;
-      updatedTrackObj.done = updatedStatusObj.done = 0;
-      updatedStatusObj.percentageDone = 0;
-      const newStatus = state.habitStatus;
-      newStatus[habitName][index] = updatedStatusObj;
-      dispatch({ type: "SET_HABIT_STATUS", payload: newStatus });
-      console.log(updatedTrackObj, updatedStatusObj);
-      console.log(state.habitStatus);
 
-      updateStatus(updatedTrackObj);
+      // mutate the habit status object
+      updateLocalHabitStatus({
+        habit,
+        habitStatus: state.habitStatus,
+        updatedStatusObj: resetStatusObj,
+        dispatch,
+        index,
+      });
+
+      updateStatus(trackObj);
     }
   }
-  const updateStatus = async (data) => {
-    let response = await HabitService.updateHabitStatus(data);
 
-    if (response.status === 200) {
-      alert("Habit Status updated");
+  const updateStatus = async (data) => {
+    try {
+      let response = await HabitService.updateHabitStatus(data);
+
+      if (response.status === 201) {
+        //alert("Habit Status updated");
+      }
+    } catch {
+      alert("Something went wrong, Please try again");
     }
   };
 
@@ -151,7 +181,7 @@ function DailyHabitCard({ habit }) {
     return (
       <Container
         className={classes.root}
-        onClick={() => handleClick(habit.habitName, index)}
+        onClick={() => handleClick(habit, index)}
       >
         <Grid
           container
@@ -201,7 +231,7 @@ function DailyHabitCard({ habit }) {
     return (
       <Container
         className={classes.root}
-        onClick={() => handleClick(habit.habitName, index)}
+        onClick={() => handleClick(habit, index)}
       >
         <Grid
           container

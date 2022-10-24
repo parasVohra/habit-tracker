@@ -18,6 +18,7 @@ import HabitFormContext from "./Store/habitFormContext";
 import Summary from "./components/Summary/Summary";
 import SummaryDetails from "./components/SummaryDetails/SummaryDetails";
 import UpdateHabit from "./components/UpdateHabit/UpdateHabit";
+import HabitStats from "./components/HabitStats/HabitStats";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
                 />
                 <ProtectedRoute path="/updateHabit" component={UpdateHabit} />
                 <ProtectedRoute path="/summary" component={Summary} />
+                <ProtectedRoute path="/habitStats" component={HabitStats} />
                 <ProtectedRoute
                   path="/summaryDetails"
                   component={SummaryDetails}

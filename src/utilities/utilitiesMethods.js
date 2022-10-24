@@ -117,3 +117,49 @@ export function isFullyComplete(habit) {
 export function isPartialComplete(habit) {
   if (habit.dailyGoal === 1) return true;
 }
+
+/**
+ *
+ * @param {array} habitTrack
+ * @returns {number} count of partially completed habits
+ */
+export function calculatePartiallyCompletedHabitCount(habitTrack) {
+  //write reducer function to count where partial completed is true
+  let result = habitTrack.reduce(
+    (acc, habit) => {
+      if (habit.isPartialComplete) {
+        acc.count = acc.count + 1;
+      }
+      return acc;
+    },
+    {
+      count: 0,
+    }
+  );
+  return result;
+}
+/**
+ *
+ * @param {array} habitTrack
+ * @returns {object} count of fully completed habits
+ */
+export function calculateFullyCompletedHabitCount(habitTrack) {
+  let result = habitTrack.reduce(
+    (acc, habit) => {
+      if (habit.isFullyComplete) {
+        acc.count = acc.count + 1;
+      }
+      return acc;
+    },
+    {
+      count: 0,
+    }
+  );
+  return result;
+}
+
+export function calculateHabitStrength(habitTrack) {
+  // calculate past 66 day date from current day
+  // then count how many times habit partially performed since last 66 days
+  // percentage is = (count / 66 ) * 100
+}

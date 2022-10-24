@@ -22,7 +22,7 @@ function calculateLongestStreak(habitTrack) {
       if (streak.previousDate === null) {
         streak.previousDate = habit.date;
       } else {
-        if (habit.isComplete) {
+        if (habit.isPartialComplete) {
           let preDate = parse(streak.previousDate, "ddMMyyyy", new Date());
           let currDate = parse(habit.date, "ddMMyyyy", new Date());
           let diff = differenceInDays(currDate, preDate);

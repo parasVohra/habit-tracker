@@ -3,15 +3,22 @@ import useStyles from "./useStyles";
 import { Grid, Container, Paper, Typography } from "@material-ui/core";
 import { Context } from "../../Store/habitStore";
 import { makeStyles } from "@material-ui/core/styles";
+import { getDay } from "date-fns";
 
 function HabitCard(habits) {
   const classes = useStyles();
   const habit = habits.habit;
   const [state, dispatch] = useContext(Context);
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const todayDayIndex = getDay(state.currentDate);
 
   const dateColor = {
     color: habit.color,
+  };
+  console.log(habits);
+
+  const isDateInFuture = (todayDayIndex, dateIndex) => {
+    return dateIndex <= todayDayIndex ? true : false;
   };
 
   const dateClasses = (dateColor, index) =>
@@ -49,6 +56,12 @@ function HabitCard(habits) {
         borderColor: dateColor.color,
         cursor: "pointer",
       },
+      noPointer: {
+        pointerEvents: "none",
+      },
+      pointer: {
+        pointerEvents: "all",
+      },
     }));
 
   function handleClick(e) {
@@ -62,11 +75,14 @@ function HabitCard(habits) {
 
   function SelectedDate(index) {
     const dateC = dateClasses(dateColor, index)();
+    const isClickable = isDateInFuture(todayDayIndex, index);
+    const pointerClass = isClickable ? dateC.pointer : dateC.noPointer;
+
     return (
       <div
         id={`${habit.habitName},${index}`}
         onClick={(e) => handleClick(e)}
-        className={dateC.selected}
+        className={`${dateC.selected} ${pointerClass}`}
       >
         {state.currentWeekDates[index]}
       </div>
@@ -75,11 +91,14 @@ function HabitCard(habits) {
 
   function UnSelectedDate(index) {
     const dateC = dateClasses(dateColor, index)();
+    const isClickable = isDateInFuture(todayDayIndex, index);
+    const pointerClass = isClickable ? dateC.pointer : dateC.noPointer;
+
     return (
       <div
         id={`${habit.habitName},${index}`}
         onClick={(e) => handleClick(e)}
-        className={dateC.unSelected}
+        className={`${dateC.unSelected} ${pointerClass}`}
       >
         {state.currentWeekDates[index]}
       </div>
@@ -109,7 +128,7 @@ function HabitCard(habits) {
               className={classes.textGrey}
               variant="subtitle1"
             >
-              6 times a week
+              {habit.weeklyGoal.value} times a week
             </Typography>
           </Grid>
         </Grid>
@@ -119,11 +138,20 @@ function HabitCard(habits) {
             return (
               <Fragment key={index}>
                 <Grid item className={classes.titleText}>
-                  <Typography
-                    align="center"
-                    variant="h6"
-                    className={classes.textGrey}
-                  >{`${day}`}</Typography>
+                  {todayDayIndex === index ? (
+                    <Typography
+                      align="center"
+                      variant="h6"
+                      className={classes.textWhite}
+                    >{`${day}`}</Typography>
+                  ) : (
+                    <Typography
+                      align="center"
+                      variant="h6"
+                      className={classes.textGrey}
+                    >{`${day}`}</Typography>
+                  )}
+
                   {state.habitStatus[habit.habitName][index]
                     ? SelectedDate(index)
                     : UnSelectedDate(index)}

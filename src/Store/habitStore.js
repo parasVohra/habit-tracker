@@ -4,6 +4,7 @@ import {
   getWeekStartDate,
   getWeekEndDate,
 } from "../utilities/utilitiesMethods";
+import tokenService from "../utilities/tokenMethods";
 
 const initialState = {
   habits: [],
@@ -16,7 +17,7 @@ const initialState = {
   weekStartDate: getWeekStartDate() || new Date(),
   weekEndDate: getWeekEndDate() || new Date(),
   token: "",
-  isAuthenticated: false,
+  isAuthenticated: tokenService.hasToken("habit_token"),
   userInfo: {},
   isLoading: true,
   habitView: "daily",

@@ -6,21 +6,22 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     marginTop: "0.5rem",
-    maxWidth: "30rem",
-    padding: "2px",
+    maxWidth: "50rem",
+    minWidth: "10rem",
   },
+    title: {
+        marginTop: "3rem",
+        marginBottom: "2rem",
+    },
   titleText: {
     margin: "auto",
   },
   box: {
-    height: "5rem",
+    margin: "auto",
   },
   habitContainer: {
     alignItems: "center",
-    minWidth: "20rem",
-    maxWidth: "50rem",
     minHeight: "10rem",
-    margin: "auto",
     backgroundColor: "#303038",
     borderRadius: "10px",
     padding: "0.5rem",
@@ -47,6 +48,10 @@ const useStyles = makeStyles((theme) => ({
   doneText: {
     paddingLeft: "0.6rem",
     color: "#6c6c72",
+  },
+  statsText: {
+    padding: "2px",
+    margin: "auto",
   },
 }));
 

@@ -5,6 +5,11 @@ import { Context } from "../../Store/habitStore";
 import BackButton from "../FormComponents/BackButton/BackButton";
 import { useHistory } from "react-router-dom";
 import { FormContext } from "../../Store/habitFormContext";
+import { calculateLongestStreak } from "../../utilities/calculateStreak";
+import {
+  calculatePartiallyCompletedHabitCount,
+  calculateFullyCompletedHabitCount,
+} from "../../utilities/utilitiesMethods";
 
 const Summary = () => {
   const classes = useStyles();
@@ -44,14 +49,24 @@ const Summary = () => {
     dispatch({ type: "SET_INPUT_TYPE", payload: trackType });
     history.push("/updateHabit");
   }
+  function handleStatsClick(habit) {
+    history.push("/habitStats");
+  }
 
   return (
     <>
       <BackButton />
+      <div className={classes.title}>
+                      <Typography align="center" color="TextSecondary" variant="h3">Summary</Typography>
+      </div>
       {state.habits.length
         ? state.habits.map((habit) => {
             return (
-              <Container className={classes.root} key={habit._id}>
+              <Container
+                className={classes.root}
+                style={{ color: `${habit.color}` }}
+                key={habit._id}
+              >
                 <Grid
                   container
                   direction="column"
@@ -59,22 +74,51 @@ const Summary = () => {
                   sm={12}
                   md={12}
                   elevation={6}
-                  className={classes.box}
+                  className={classes.habitContainer}
                   component={Paper}
+                  style={{ color: `${habit.color}` }}
                   item
                 >
                   <Grid item container>
-                    <Grid item xs={6}>
+                    <Grid item xs={8}>
                       <Typography>{habit.habitName}</Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                       <Button onClick={() => handleEditClick(habit)}>
                         Edit
+                      </Button>
+                      <Button onClick={() => handleStatsClick(habit)}>
+                        stats
                       </Button>
                     </Grid>
                   </Grid>
 
-                  <Grid item container direction="row"></Grid>
+                  <Grid item container direction="row" className={classes.box}>
+                    <Grid item xs={4}>
+                      <Typography className={classes.statsText} align="center">
+                        Completed
+                      </Typography>
+                      <Typography className={classes.statsText} align="center">
+                        {getCompletedHabitCount(habit)}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Typography className={classes.statsText} align="center">
+                        Partial
+                      </Typography>
+                      <Typography className={classes.statsText} align="center">
+                        {getPartiallyCompletedHabitCount(habit)}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Typography className={classes.statsText} align="center">
+                        Longest Streak
+                      </Typography>
+                      <Typography className={classes.statsText} align="center">
+                        {getLongestStreak(habit.habitTrack)}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Container>
             );
@@ -83,5 +127,19 @@ const Summary = () => {
     </>
   );
 };
+function getConcurredPercentage(habit) {
+  return 23;
+}
+function getCompletedHabitCount(habit) {
+  let res = calculateFullyCompletedHabitCount(habit.habitTrack);
+  return res.count;
+}
+function getPartiallyCompletedHabitCount(habit) {
+  let res = calculatePartiallyCompletedHabitCount(habit.habitTrack);
+  return res.count;
+}
+function getLongestStreak(habitTrack) {
+  return calculateLongestStreak(habitTrack).longestStreak;
+}
 
 export default Summary;
