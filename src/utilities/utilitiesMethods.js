@@ -157,3 +157,9 @@ export function calculateFullyCompletedHabitCount(habitTrack) {
   );
   return result;
 }
+
+export function calculateHabitStrength(habitTrack) {
+  // calculate past 66 day date from current day
+  // then count how many times habit partially performed since last 66 days
+  // percentage is = (count / 66 ) * 100
+}

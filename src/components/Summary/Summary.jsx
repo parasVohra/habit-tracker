@@ -56,6 +56,9 @@ const Summary = () => {
   return (
     <>
       <BackButton />
+      <div className={classes.title}>
+                      <Typography align="center" color="TextSecondary" variant="h3">Summary</Typography>
+      </div>
       {state.habits.length
         ? state.habits.map((habit) => {
             return (

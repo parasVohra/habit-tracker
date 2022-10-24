@@ -7,8 +7,12 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     marginTop: "0.5rem",
     maxWidth: "50rem",
-    minWidth: "15rem",
+    minWidth: "10rem",
   },
+    title: {
+        marginTop: "3rem",
+        marginBottom: "2rem",
+    },
   titleText: {
     margin: "auto",
   },
