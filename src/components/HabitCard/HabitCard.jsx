@@ -95,10 +95,11 @@ function HabitCard(habits) {
                 done: 0,
                 percentageDone: 0,
             };
+            console.log("before status", state.habitStatus);
             updateLocalHabitStatus({
                 habit,
                 habitStatus: state.habitStatus,
-                updateStatusObj: resetStatusObj,
+                updatedStatusObj: resetStatusObj,
                 dispatch,
                 index,
             });
