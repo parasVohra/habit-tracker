@@ -24,7 +24,6 @@ const RenderHabits = () => {
             });
 
             const formatDates = result.map((date) => {
-                console.log("week date:", date);
                 let intDate = {
                     justDate: format(date, "dd"),
                     fullDate: date,
