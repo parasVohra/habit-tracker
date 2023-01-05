@@ -53,7 +53,7 @@ export function getStartOfMonth(date) {
  * @returns {date}
  */
 export function getEndOfMonth(date) {
-    const endOfMonth = lastDayOfMonth(date);
+    const endOfMonth = Number(format(lastDayOfMonth(date), "d"));
     return endOfMonth;
 }
 

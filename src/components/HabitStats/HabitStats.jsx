@@ -1,5 +1,4 @@
 import React, { Fragment, useContext } from "react";
-
 import {
     Grid,
     Container,
@@ -31,27 +30,20 @@ function HabitStats() {
     const [state, dispatch] = useContext(Context);
     const monthRows = [0, 1, 2, 3, 4, 5];
     function renderCalender() {
-        console.log(getCurrentYear(state.currentDate));
-        console.log(getCurrentMonth(state.currentDate));
-        console.log(getStartOfMonth(state.currentDate));
-        console.log(firstDayIndexOfMonth(getStartOfMonth(state.currentDate)));
         const startIndex = compose(firstDayIndexOfMonth, getStartOfMonth);
-        console.log(monthStart(state.currentDate));
-        console.log(getEndOfMonth(state.currentDate));
         const monthStart = 1;
-        const monthEnd = 31;
-
-        const currentYear = 2023;
+        const monthEnd = getEndOfMonth(state.currentDate);
+        const currentYear = getCurrentYear(state.currentDate);
         const Month = getCurrentMonth(state.currentDate)
             .toString()
             .padStart(2, "0");
-
+        console.log(monthEnd);
         function makeMonth() {
-            const month = [];
+            let month = [];
             let week = [];
             let dayCount = 1;
             let firstWeek = true;
-            for (let i = 1; i <= monthEnd; i++) {
+            for (let i = monthStart; i <= monthEnd; i++) {
                 const day = {
                     date: "",
                     fullDate: "",
@@ -59,7 +51,7 @@ function HabitStats() {
                     isDone: false,
                 };
                 if (firstWeek) {
-                    dayCount = startIndex + 1;
+                    dayCount = startIndex(state.currentDate) + 1;
                     firstWeek = false;
                 }
                 if (dayCount > 7) {
@@ -67,7 +59,7 @@ function HabitStats() {
                     month.push(week);
                     week = [];
                 }
-                if (i === 31) {
+                if (i === monthEnd) {
                     month.push(week);
                 }
                 day.date = `${i}`;
@@ -80,8 +72,7 @@ function HabitStats() {
             return month;
         }
 
-        makeMonth();
-
+        return makeMonth();
         // get month start day
 
         // get month end
@@ -93,27 +84,34 @@ function HabitStats() {
         // if end of week then jump to next row break
         //
     }
-    renderCalender();
+    const monthDataStructure = renderCalender();
     return (
         <div>
             <BackButton />
-            {monthRows.map(() => {
-                return (
-                    <Container className={classes.root}>
-                        <Grid
-                            container
-                            direction="column"
-                            xs={12}
-                            sm={12}
-                            md={12}
-                            elevation={6}
-                            className={classes.habitContainer}
-                            component={Paper}
-                            item
-                        ></Grid>
-                    </Container>
-                );
-            })}
+            <TableContainer component={Paper}>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Sun</TableCell>
+                        <TableCell>Mon</TableCell>
+                        <TableCell>Tue</TableCell>
+                        <TableCell>Wed</TableCell>
+                        <TableCell>Thu</TableCell>
+                        <TableCell>Fri</TableCell>
+                        <TableCell>Sat</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {monthDataStructure.map((week, index) => {
+                        return (
+                            <TableRow key={index}>
+                                {week.map((day, index) => {
+                                    return <TableCell>{day.date}</TableCell>;
+                                })}
+                            </TableRow>
+                        );
+                    })}
+                </TableBody>
+            </TableContainer>
         </div>
     );
 }
