@@ -76,6 +76,11 @@ const Reducer = (state, action) => {
                 ...state,
                 habitView: payload,
             };
+        case "SET_CURRENT_STAT_HABIT":
+            return {
+                ...state,
+                currentStatHabit: payload,
+            };
 
         default:
             return state;

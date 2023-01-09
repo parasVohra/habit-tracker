@@ -12,6 +12,7 @@ import {
     TableRow,
     TableContainer,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import useStyles from "./useStyles";
 import {
     firstDayIndexOfMonth,
@@ -24,24 +25,54 @@ import {
 import BackButton from "../FormComponents/BackButton/BackButton";
 import { Context } from "../../Store/habitStore";
 import { compose } from "ramda";
+import { useLocation } from "react-router-dom";
+import { useState } from "react";
+import { format } from "date-fns/esm";
 
 function HabitStats() {
     const classes = useStyles();
+    const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const [state, dispatch] = useContext(Context);
-    const monthRows = [0, 1, 2, 3, 4, 5];
+
+    const currentStatHabit = state.currentStatHabit;
+    const currentDate = state.currentDate;
+    const currentMonthName = format(currentDate, "LLLL");
+    const dateColor = (dateColor) =>
+        makeStyles(() => ({
+            highlight: {
+                backgroundColor: dateColor.color,
+                borderColor: dateColor.color,
+            },
+        }));
+    console.log(currentStatHabit);
+    const currentMonthYear = format(currentDate, "MMyyyy");
+    const habitColor = dateColor(currentStatHabit)();
     function renderCalender() {
         const startIndex = compose(firstDayIndexOfMonth, getStartOfMonth);
         const monthStart = 1;
-        const monthEnd = getEndOfMonth(state.currentDate);
-        const currentYear = getCurrentYear(state.currentDate);
-        const Month = getCurrentMonth(state.currentDate)
-            .toString()
-            .padStart(2, "0");
+        const monthEnd = getEndOfMonth(currentDate);
+        const currentYear = getCurrentYear(currentDate);
+        const Month = format(currentDate, "MM");
         console.log(monthEnd);
+        function filterCurrentMonthDate(habitTrack) {
+            return habitTrack.filter(
+                (track) => currentMonthYear === track.date.substring(2)
+            );
+        }
+        const currentMonthDates = filterCurrentMonthDate(
+            currentStatHabit.habitTrack
+        );
+        function isHabitDone(fullDate) {
+            for (let d of currentMonthDates) {
+                if (fullDate === d.date) {
+                    return true;
+                }
+            }
+        }
         function makeMonth() {
             let month = [];
             let week = [];
-            let dayCount = 1;
+            let dayCount = 0;
             let firstWeek = true;
             for (let i = monthStart; i <= monthEnd; i++) {
                 const day = {
@@ -51,11 +82,15 @@ function HabitStats() {
                     isDone: false,
                 };
                 if (firstWeek) {
-                    dayCount = startIndex(state.currentDate) + 1;
+                    for (let j = 0; j < startIndex(currentDate); j++) {
+                        week[j] = null;
+                    }
+                    dayCount = startIndex(currentDate);
                     firstWeek = false;
                 }
-                if (dayCount > 7) {
-                    dayCount = 1;
+                if (dayCount > 6) {
+                    firstWeek = false;
+                    dayCount = 0;
                     month.push(week);
                     week = [];
                 }
@@ -66,53 +101,92 @@ function HabitStats() {
                 day.fullDate = `${i
                     .toString()
                     .padStart(2, "0")}${Month}${currentYear}`;
-                week[dayCount - 1] = day;
+                week[dayCount] = day;
+                day.isDone = isHabitDone(day.fullDate);
                 dayCount++;
             }
             return month;
         }
 
         return makeMonth();
-        // get month start day
-
-        // get month end
-
-        // start 6 row of the month
-
-        // if end of month then return
-
-        // if end of week then jump to next row break
-        //
     }
     const monthDataStructure = renderCalender();
+
+    console.log(monthDataStructure);
+
     return (
-        <div>
+        <Fragment>
             <BackButton />
-            <TableContainer component={Paper}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Sun</TableCell>
-                        <TableCell>Mon</TableCell>
-                        <TableCell>Tue</TableCell>
-                        <TableCell>Wed</TableCell>
-                        <TableCell>Thu</TableCell>
-                        <TableCell>Fri</TableCell>
-                        <TableCell>Sat</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
+            <div className={classes.title}>
+                <Typography align="center" color="TextSecondary" variant="h3">
+                    {currentStatHabit.habitName}
+                </Typography>
+            </div>
+            <Container className={classes.root}>
+                <Grid
+                    container
+                    direction="column"
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    elevation={6}
+                    className={classes.habitContainer}
+                    component={Paper}
+                >
+                    <Grid item container className={classes.habitTitleBox}>
+                        <Grid item xs={12}>
+                            <Typography align="left" variant="h5">
+                                {currentMonthName}
+                            </Typography>
+                        </Grid>
+                        {weekDays.map((day, index) => {
+                            return (
+                                <Grid item className={classes.titleText}>
+                                    <Typography
+                                        align="center"
+                                        variant="h6"
+                                        className={classes.textGrey}
+                                    >
+                                        {day}
+                                    </Typography>
+                                </Grid>
+                            );
+                        })}
+                    </Grid>
                     {monthDataStructure.map((week, index) => {
                         return (
-                            <TableRow key={index}>
+                            <Grid item container key={index} direction="row">
                                 {week.map((day, index) => {
-                                    return <TableCell>{day.date}</TableCell>;
+                                    return (
+                                        <Fragment key={index}>
+                                            <Grid
+                                                item
+                                                className={classes.titleText}
+                                            >
+                                                {day.isDone ? (
+                                                    <Typography
+                                                        align="center"
+                                                        variant="h6"
+                                                        className={`${classes.selected}
+                                                            ${habitColor.highlight}`}
+                                                    >{`${day.date}`}</Typography>
+                                                ) : (
+                                                    <Typography
+                                                        align="center"
+                                                        variant="h6"
+                                                        className={`${classes.unSelected} ${classes.textGrey}`}
+                                                    >{`${day.date}`}</Typography>
+                                                )}
+                                            </Grid>
+                                        </Fragment>
+                                    );
                                 })}
-                            </TableRow>
+                            </Grid>
                         );
                     })}
-                </TableBody>
-            </TableContainer>
-        </div>
+                </Grid>
+            </Container>
+        </Fragment>
     );
 }
 
