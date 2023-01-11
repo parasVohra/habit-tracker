@@ -158,7 +158,9 @@ function HabitCard(habits) {
                 //alert("Habit Status updated");
             }
         } catch {
-            alert("Something went wrong, Please try again");
+            alert(
+                "Something went wrong, Please refresh the page and try again"
+            );
         }
     };
 

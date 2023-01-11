@@ -10,6 +10,7 @@ import {
     calculatePartiallyCompletedHabitCount,
     calculateFullyCompletedHabitCount,
 } from "../../utilities/utilitiesMethods";
+import HabitStats from "../HabitStats/HabitStats";
 
 const Summary = () => {
     const classes = useStyles();

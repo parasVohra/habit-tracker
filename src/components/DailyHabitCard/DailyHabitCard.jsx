@@ -21,7 +21,7 @@ function DailyHabitCard({ habit }) {
     const classes = useStyles();
     const [state, dispatch] = useContext(Context);
     const todayDayIndex = getDay(new Date());
-    console.log(todayDayIndex, "  ; daily   today index");
+
     const [streak, setStreak] = useState({
         currentStreak: 0,
         longestStreak: 0,
