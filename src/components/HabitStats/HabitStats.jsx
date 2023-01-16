@@ -5,7 +5,11 @@ import useStyles from "./useStyles";
 import BackButton from "../FormComponents/BackButton/BackButton";
 import { Context } from "../../Store/habitStore";
 import { format, sub } from "date-fns/esm";
-import { renderCalendar } from "../../utilities/calenderUtilMethods";
+import {
+    renderCalendar,
+    yearlyStat,
+} from "../../utilities/calenderUtilMethods";
+import LineChart from "../LineChart/LineChart";
 
 function HabitStats() {
     const classes = useStyles();
@@ -13,6 +17,20 @@ function HabitStats() {
     const [state, dispatch] = useContext(Context);
     const currentStatHabit = state.currentStatHabit;
     const currentDate = state.currentDate;
+    const yearlyStatData = yearlyStat(currentStatHabit.habitTrack);
+    console.log(yearlyStatData);
+    const chartdata = {
+        label: "Monthly Count",
+        labels: yearlyStatData.x,
+        datasets: [
+            {
+                data: yearlyStatData.y,
+                backgroundColor: currentStatHabit.color,
+                borderColor: currentStatHabit.color,
+            },
+        ],
+    };
+    console.log(chartdata);
 
     const dateColor = (dateColor) =>
         makeStyles(() => ({
@@ -35,6 +53,9 @@ function HabitStats() {
                 <Typography align="center" color="TextSecondary" variant="h3">
                     {currentStatHabit.habitName}
                 </Typography>
+            </div>
+            <div style={{ width: 500, margin: " auto" }}>
+                <LineChart chartData={chartdata} />
             </div>
             <Container className={classes.root}>
                 <Grid

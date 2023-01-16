@@ -10,13 +10,42 @@ import {
     getEndOfMonth,
     getStartOfMonth,
 } from "./utilitiesMethods";
-import { compose } from "ramda";
+import { compose, reverse } from "ramda";
 
 const filterCurrentMonthDate = (habitTrack, currentDate) => {
     return habitTrack.filter(
         (track) => format(currentDate, "MMyyyy") === track.date.substring(2)
     );
 };
+
+export function yearlyStat(habitTrack) {
+    const copyTrack = reverse(habitTrack);
+    const stat = copyTrack.reduce(
+        (acc, val) => {
+            let year = val.date.substring(4, 9);
+            let month = val.date.substring(2, 4);
+            let date = val.date.substring(0, 2);
+            let fullDate = `${year},${month},${date}`;
+            let monthName = format(new Date(fullDate), "MMM");
+            if (acc.x.length === 0) {
+                acc.x.push(monthName);
+                acc.y[acc.x.length - 1] = 1;
+            }
+            if (acc.x[acc.x.length - 1] === monthName) {
+                acc.y[acc.x.length - 1]++;
+            } else {
+                acc.x.push(monthName);
+                acc.y[acc.x.length - 1] = 1;
+            }
+            return acc;
+        },
+        {
+            x: [],
+            y: [],
+        }
+    );
+    return stat;
+}
 
 function makeMonth(currentDate, isHabitDone) {
     let month = [];
