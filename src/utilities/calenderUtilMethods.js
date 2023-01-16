@@ -18,15 +18,14 @@ const filterCurrentMonthDate = (habitTrack, currentDate) => {
     );
 };
 
-export function yearlyStat(habitTrack) {
+export function yearlyStat(habitTrack, currentDate) {
     const copyTrack = reverse(habitTrack);
     const stat = copyTrack.reduce(
         (acc, val) => {
-            let year = val.date.substring(4, 9);
-            let month = val.date.substring(2, 4);
-            let date = val.date.substring(0, 2);
-            let fullDate = `${year},${month},${date}`;
-            let monthName = format(new Date(fullDate), "MMM");
+            let year = Number(val.date.substring(4, 9));
+            let month = Number(val.date.substring(2, 4));
+            let date = Number(val.date.substring(0, 2));
+            let monthName = format(new Date(year,month,date), "MMM");
             if (acc.x.length === 0) {
                 acc.x.push(monthName);
                 acc.y[acc.x.length - 1] = 1;

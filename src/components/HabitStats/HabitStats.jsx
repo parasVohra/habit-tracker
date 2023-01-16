@@ -18,7 +18,6 @@ function HabitStats() {
     const currentStatHabit = state.currentStatHabit;
     const currentDate = state.currentDate;
     const yearlyStatData = yearlyStat(currentStatHabit.habitTrack);
-    console.log(yearlyStatData);
     const chartdata = {
         label: "Monthly Count",
         labels: yearlyStatData.x,
