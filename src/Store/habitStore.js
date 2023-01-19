@@ -23,6 +23,7 @@ const initialState = {
     habitView: "daily",
     currentWeekDates: [],
     currentStatHabit: null,
+    statCurrentDate: new Date(),
 };
 
 const Store = ({ children }) => {

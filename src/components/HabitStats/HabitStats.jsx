@@ -1,10 +1,10 @@
-import React, { Fragment, useContext } from "react";
-import { Grid, Container, Paper, Typography } from "@material-ui/core";
+import React, { Fragment, useContext, useEffect } from "react";
+import { Grid, Container, Paper, Typography, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import useStyles from "./useStyles";
 import BackButton from "../FormComponents/BackButton/BackButton";
 import { Context } from "../../Store/habitStore";
-import { format, sub } from "date-fns/esm";
+import { format, addMonths } from "date-fns/esm";
 import {
     renderCalendar,
     yearlyStat,
@@ -16,7 +16,6 @@ function HabitStats() {
     const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const [state, dispatch] = useContext(Context);
     const currentStatHabit = state.currentStatHabit;
-    const currentDate = state.currentDate;
     const yearlyStatData = yearlyStat(currentStatHabit.habitTrack);
     const chartdata = {
         label: "Monthly Count",
@@ -29,6 +28,7 @@ function HabitStats() {
             },
         ],
     };
+    useEffect(() => {}, [state.statCurrentDate]);
     console.log(chartdata);
 
     const dateColor = (dateColor) =>
@@ -41,9 +41,19 @@ function HabitStats() {
 
     const habitColor = dateColor(currentStatHabit)();
     const monthDataStructure = renderCalendar(
-        currentDate,
+        state.statCurrentDate,
         currentStatHabit.habitTrack
     );
+
+    function changeMonth(opt) {
+        let oprater = 1;
+        if (opt === "sub") {
+            oprater = -1;
+        }
+        const changeMonthDate = addMonths(state.statCurrentDate, oprater);
+        dispatch({ type: "SET_STAT_CURRENT_DATE", payload: changeMonthDate });
+        return changeMonthDate;
+    }
     console.log(monthDataStructure);
     return (
         <Fragment>
@@ -69,9 +79,23 @@ function HabitStats() {
                 >
                     <Grid item container className={classes.habitTitleBox}>
                         <Grid item xs={12}>
-                            <Typography align="left" variant="h5">
-                                {format(currentDate, "LLLL")}
-                            </Typography>
+                            <Grid item container xs={12}>
+                                <Grid item xs={4} align="left">
+                                    <Button onClick={() => changeMonth("sub")}>
+                                        Prev
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4} align="center">
+                                    <Typography align="left" variant="h4" item>
+                                        {format(state.statCurrentDate, "LLLL")}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={4} align="right">
+                                    <Button onClick={() => changeMonth("add")}>
+                                        Next
+                                    </Button>
+                                </Grid>
+                            </Grid>
                         </Grid>
                         {weekDays.map((day, index) => {
                             return (
@@ -103,7 +127,7 @@ function HabitStats() {
                                                             align="center"
                                                             variant="h6"
                                                             className={`${classes.selected}
-                                                            ${habitColor.highlight}`}
+                                    ${habitColor.highlight}`}
                                                         >{`${day.date}`}</Typography>
                                                     ) : (
                                                         <Typography

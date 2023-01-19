@@ -81,7 +81,11 @@ const Reducer = (state, action) => {
                 ...state,
                 currentStatHabit: payload,
             };
-
+case "SET_STAT_CURRENT_DATE":
+            return {
+                ...state,
+                statCurrentDate: payload,
+            };
         default:
             return state;
     }
