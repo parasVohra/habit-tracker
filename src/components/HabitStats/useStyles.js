@@ -13,12 +13,12 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: "2rem",
     },
     titleText: {
-        width: "4rem",
+        width: "3rem",
     },
     habitContainer: {
         alignItems: "center",
-        minWidth: "10rem",
-        maxWidth: "30rem",
+        minWidth: "22rem",
+        maxWidth: "22rem",
         minHeight: "14rem",
         margin: "auto",
         backgroundColor: "#303038",

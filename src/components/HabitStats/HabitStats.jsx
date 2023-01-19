@@ -53,7 +53,7 @@ function HabitStats() {
                     {currentStatHabit.habitName}
                 </Typography>
             </div>
-            <div style={{ width: 500, margin: " auto" }}>
+            <div style={{ minWidth: 350, maxWidth: 500, margin: " auto" }}>
                 <LineChart chartData={chartdata} />
             </div>
             <Container className={classes.root}>
