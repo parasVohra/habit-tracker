@@ -52,28 +52,6 @@ export default function Home() {
     hydrateStoreState();
   }, [dispatch]);
 
-  // this fetch function is need to extracted and need to be reused
-
-  // const changeDate = async (method, n) => {
-  //   // change the current date to prev or next date
-  //   if (method === "add") {
-  //     let changedDate = addDays(state.currentDate, n);
-  //     dispatch({ type: "SET_CURRENT_DATE", payload: changedDate });
-  //     const newStartWeekDate = await getWeekStartDate(changedDate);
-  //     const newEndWeekDate = await getWeekEndDate(changedDate);
-  //     dispatch({ type: "SET_WEEK_END_DATE", payload: newEndWeekDate });
-  //     dispatch({ type: "SET_WEEK_START_DATE", payload: newStartWeekDate });
-  //   }
-  //   if (method === "sub") {
-  //     let changedDate = subDays(state.currentDate, n);
-  //     dispatch({ type: "SET_CURRENT_DATE", payload: changedDate });
-  //     const newStartWeekDate = await getWeekStartDate(changedDate);
-  //     const newEndWeekDate = await getWeekEndDate(changedDate);
-
-  //     dispatch({ type: "SET_WEEK_START_DATE", payload: newStartWeekDate });
-  //     dispatch({ type: "SET_WEEK_END_DATE", payload: newEndWeekDate });
-  //   }
-  // };
 
   function setHabitView(viewType) {
     dispatch({ type: "SET_HABIT_VIEW", payload: viewType });

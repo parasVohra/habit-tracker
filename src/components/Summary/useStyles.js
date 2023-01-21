@@ -16,6 +16,14 @@ const useStyles = makeStyles((theme) => ({
     titleText: {
         margin: "auto",
     },
+    activeButton: {
+        background: "rgba(196, 196, 196, 0.19)",
+        color: "#FFFFFF",
+    },
+    disabledButton: {
+        background: "rgba(196, 196, 196, 0.04)",
+        color: "#8F8E8E",
+    },
     box: {
         margin: "auto",
     },
@@ -24,6 +32,8 @@ const useStyles = makeStyles((theme) => ({
         minHeight: "6rem",
         backgroundColor: "#303038",
         borderRadius: "10px",
+        borderStyle: "solid",
+        borderWidth: "1px",
         padding: "0.5rem",
     },
     textGrey: {

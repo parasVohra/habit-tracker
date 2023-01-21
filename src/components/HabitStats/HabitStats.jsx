@@ -16,7 +16,10 @@ function HabitStats() {
     const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const [state, dispatch] = useContext(Context);
     const currentStatHabit = state.currentStatHabit;
-    const yearlyStatData = yearlyStat(currentStatHabit.habitTrack);
+    const yearlyStatData = yearlyStat(
+        currentStatHabit.habitTrack,
+        state.statCurrentDate
+    );
     const chartdata = {
         label: "Monthly Count",
         labels: yearlyStatData.x,

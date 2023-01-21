@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import Fab from "@material-ui/core/Fab";
 import useStyles from "./useStyles";
 import { Grid, Container, Paper, Typography, Button } from "@material-ui/core";
 import { Context } from "../../Store/habitStore";
@@ -10,6 +11,8 @@ import {
     calculatePartiallyCompletedHabitCount,
     calculateFullyCompletedHabitCount,
 } from "../../utilities/utilitiesMethods";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import EqualizerIcon from "@material-ui/icons/Equalizer";
 import HabitStats from "../HabitStats/HabitStats";
 
 const Summary = () => {
@@ -86,27 +89,36 @@ const Summary = () => {
                                   item
                               >
                                   <Grid item container>
-                                      <Grid item xs={8}>
-                                          <Typography>
+                                      <Grid align="left" item xs={8}>
+                                          <Typography variant="h5">
                                               {habit.habitName}
                                           </Typography>
                                       </Grid>
-                                      <Grid item xs={4}>
-                                          <Button
+                                      <Grid item align="right" xs={2}>
+                                          <Fab
+                                              className={classes.disabledButton}
                                               onClick={() =>
                                                   handleEditClick(habit)
                                               }
+                                              size="small"
                                           >
-                                              Edit
-                                          </Button>
-
-                                          <Button
+                                              <EditOutlinedIcon
+                                                  className={classes.icon}
+                                              />
+                                          </Fab>
+                                      </Grid>
+                                      <Grid item align="right" xs={2}>
+                                          <Fab
+                                              className={classes.disabledButton}
                                               onClick={() =>
                                                   handleStatsClick(habit)
                                               }
+                                              size="small"
                                           >
-                                              Stats
-                                          </Button>
+                                              <EqualizerIcon
+                                                  className={classes.icon}
+                                              />
+                                          </Fab>
                                       </Grid>
                                   </Grid>
 

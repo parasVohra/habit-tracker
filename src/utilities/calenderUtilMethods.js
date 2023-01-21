@@ -22,18 +22,26 @@ export function yearlyStat(habitTrack, currentDate) {
     const copyTrack = reverse(habitTrack);
     const stat = copyTrack.reduce(
         (acc, val) => {
-            let year = Number(val.date.substring(4, 9));
-            let month = Number(val.date.substring(2, 4));
-            let date = Number(val.date.substring(0, 2));
-            let monthName = format(new Date(year,month,date), "MMM");
+            const statyear = Number(val.date.substring(4, 9));
+            const statmonth = Number(val.date.substring(2, 4)) - 1;
+            const statdate = Number(val.date.substring(0, 2));
+            const shortYear = format(
+                new Date(statyear, statmonth, statdate),
+                "y"
+            );
+            const statmonthName = format(
+                new Date(statyear, statmonth, statdate),
+                "MMM"
+            );
+            const statMonthYear = `${statmonthName}-${shortYear}`;
             if (acc.x.length === 0) {
-                acc.x.push(monthName);
-                acc.y[acc.x.length - 1] = 1;
+                acc.x.push(statMonthYear);
+                acc.y[acc.x.length - 1] = 0;
             }
-            if (acc.x[acc.x.length - 1] === monthName) {
+            if (acc.x[acc.x.length - 1] === statMonthYear) {
                 acc.y[acc.x.length - 1]++;
             } else {
-                acc.x.push(monthName);
+                acc.x.push(statMonthYear);
                 acc.y[acc.x.length - 1] = 1;
             }
             return acc;
