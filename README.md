@@ -18,7 +18,7 @@ Habit Tracker
 
     ![SignIn View](demo/signIn.png) ![SignUp view](demo/signUp.png)
 
-2. Home. On home page user can see all his habits in Daily and weekly view.
+2. Home. On home page user can see all his habits in Daily and weekly view. User can also see his streaks and work similar to snapchat streaks.
 
     ![weekly View](demo/weekly.png) ![daily view](demo/daily.png)
 
