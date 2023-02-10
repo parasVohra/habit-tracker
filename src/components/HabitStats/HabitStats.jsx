@@ -28,11 +28,11 @@ function HabitStats() {
                 data: yearlyStatData.y,
                 backgroundColor: currentStatHabit.color,
                 borderColor: currentStatHabit.color,
+                label: currentStatHabit.name,
             },
         ],
     };
     useEffect(() => {}, [state.statCurrentDate]);
-    console.log(chartdata);
 
     const dateColor = (dateColor) =>
         makeStyles(() => ({
