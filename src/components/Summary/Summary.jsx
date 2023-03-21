@@ -54,7 +54,6 @@ const Summary = () => {
         history.push("/updateHabit");
     }
     function handleStatsClick(habit) {
-        console.log(habit);
         dispatchHabit({ type: "SET_CURRENT_STAT_HABIT", payload: habit });
         console.log("state at summary", state);
         history.push("/habitStats");
