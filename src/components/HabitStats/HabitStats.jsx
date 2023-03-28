@@ -28,7 +28,7 @@ function HabitStats() {
                 data: yearlyStatData.y,
                 backgroundColor: currentStatHabit.color,
                 borderColor: currentStatHabit.color,
-                label: currentStatHabit.name,
+                //label: currentStatHabit.name,
             },
         ],
     };
